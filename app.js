@@ -109,9 +109,12 @@ function populate() {
       const label = document.createElement('label');
       const input = document.createElement('input');
       label.textContent = title;
-      input.type = 'text';
+      input.type = 'number';
       input.name = name;
       input.inputMode = 'numeric';
+      input.min = '0';
+      input.max = String(COUNT_LIMIT);
+      input.step = '1';
       input.autocomplete = 'off';
       input.spellcheck = false;
       input.required = true;
@@ -342,6 +345,7 @@ async function loadPublicReports() {
 function showReceipt(report) {
   savedReport = report;
   clearSubmissionFallback();
+  clearSubmissionAccess();
   byId('saved-receipt').textContent = report.branch_name + ' · ' + periodText(report) + ' · ' + report.report_id;
   const text = [
     'LPIA Academic Report', report.branch_name + ' · ' + periodText(report),
@@ -369,13 +373,22 @@ function showSubmissionFallback(report) {
   byId('submission-fallback').hidden = false;
 }
 
-async function copyFallbackReport() {
+async function continueToGitHub(event) {
+  const report = fallbackReport;
+  if (!report) {
+    event.preventDefault();
+    return;
+  }
   const body = byId('fallback-body');
+  checkFallbackReceipt();
   try {
     if (!navigator.clipboard) throw new Error('Clipboard unavailable.');
     await navigator.clipboard.writeText(body.value);
-    byId('fallback-status').textContent = 'Report copied.';
+    if (fallbackReport === report) {
+      byId('fallback-status').textContent = 'Report copied. Paste it on GitHub to finish sending.';
+    }
   } catch {
+    if (fallbackReport !== report) return;
     byId('fallback-copy-manually').hidden = false;
     body.focus();
     body.select();
@@ -423,6 +436,19 @@ async function checkFallbackReceipt() {
   }
 }
 
+function showSubmissionAccess() {
+  const access = byId('submission-access');
+  if (!byId('submission-code')) access.append(byId('submission-access-field').content.cloneNode(true));
+  byId('submission-code').value = '';
+  access.hidden = false;
+}
+
+function clearSubmissionAccess() {
+  const access = byId('submission-access');
+  access.hidden = true;
+  access.replaceChildren();
+}
+
 async function submitDirectly(report) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
@@ -431,18 +457,17 @@ async function submitDirectly(report) {
       method: 'POST', cache: 'no-store', signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        operation: 'submit', report, accessCode: byId('submission-code').value
+        operation: 'submit', report, accessCode: byId('submission-code')?.value ?? ''
       })
     });
     if ([404, 405, 503].includes(response.status) ||
         !response.headers.get('Content-Type')?.includes('application/json')) {
-      throw new DirectSubmissionUnavailable('Direct submission is unavailable. Send the report through GitHub below.');
+      throw new DirectSubmissionUnavailable();
     }
 
     const result = await response.json();
     if (response.status === 403 && result.message === 'The access code is invalid for this branch.') {
-      byId('submission-access').hidden = false;
-      byId('submission-code').value = '';
+      showSubmissionAccess();
       throw new Error('Enter the reporting access code for your branch, then press SUBMIT.');
     }
     if (!response.ok) throw new Error(result.message || 'The report could not be saved.');
@@ -472,15 +497,20 @@ async function sendReport(operation) {
       else showFeedback(feedback, 'info', 'No saved report was found for this branch and period.');
     }
   } catch (error) {
-    if (error instanceof DirectSubmissionUnavailable) showSubmissionFallback(report);
-    showFeedback(feedback, 'error', error.name === 'AbortError'
-      ? 'The request timed out. Use Check Report before trying again.'
-      : error.message);
+    if (error instanceof DirectSubmissionUnavailable) {
+      clearSubmissionAccess();
+      showFeedback(feedback, 'info', 'Your report is ready to send.');
+      showSubmissionFallback(report);
+    } else {
+      showFeedback(feedback, 'error', error.name === 'AbortError'
+        ? 'The request timed out. Use Check Report before trying again.'
+        : error.message);
+    }
   } finally {
     setBusy(false);
     if (activeScreen === 'entry') {
-      const access = byId('submission-access');
-      if (operation === 'submit' && !access.hidden && !byId('submission-code').value) byId('submission-code').focus();
+      const code = byId('submission-code');
+      if (operation === 'submit' && code && !code.value) code.focus();
       else feedback.focus({ preventScroll: true });
     }
   }
@@ -713,6 +743,7 @@ function showDetail(report, previousScreen) {
 function finish() {
   form.reset();
   clearSubmissionFallback();
+  clearSubmissionAccess();
   academicRequest += 1;
   const exit = document.exitFullscreen || document.webkitExitFullscreen || document.webkitCancelFullScreen;
   if (document.fullscreenElement || document.webkitFullscreenElement) {
@@ -740,8 +771,7 @@ byId('view-new-report').addEventListener('click', () => showDetail(savedReport, 
 byId('view-history').addEventListener('click', openHistory);
 byId('history-search').addEventListener('input', renderHistory);
 byId('finish').addEventListener('click', finish);
-byId('copy-fallback').addEventListener('click', copyFallbackReport);
-byId('fallback-github').addEventListener('click', checkFallbackReceipt);
+byId('fallback-github').addEventListener('click', continueToGitHub);
 
 function initPickers() {
   const dialog = byId('field-picker');
@@ -750,7 +780,8 @@ function initPickers() {
   const settings = {
     branch: ['Branch', 'Select a branch'],
     year: ['Reporting year', 'Select a year'],
-    month: ['Reporting month', 'Select a month']
+    month: ['Reporting month', 'Select a month'],
+    week: ['Reporting week', 'Select a week']
   };
   for (const select of form.querySelectorAll('[data-picker]')) {
     const [name, placeholder] = settings[select.dataset.picker];

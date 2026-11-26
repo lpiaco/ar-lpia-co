@@ -168,7 +168,7 @@ body.app-running .app-content, body.app-running .menu-screen {
   color: var(--ink); background: #fff;
 }
 .picker-dialog[open] { display: flex; flex-direction: column; }
-.picker-dialog[data-kind="branch"] {
+.picker-dialog:is([data-kind="branch"], [data-kind="week"]) {
   height: 50vh; height: 50dvh; max-height: 50vh; max-height: 50dvh;
 }
 .picker-dialog::backdrop { background: rgb(16 46 42 / 55%); }
