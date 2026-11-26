@@ -1,0 +1,35 @@
+name: Sync reports.csv to Google Sheets
+
+on:
+  workflow_call:
+    secrets:
+      GOOGLE_SERVICE_ACCOUNT_JSON:
+        required: false
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Save LPIA report]
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lpia-report-sheet-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'lpiaco/ar-lpia-co' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: refs/heads/main
+          persist-credentials: false
+
+      - name: Read the current CSV, sync the dedicated tab, and verify it
+        env:
+          GITHUB_REPORTS_TOKEN: ${{ github.token }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: node .github/scripts/sync-reports-to-sheet.mjs

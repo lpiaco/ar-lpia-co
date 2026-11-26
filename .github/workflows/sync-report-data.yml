@@ -1,0 +1,14 @@
+name: Sync report-data commits to Sheets
+
+on:
+  push:
+    branches: [report-data]
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    uses: lpiaco/ar-lpia-co/.github/workflows/sync-reports-to-sheet.yml@main
+    secrets:
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}

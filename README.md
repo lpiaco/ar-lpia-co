@@ -26,3 +26,17 @@ At the handoff, GitHub Pages returned HTTP 404 for GET /api/reports and HTTP 405
 ## Local checks
 
 Run `node checks/reports.test.mjs`. Supply `PLAYWRIGHT_MODULE` and optionally `CHROMIUM_PATH` to exercise the browser suite, including modal dimensions, automatic CSV prefill, direct POST, preserved input on failure, receipt, history, and exit.
+
+## Google Sheets mirror
+
+GitHub remains the source of truth. The **Sync reports.csv to Google Sheets** workflow mirrors the latest CSV from `report-data` to the **GitHub Reports** tab of the [prototype spreadsheet](https://docs.google.com/spreadsheets/d/15aUuGb1WaXvaXR39FO5Bby2YBLjC_UFZvv4ALaW-exQ/edit). The source spreadsheet and other tabs are outside the sync. After creating its destination tab, the sync marks it as managed and refuses to overwrite a same-named tab that it did not create. Manual edits to the managed tab are replaced on the next sync.
+
+A push to `report-data` calls the sync through the workflow file stored on that branch. Commits made with GitHub Actions' built-in token do not trigger push workflows, so a separate `workflow_run` trigger runs after successful **Save LPIA report** runs. This job reads the current branch head and its pinned CSV. It never writes to GitHub or blocks a report save. The workflow can also be run manually.
+
+Set up access one time:
+
+1. Enable the Google Sheets API in a Google Cloud project and create a dedicated service account. Share only the prototype spreadsheet with that account as **Editor**.
+2. Store the service-account JSON key as the GitHub Actions repository secret `GOOGLE_SERVICE_ACCOUNT_JSON`. Use **Settings → Secrets and variables → Actions → New repository secret**.
+3. Run **Sync reports.csv to Google Sheets** once from **Actions**. The job reports the CSV commit and how many rows it verified. Counts remain numbers, IDs retain leading zeroes, and any formula-like text is written literally.
+
+Run `node checks/sync-reports-to-sheet.test.mjs` to exercise the sync locally with simulated services.
