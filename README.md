@@ -21,7 +21,7 @@ The two runtime secrets are:
 
 An authorized Cloudflare deployment must attach those secrets and the route. Keep actual values outside this repository and ZIP. The existing issue workflow remains available for previously created GitHub issues. The application no longer opens the issue workflow.
 
-At the handoff, the live endpoint returned HTTP 404. The browser success, access-code prompt, validation, and error paths were exercised against a simulated endpoint. The production direct-write test is pending a deployment with the required access.
+At the handoff, GitHub Pages returned HTTP 404 for GET /api/reports and HTTP 405 for POST /api/reports. The Cloudflare route had no deployed handler. The browser success, access-code prompt, validation, and error paths were exercised against a simulated endpoint. The production direct-write test is pending a deployment with the required access.
 
 ## Local checks
 
