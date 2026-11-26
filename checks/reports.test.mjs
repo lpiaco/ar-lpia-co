@@ -181,14 +181,21 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByRole('heading', { name: 'LPIA Academic Report' }).waitFor();
     await page.waitForFunction(() => document.getElementById('brand-logo').naturalWidth > 0);
     assert.ok(await page.locator('#brand-logo').isVisible());
-    assert.equal((await page.locator('#brand-logo').boundingBox()).width, 168);
+    const splashLogo = await page.locator('#brand-logo').boundingBox();
+    assert.equal(splashLogo.width, 168);
     await page.getByRole('button', { name: 'START', exact: true }).click();
     assert.equal(await page.evaluate(() => window.fullscreenRequested), true);
     for (const viewport of [{ width: 360, height: 780 }, { width: 1366, height: 768 }]) {
       await page.setViewportSize(viewport);
       const menu = await page.locator('.menu-content').boundingBox();
+      const logo = await page.locator('#menu-screen .logo-slot').boundingBox();
+      const title = await page.locator('#menu-title').boundingBox();
       assert.ok(Math.abs(menu.x + menu.width / 2 - viewport.width / 2) < 1);
       assert.ok(Math.abs(menu.y + menu.height / 2 - viewport.height / 2) < 1);
+      assert.equal(logo.width, splashLogo.width);
+      assert.equal(logo.height, splashLogo.height);
+      assert.ok(Math.abs(logo.x + logo.width / 2 - viewport.width / 2) < 1);
+      assert.ok(logo.y + logo.height < title.y);
     }
     await page.setViewportSize({ width: 360, height: 780 });
     await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();

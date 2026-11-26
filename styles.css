@@ -103,6 +103,7 @@ button:disabled { opacity: 0.58; cursor: default; }
 .menu-options { display: grid; gap: 0.65rem; max-width: 31rem; margin-block: 1.25rem; }
 .menu-options button, .menu-options .button { text-align: left; }
 .menu-content { width: min(100%, 31rem); }
+.menu-content .logo-slot { margin-bottom: 1.2rem; }
 .menu-content .menu-options { margin: 1.25rem 0 0; }
 .menu-content .menu-options button { text-align: center; }
 .button {
@@ -133,7 +134,6 @@ button:disabled { opacity: 0.58; cursor: default; }
 h1, h2, h3, legend, .masthead .brand-heading { font-weight: 800; }
 .brand-heading { display: flex; align-items: center; gap: 0.35em; }
 .brand-heading img { display: block; flex: none; width: 1em; height: 1em; object-fit: contain; }
-.menu-content .brand-heading { justify-content: center; }
 .masthead .brand-heading { font-size: clamp(1.05rem, 3vw, 1.35rem); }
 body.app-running {
   height: 100vh;
