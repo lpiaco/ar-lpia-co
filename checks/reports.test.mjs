@@ -132,7 +132,8 @@ if (process.env.PLAYWRIGHT_MODULE) {
   let endpointAvailable = false;
   const server = createServer(async (req, res) => {
     try {
-      if (req.url === '/api/reports') {
+      const pathname = new URL(req.url, 'http://127.0.0.1').pathname;
+      if (pathname === '/api/reports') {
         if (!endpointAvailable) {
           res.writeHead(404, { 'Content-Type': 'text/html' }).end('Page not found.');
           return;
@@ -145,9 +146,9 @@ if (process.env.PLAYWRIGHT_MODULE) {
         }), { ...browserMock.env, SITE_ORIGIN: origin });
         res.writeHead(response.status, Object.fromEntries(response.headers));
         res.end(await response.text());
-      } else if (mime[req.url]) {
-        res.writeHead(200, { 'Content-Type': mime[req.url] });
-        res.end(await readFile(new URL('..' + (req.url === '/' ? '/index.html' : req.url), import.meta.url)));
+      } else if (mime[pathname]) {
+        res.writeHead(200, { 'Content-Type': mime[pathname] });
+        res.end(await readFile(new URL('..' + (pathname === '/' ? '/index.html' : pathname), import.meta.url)));
       } else {
         res.writeHead(404).end();
       }
