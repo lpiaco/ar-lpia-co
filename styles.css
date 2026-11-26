@@ -8,6 +8,7 @@
   --muted: #46575f;
   --accent: #15574d;
   --border: #c8d2d5;
+  --logo-size: 10.5rem;
 }
 
 * { box-sizing: border-box; }
@@ -94,7 +95,7 @@ button:disabled { opacity: 0.58; cursor: default; }
 }
 .splash-content { width: min(100%, 30rem); }
 .splash-content h1 { margin: 1.2rem 0 1.75rem; }
-.logo-slot { width: 10.5rem; height: 10.5rem; margin: 0 auto; display: block; object-fit: contain; }
+.logo-slot { width: var(--logo-size); height: var(--logo-size); margin: 0 auto; display: block; object-fit: contain; }
 .splash-content button { min-width: 9rem; color: #102e2a; background: #fff; border-color: #fff; }
 .finished-screen { background: #000; color: #fff; }
 .finished-screen h1 { font-size: clamp(1.45rem, 6vw, 2.75rem); }
@@ -103,7 +104,9 @@ button:disabled { opacity: 0.58; cursor: default; }
 .menu-options { display: grid; gap: 0.65rem; max-width: 31rem; margin-block: 1.25rem; }
 .menu-options button, .menu-options .button { text-align: left; }
 .menu-content { width: min(100%, 31rem); }
-.menu-content .logo-slot { margin-bottom: 1.2rem; }
+/* The 128px PNG has 14 transparent rows above and 15 below its visible mark. */
+.menu-logo { height: calc(var(--logo-size) * 99 / 128); margin-bottom: 1.2rem; overflow: hidden; }
+.menu-logo .logo-slot { transform: translateY(-10.9375%); }
 .menu-content .menu-options { margin: 1.25rem 0 0; }
 .menu-content .menu-options button { text-align: center; }
 .button {

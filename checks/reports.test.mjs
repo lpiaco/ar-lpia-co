@@ -190,12 +190,30 @@ if (process.env.PLAYWRIGHT_MODULE) {
       const menu = await page.locator('.menu-content').boundingBox();
       const logo = await page.locator('#menu-screen .logo-slot').boundingBox();
       const title = await page.locator('#menu-title').boundingBox();
+      const lastButton = await page.locator('#open-entry').boundingBox();
+      const visibleLogo = await page.locator('#menu-screen .logo-slot').evaluate(img => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const context = canvas.getContext('2d');
+        context.drawImage(img, 0, 0);
+        const rgba = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        const visible = (value, index) => index % 4 === 3 && value > 0;
+        const rowOf = index => Math.floor(index / (canvas.width * 4));
+        const firstRow = rowOf(rgba.findIndex(visible));
+        const lastRow = rowOf(rgba.findLastIndex(visible));
+        const rect = img.getBoundingClientRect();
+        const scale = rect.height / canvas.height;
+        return { top: rect.top + firstRow * scale, bottom: rect.top + (lastRow + 1) * scale };
+      });
       assert.ok(Math.abs(menu.x + menu.width / 2 - viewport.width / 2) < 1);
       assert.ok(Math.abs(menu.y + menu.height / 2 - viewport.height / 2) < 1);
       assert.equal(logo.width, splashLogo.width);
       assert.equal(logo.height, splashLogo.height);
       assert.ok(Math.abs(logo.x + logo.width / 2 - viewport.width / 2) < 1);
-      assert.ok(logo.y + logo.height < title.y);
+      assert.ok(visibleLogo.bottom < title.y);
+      const bottomGap = viewport.height - lastButton.y - lastButton.height;
+      assert.ok(Math.abs(visibleLogo.top - bottomGap) < 1, 'Visible upper and lower gaps: ' + visibleLogo.top + ', ' + bottomGap);
     }
     await page.setViewportSize({ width: 360, height: 780 });
     await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
