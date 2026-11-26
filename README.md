@@ -6,7 +6,7 @@ The public frontend is plain HTML, CSS, and JavaScript on GitHub Pages at `ar.lp
 
 - **START** requests fullscreen and opens the main menu. Browsers that decline fullscreen still open the menu. There is a space reserved for the upcoming logo.
 - **Current Status** shows aggregate reports by selected period, branch coverage, a branch ranking, students, classes, academic personnel, and student movement. Averages divide by branches reporting or by the applicable class count. Missing branches are not counted as zero. Empty or disconnected storage is labelled.
-- **Enter Data** provides the approved branch form, with live totals and authorized lookup of earlier Academic Numbers. A central access code can read all report history. An individual branch access code can view only that branch's reports.
+- **Enter Data** provides the approved branch form, with live totals and authorized lookup of earlier Academic Numbers. Report history lists every submitted branch and period. A central access code can open all reports. Individual branch codes can open their own reports, with summaries for other branches.
 - After a verified save, choose the latest report, searchable report history, a WhatsApp summary, or **Selesai**. The WhatsApp link opens a draft; the coordinator chooses the recipient and sends it. Set `ACADEMIC_OFFICE_WHATSAPP` in `app.js` to the confirmed number in international digits if available. To add the upcoming logo, place it in the site repository and set `BRAND_LOGO_URL` in `app.js`.
 
 ## Release

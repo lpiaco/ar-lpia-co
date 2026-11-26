@@ -537,10 +537,13 @@ function renderHistory() {
     summary.append(textElement('h3', report.branch_name + ' · ' + periodText(report)),
       textElement('p', report.report_id + ' · ' + formatCount.format(report.total_active_students) + ' active students', 'hint'));
     if (current) summary.append(textElement('p', 'Laporan yang baru dibuka', 'hint'));
-    const open = textElement('button', 'View report', 'secondary');
-    open.type = 'button';
-    open.addEventListener('click', () => showDetail(report, 'history'));
-    card.append(summary, open);
+    card.append(summary);
+    if (report.can_view_full !== false) {
+      const open = textElement('button', 'View report', 'secondary');
+      open.type = 'button';
+      open.addEventListener('click', () => showDetail(report, 'history'));
+      card.append(open);
+    }
     output.append(card);
   }
 }

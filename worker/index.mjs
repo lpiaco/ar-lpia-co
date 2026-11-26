@@ -160,7 +160,14 @@ export function createHandler(requestGithub = fetch) {
       const { reports } = await store.read();
       const branchReports = reports.filter(row => row.branch_id === branch).sort((a, b) => b.report_id.localeCompare(a.report_id));
       if (operation === 'history') {
-        return json({ reports: administrator ? reports.sort((a, b) => b.report_id.localeCompare(a.report_id)) : branchReports });
+        const summaries = reports.sort((a, b) => b.report_id.localeCompare(a.report_id)).map(row => {
+          if (administrator || row.branch_id === branch) return { ...row, can_view_full: true };
+          return {
+            ...validatePeriod(row), report_id: row.report_id, branch_name: row.branch_name,
+            total_active_students: row.total_active_students, can_view_full: false
+          };
+        });
+        return json({ reports: summaries });
       }
       const requested = validatePeriod(report);
       const id = reportId(requested);

@@ -96,8 +96,14 @@ assert.equal((await (await mock.api('academia', period)).json()).counts.academic
 assert.equal((await mock.api('history', { branch_id: '08' }, 'gede-test-code')).status, 403);
 const gede = { ...setu, branch_id: '03', active_english_students: 65, active_computer_students: 22 };
 assert.equal((await mock.api('submit', gede, 'gede-test-code')).status, 200);
-assert.equal((await (await mock.api('history', { branch_id: '08' })).json()).reports.length, 3);
-assert.equal((await (await mock.api('history', { branch_id: '08' }, 'head-office-code')).json()).reports.length, 4);
+const branchHistory = (await (await mock.api('history', { branch_id: '08' })).json()).reports;
+assert.equal(branchHistory.length, 4);
+const otherBranch = branchHistory.find(row => row.branch_id === '03');
+assert.equal(otherBranch.can_view_full, false);
+assert.equal(Object.hasOwn(otherBranch, 'reporter_name'), false);
+assert.equal(Object.hasOwn(otherBranch, 'remarks'), false);
+const centralHistory = (await (await mock.api('history', { branch_id: '08' }, 'head-office-code')).json()).reports;
+assert.ok(centralHistory.every(row => row.can_view_full));
 const stats = (await (await mock.api()).json()).periods;
 assert.equal(stats.length, 3);
 assert.equal(stats[1].branches.length, 2);
@@ -186,7 +192,8 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.getByRole('button', { name: 'Lihat semua laporan yang sudah terkirim' }).click();
     await page.getByText('Laporan yang baru dibuka').waitFor();
-    assert.equal(await page.locator('#history-list article').count(), 2);
+    assert.equal(await page.locator('#history-list article').count(), 3);
+    assert.equal(await page.locator('#history-list button').count(), 2);
     await page.locator('#history-search').fill('Week 2');
     assert.equal(await page.locator('#history-list article').count(), 1);
     await page.getByRole('button', { name: 'Back to saved report' }).click();
