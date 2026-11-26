@@ -84,9 +84,6 @@
             </select>
           </label>
         </div>
-        <label class="branch-access">Branch access code
-          <input name="access_code" type="password" maxlength="128" autocomplete="off" required>
-        </label>
       </fieldset>
 
       <fieldset class="panel">
@@ -134,7 +131,7 @@
 
       <section class="actions" aria-label="Submission">
         <p id="selection">Choose a branch and reporting period.</p>
-        <p class="hint">Data submission is available to approved branch accounts.</p>
+        <p class="hint">Data submission uses GitHub. Saved reports are public.</p>
         <div class="buttons">
           <button id="submit" type="submit">Submit report</button>
           <button id="check" type="button" class="secondary">Check saved report</button>
@@ -142,6 +139,22 @@
         <div id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></div>
       </section>
     </form>
+    </section>
+
+    <section class="screen" id="pending-screen" hidden aria-labelledby="pending-title">
+      <button id="pending-back" type="button" class="secondary back">Back to report</button>
+      <h1 id="pending-title" tabindex="-1">Confirm on GitHub</h1>
+      <p>Paste the copied report into <strong>Description</strong> and click <strong>Create</strong> on GitHub. Return here for confirmation.</p>
+      <div class="buttons">
+        <button id="copy-pending" type="button" class="secondary">Copy report</button>
+        <a id="open-github" class="button secondary" target="_blank" rel="noopener noreferrer">Open GitHub</a>
+        <button id="check-pending" type="button" class="secondary">Check CSV again</button>
+      </div>
+      <p id="copy-feedback" class="hint" role="status"></p>
+      <label>Report to paste
+        <textarea id="pending-body" rows="6" readonly></textarea>
+      </label>
+      <div id="pending-feedback" class="feedback" role="status"></div>
     </section>
 
     <section class="screen" id="saved-screen" hidden aria-labelledby="saved-title">

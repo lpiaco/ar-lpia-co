@@ -3,7 +3,8 @@
 // Public options. Leave blank to use the WhatsApp contact picker.
 const ACADEMIC_OFFICE_WHATSAPP = '';
 const BRAND_LOGO_URL = '';
-const REPORTS_API = '/api/reports';
+const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=LPIA%20Academic%20Report';
+const PUBLIC_REPORTS_CSV = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv';
 
 const COUNT_LIMIT = 1000000;
 const FIRST_YEAR = 2020;
@@ -81,7 +82,8 @@ const formatCount = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
 let busy = false;
 let activeScreen = 'start';
 let savedReport;
-let historyAccess;
+let pendingReport;
+let polling = false;
 let historyReports = [];
 let statsPeriods = [];
 
@@ -209,11 +211,9 @@ function collectReport(operation, output) {
     reporting_week: Number.isInteger(report.reporting_week) && report.reporting_week >= 1 && report.reporting_week <= 5
   };
   PERIOD_FIELDS.forEach(name => mark(name, periodChecks[name] ? '' : 'Select a value.'));
-  const accessCode = field('access_code').value;
-  mark('access_code', accessCode.length >= 12 && accessCode.length <= 128 ? '' : 'Enter your branch access code.');
   if (operation === 'submit') {
     report.reporter_name = field('reporter_name').value.trim();
-    report.remarks = field('remarks').value;
+    report.remarks = field('remarks').value.replace(/\r\n?/g, '\n');
     mark('reporter_name', report.reporter_name && report.reporter_name.length <= 100 ? '' : 'Enter an Academic Name.');
     mark('remarks', report.remarks.length <= 1000 ? '' : 'Keep remarks to 1,000 characters or fewer.');
     countNames.forEach(name => {
@@ -305,7 +305,7 @@ document.querySelector('#load-academia').addEventListener('click', () => sendRep
 const byId = id => document.getElementById(id);
 const headings = {
   menu: 'menu-title', status: 'status-title', entry: 'entry-title',
-  saved: 'saved-title', history: 'history-title', detail: 'detail-title', finished: 'finished-title'
+  pending: 'pending-title', saved: 'saved-title', history: 'history-title', detail: 'detail-title', finished: 'finished-title'
 };
 
 function showScreen(name) {
@@ -329,23 +329,18 @@ function beginFullscreen() {
   showScreen('menu');
 }
 
-async function requestReports(operation, report, accessCode) {
+async function loadPublicReports() {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const response = await fetch(REPORTS_API, {
-      cache: 'no-store', signal: controller.signal,
-      ...(operation ? {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ operation, report, accessCode })
-      } : {})
-    });
-    if (!response.headers.get('Content-Type')?.includes('application/json')) {
-      throw new Error('Report storage is not connected yet.');
-    }
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'Report storage could not be reached.');
-    return data;
+    const [response, { decodeCSV }] = await Promise.all([
+      fetch(PUBLIC_REPORTS_CSV + '?read=' + Date.now(), {
+        cache: 'no-store', signal: controller.signal
+      }),
+      import('./lib/reports.mjs')
+    ]);
+    if (!response.ok) throw new Error('The report CSV could not be loaded.');
+    return decodeCSV(await response.text());
   } finally {
     clearTimeout(timeout);
   }
@@ -356,9 +351,10 @@ function idFor(period) {
     '-W' + period.reporting_week + '-' + period.branch_id;
 }
 
-function showReceipt(report, accessCode) {
+function showReceipt(report) {
   savedReport = report;
-  historyAccess = { branch: report.branch_id, code: accessCode };
+  pendingReport = undefined;
+  byId('pending-body').value = '';
   byId('saved-receipt').textContent = report.branch_name + ' · ' + periodText(report) + ' · ' + report.report_id;
   const text = [
     'LPIA Academic Report', report.branch_name + ' · ' + periodText(report),
@@ -372,34 +368,90 @@ function showReceipt(report, accessCode) {
   showScreen('saved');
 }
 
+function copyPendingReport() {
+  const body = byId('pending-body');
+  const message = byId('copy-feedback');
+  if (!navigator.clipboard) {
+    body.select();
+    message.textContent = 'Copy the selected text and paste it into GitHub.';
+    return;
+  }
+  navigator.clipboard.writeText(body.value).then(() => {
+    message.textContent = 'Report copied.';
+  }).catch(() => {
+    body.select();
+    message.textContent = 'Copy the selected text and paste it into GitHub.';
+  });
+}
+
+function startSubmission(report) {
+  pendingReport = report;
+  byId('pending-body').value = JSON.stringify(report);
+  byId('copy-feedback').textContent = '';
+  showScreen('pending');
+  copyPendingReport();
+  window.open(GITHUB_ISSUE_URL, '_blank', 'noopener,noreferrer');
+  pollForReceipt();
+}
+
+async function pollForReceipt() {
+  if (polling || !pendingReport || activeScreen !== 'pending') return;
+  polling = true;
+  const candidate = pendingReport;
+  const output = byId('pending-feedback');
+  showFeedback(output, 'progress', 'Waiting for the report to appear in the GitHub CSV…');
+  try {
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      if (activeScreen !== 'pending' || pendingReport !== candidate) return;
+      let reports;
+      try { reports = await loadPublicReports(); }
+      catch {
+        // A temporary read failure can happen while GitHub publishes the new commit.
+      }
+      if (activeScreen !== 'pending' || pendingReport !== candidate) return;
+      const saved = reports?.find(row => row.report_id === idFor(candidate));
+      if (saved) {
+        if (Object.keys(candidate).every(key => candidate[key] === saved[key])) {
+          showReceipt(saved);
+        } else {
+          showFeedback(output, 'error', 'A different report already exists for this branch and period. Use Check saved report to review it.');
+        }
+        return;
+      }
+      await new Promise(resolve => setTimeout(resolve, 4000));
+    }
+    showFeedback(output, 'info', 'The CSV has not confirmed this report yet. Check the GitHub issue for its status, then choose Check CSV again.');
+  } finally {
+    polling = false;
+    if (activeScreen === 'pending' && pendingReport && pendingReport !== candidate) pollForReceipt();
+  }
+}
+
 async function sendReport(operation) {
   if (busy || activeScreen !== 'entry') return;
   const output = operation === 'academia' ? academicFeedback : feedback;
   const report = collectReport(operation, output);
   if (!report) return;
-  const accessCode = field('access_code').value;
+  if (operation === 'submit') {
+    startSubmission(report);
+    return;
+  }
   setBusy(true);
-  const progress = {
-    submit: 'Saving and verifying the report…',
-    status: 'Checking saved reports…',
-    academia: 'Looking up previous Academic Numbers…'
-  };
-  showFeedback(output, 'progress', progress[operation]);
+  showFeedback(output, 'progress', 'Checking saved reports…');
   try {
-    const result = await requestReports(operation, report, accessCode);
-    if (operation === 'academia') {
-      fillAcademicNumbers(result, report);
-    } else if (result.status === 'not_found') {
-      showFeedback(output, 'info', result.message);
-    } else if (['saved', 'already_saved', 'found'].includes(result.status) &&
-      result.report?.report_id === idFor(report)) {
-      showReceipt(result.report, accessCode);
+    const records = (await loadPublicReports())
+      .filter(row => row.branch_id === report.branch_id).sort((a, b) => b.report_id.localeCompare(a.report_id));
+    const id = idFor(report);
+    const saved = records.find(row => operation === 'academia' ? row.report_id <= id : row.report_id === id);
+    if (operation === 'academia' && saved) {
+      fillAcademicNumbers({ status: 'academia_found', period: saved, counts: saved }, report);
+    } else if (saved) {
+      showReceipt(saved);
     } else {
-      showFeedback(output, 'error', 'The saved report could not be verified.');
+      showFeedback(output, 'info', 'No saved report was found for this branch and period.');
     }
   } catch (error) {
-    const message = error.name === 'AbortError' ? 'The request timed out. Check for a saved report before retrying.' : error.message;
-    showFeedback(output, 'error', message);
+    showFeedback(output, 'error', error.name === 'AbortError' ? 'The request timed out.' : error.message);
   } finally {
     setBusy(false);
     if (activeScreen === 'entry') output.focus({ preventScroll: true });
@@ -432,9 +484,9 @@ async function openStats() {
   byId('stats-controls').hidden = true;
   showFeedback(output, 'progress', 'Loading submitted reports…');
   try {
-    const data = await requestReports();
+    const [reports, { publicStats }] = await Promise.all([loadPublicReports(), import('./lib/reports.mjs')]);
     if (activeScreen !== 'status') return;
-    statsPeriods = data.periods;
+    statsPeriods = publicStats(reports);
     if (!Array.isArray(statsPeriods) || !statsPeriods.length) {
       showFeedback(output, 'info', 'No reports have been submitted yet.');
       return;
@@ -505,9 +557,9 @@ async function openHistory() {
   historyReports = [];
   showFeedback(output, 'progress', 'Loading saved reports…');
   try {
-    const data = await requestReports('history', { branch_id: historyAccess.branch }, historyAccess.code);
+    const reports = await loadPublicReports();
     if (activeScreen !== 'history') return;
-    historyReports = data.reports;
+    historyReports = reports.sort((a, b) => b.report_id.localeCompare(a.report_id));
     if (!historyReports.some(report => report.report_id === savedReport.report_id)) {
       historyReports.unshift(savedReport);
     }
@@ -586,7 +638,8 @@ function showDetail(report, previousScreen) {
 function finish() {
   form.reset();
   savedReport = undefined;
-  historyAccess = undefined;
+  pendingReport = undefined;
+  byId('pending-body').value = '';
   historyReports = [];
   carriedAcademicFields.clear();
   for (const id of ['history-list', 'report-detail', 'saved-receipt', 'feedback', 'academic-feedback']) {
@@ -616,3 +669,12 @@ byId('view-new-report').addEventListener('click', () => showDetail(savedReport, 
 byId('view-history').addEventListener('click', openHistory);
 byId('history-search').addEventListener('input', renderHistory);
 byId('finish').addEventListener('click', finish);
+
+byId('open-github').href = GITHUB_ISSUE_URL;
+byId('copy-pending').addEventListener('click', copyPendingReport);
+byId('check-pending').addEventListener('click', pollForReceipt);
+byId('pending-back').addEventListener('click', () => {
+  pendingReport = undefined;
+  byId('pending-body').value = '';
+  showScreen('entry');
+});

@@ -112,7 +112,6 @@ button:disabled { opacity: 0.58; cursor: default; }
   font: inherit; font-weight: 700; text-decoration: none;
 }
 .back { margin-bottom: 0.9rem; }
-.branch-access { margin-top: 0.8rem; }
 #stats-controls { max-width: 24rem; }
 #stats-feedback { margin-block: 0.75rem; }
 .screen-end { border-top: 1px solid var(--border); margin-top: 2rem; padding-top: 0.9rem; }

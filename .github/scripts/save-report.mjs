@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
-import { createHandler } from '../../worker/index.mjs';
+import { createHandler } from '../../lib/report-store.mjs';
 
 const repository = process.env.GITHUB_REPOSITORY;
 const token = process.env.GH_TOKEN;
