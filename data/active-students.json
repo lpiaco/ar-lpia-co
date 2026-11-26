@@ -1,0 +1,5833 @@
+[
+  {
+    "key": "monthly-2026-11",
+    "reporting_year": 2026,
+    "reporting_month": 11,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 257,
+        "computer": 98
+      },
+      {
+        "branch": "Tambun",
+        "english": 79,
+        "computer": 21
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 66,
+        "computer": 27
+      },
+      {
+        "branch": "Cibinong",
+        "english": 57,
+        "computer": 16
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 143,
+        "computer": 9
+      },
+      {
+        "branch": "TWA",
+        "english": 92,
+        "computer": 8
+      },
+      {
+        "branch": "Pemalang",
+        "english": 76,
+        "computer": 10
+      },
+      {
+        "branch": "Setu",
+        "english": 69,
+        "computer": 7
+      },
+      {
+        "branch": "Ungaran",
+        "english": 59,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 28,
+        "computer": 27
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 71,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 14,
+        "computer": 2
+      },
+      {
+        "branch": "Karadenan",
+        "english": 36,
+        "computer": 4
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 24
+      },
+      {
+        "branch": "Ciracas",
+        "english": 70,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 60,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 32,
+        "computer": 15
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 5
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 32,
+        "computer": 7
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 72,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-10",
+    "reporting_year": 2026,
+    "reporting_month": 10,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 262,
+        "computer": 98
+      },
+      {
+        "branch": "Tambun",
+        "english": 79,
+        "computer": 21
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 69,
+        "computer": 20
+      },
+      {
+        "branch": "Cibinong",
+        "english": 64,
+        "computer": 16
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 143,
+        "computer": 9
+      },
+      {
+        "branch": "TWA",
+        "english": 98,
+        "computer": 5
+      },
+      {
+        "branch": "Pemalang",
+        "english": 73,
+        "computer": 9
+      },
+      {
+        "branch": "Setu",
+        "english": 67,
+        "computer": 9
+      },
+      {
+        "branch": "Ungaran",
+        "english": 58,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 32,
+        "computer": 28
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 68,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 14,
+        "computer": 2
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 4
+      },
+      {
+        "branch": "Rawasari",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 24
+      },
+      {
+        "branch": "Ciracas",
+        "english": 69,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 58,
+        "computer": 10
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 36,
+        "computer": 14
+      },
+      {
+        "branch": "TNI",
+        "english": 26,
+        "computer": 5
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 46,
+        "computer": 7
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 72,
+        "computer": 4
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-09",
+    "reporting_year": 2026,
+    "reporting_month": 9,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 264,
+        "computer": 97
+      },
+      {
+        "branch": "Tambun",
+        "english": 85,
+        "computer": 27
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 74,
+        "computer": 22
+      },
+      {
+        "branch": "Cibinong",
+        "english": 70,
+        "computer": 16
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 146,
+        "computer": 10
+      },
+      {
+        "branch": "TWA",
+        "english": 97,
+        "computer": 8
+      },
+      {
+        "branch": "Pemalang",
+        "english": 68,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 65,
+        "computer": 10
+      },
+      {
+        "branch": "Ungaran",
+        "english": 54,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 28,
+        "computer": 23
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 67,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 15,
+        "computer": 2
+      },
+      {
+        "branch": "Karadenan",
+        "english": 30,
+        "computer": 2
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 24
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 54,
+        "computer": 9
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 38,
+        "computer": 13
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 7
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 50,
+        "computer": 10
+      },
+      {
+        "branch": "Solo",
+        "english": 12,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 57,
+        "computer": 4
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-08",
+    "reporting_year": 2026,
+    "reporting_month": 8,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 262,
+        "computer": 101
+      },
+      {
+        "branch": "Tambun",
+        "english": 84,
+        "computer": 26
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 72,
+        "computer": 19
+      },
+      {
+        "branch": "Cibinong",
+        "english": 69,
+        "computer": 16
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 144,
+        "computer": 15
+      },
+      {
+        "branch": "TWA",
+        "english": 95,
+        "computer": 10
+      },
+      {
+        "branch": "Pemalang",
+        "english": 68,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 68,
+        "computer": 9
+      },
+      {
+        "branch": "Ungaran",
+        "english": 52,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 29,
+        "computer": 26
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 67,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 15,
+        "computer": 2
+      },
+      {
+        "branch": "Karadenan",
+        "english": 30,
+        "computer": 1
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 24
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 56,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 39,
+        "computer": 13
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 7
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 48,
+        "computer": 10
+      },
+      {
+        "branch": "Solo",
+        "english": 12,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 57,
+        "computer": 4
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-07",
+    "reporting_year": 2026,
+    "reporting_month": 7,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 244,
+        "computer": 101
+      },
+      {
+        "branch": "Tambun",
+        "english": 80,
+        "computer": 22
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 51,
+        "computer": 15
+      },
+      {
+        "branch": "Cibinong",
+        "english": 61,
+        "computer": 21
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 120,
+        "computer": 9
+      },
+      {
+        "branch": "TWA",
+        "english": 94,
+        "computer": 8
+      },
+      {
+        "branch": "Pemalang",
+        "english": 67,
+        "computer": 13
+      },
+      {
+        "branch": "Setu",
+        "english": 61,
+        "computer": 7
+      },
+      {
+        "branch": "Ungaran",
+        "english": 46,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 23,
+        "computer": 30
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 70,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 13,
+        "computer": 2
+      },
+      {
+        "branch": "Karadenan",
+        "english": 30,
+        "computer": 4
+      },
+      {
+        "branch": "Rawasari",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 27
+      },
+      {
+        "branch": "Ciracas",
+        "english": 66,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 50,
+        "computer": 9
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 34,
+        "computer": 14
+      },
+      {
+        "branch": "TNI",
+        "english": 27,
+        "computer": 7
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 38,
+        "computer": 11
+      },
+      {
+        "branch": "Solo",
+        "english": 12,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 19,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 48,
+        "computer": 4
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-06",
+    "reporting_year": 2026,
+    "reporting_month": 6,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 228,
+        "computer": 108
+      },
+      {
+        "branch": "Tambun",
+        "english": 80,
+        "computer": 22
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 49,
+        "computer": 14
+      },
+      {
+        "branch": "Cibinong",
+        "english": 64,
+        "computer": 15
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 125,
+        "computer": 5
+      },
+      {
+        "branch": "TWA",
+        "english": 88,
+        "computer": 8
+      },
+      {
+        "branch": "Pemalang",
+        "english": 55,
+        "computer": 13
+      },
+      {
+        "branch": "Setu",
+        "english": 56,
+        "computer": 6
+      },
+      {
+        "branch": "Ungaran",
+        "english": 53,
+        "computer": 2
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 27,
+        "computer": 30
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 69,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 12,
+        "computer": 2
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 27
+      },
+      {
+        "branch": "Ciracas",
+        "english": 65,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 31,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 22,
+        "computer": 14
+      },
+      {
+        "branch": "TNI",
+        "english": 26,
+        "computer": 6
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 31,
+        "computer": 5
+      },
+      {
+        "branch": "Solo",
+        "english": 12,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 15,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 36,
+        "computer": 4
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 30,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-05",
+    "reporting_year": 2026,
+    "reporting_month": 5,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 237,
+        "computer": 100
+      },
+      {
+        "branch": "Tambun",
+        "english": 82,
+        "computer": 22
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 53,
+        "computer": 9
+      },
+      {
+        "branch": "Cibinong",
+        "english": 69,
+        "computer": 13
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 125,
+        "computer": 5
+      },
+      {
+        "branch": "TWA",
+        "english": 82,
+        "computer": 5
+      },
+      {
+        "branch": "Pemalang",
+        "english": 53,
+        "computer": 17
+      },
+      {
+        "branch": "Setu",
+        "english": 60,
+        "computer": 3
+      },
+      {
+        "branch": "Ungaran",
+        "english": 51,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 31,
+        "computer": 29
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 61,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 12,
+        "computer": 1
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 2
+      },
+      {
+        "branch": "Rawasari",
+        "english": 15,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 26
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 30,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 31,
+        "computer": 17
+      },
+      {
+        "branch": "TNI",
+        "english": 25,
+        "computer": 6
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 31,
+        "computer": 3
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 13,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 27,
+        "computer": 2
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 30,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-04",
+    "reporting_year": 2026,
+    "reporting_month": 4,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 234,
+        "computer": 101
+      },
+      {
+        "branch": "Tambun",
+        "english": 75,
+        "computer": 23
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 60,
+        "computer": 8
+      },
+      {
+        "branch": "Cibinong",
+        "english": 67,
+        "computer": 10
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 125,
+        "computer": 5
+      },
+      {
+        "branch": "TWA",
+        "english": 85,
+        "computer": 5
+      },
+      {
+        "branch": "Pemalang",
+        "english": 52,
+        "computer": 13
+      },
+      {
+        "branch": "Setu",
+        "english": 60,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 55,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 37,
+        "computer": 25
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 63,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 13,
+        "computer": 0
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 0
+      },
+      {
+        "branch": "Rawasari",
+        "english": 14,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 26
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 30,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 33,
+        "computer": 18
+      },
+      {
+        "branch": "TNI",
+        "english": 24,
+        "computer": 4
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 27,
+        "computer": 5
+      },
+      {
+        "branch": "Solo",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Tanah Baru",
+        "english": 7,
+        "computer": 1
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 33,
+        "computer": 1
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-03",
+    "reporting_year": 2026,
+    "reporting_month": 3,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 230,
+        "computer": 91
+      },
+      {
+        "branch": "Tambun",
+        "english": 84,
+        "computer": 22
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 63,
+        "computer": 8
+      },
+      {
+        "branch": "Cibinong",
+        "english": 65,
+        "computer": 8
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 128,
+        "computer": 5
+      },
+      {
+        "branch": "TWA",
+        "english": 84,
+        "computer": 4
+      },
+      {
+        "branch": "Pemalang",
+        "english": 53,
+        "computer": 11
+      },
+      {
+        "branch": "Setu",
+        "english": 52,
+        "computer": 3
+      },
+      {
+        "branch": "Ungaran",
+        "english": 54,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 44,
+        "computer": 19
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 61,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 13,
+        "computer": 0
+      },
+      {
+        "branch": "Karadenan",
+        "english": 39,
+        "computer": 1
+      },
+      {
+        "branch": "Rawasari",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 17,
+        "computer": 25
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 32,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 31,
+        "computer": 14
+      },
+      {
+        "branch": "TNI",
+        "english": 25,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 24,
+        "computer": 5
+      },
+      {
+        "branch": "Solo",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 5,
+        "computer": 0
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 35,
+        "computer": 1
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-02",
+    "reporting_year": 2026,
+    "reporting_month": 2,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 227,
+        "computer": 88
+      },
+      {
+        "branch": "Tambun",
+        "english": 84,
+        "computer": 21
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 62,
+        "computer": 8
+      },
+      {
+        "branch": "Cibinong",
+        "english": 72,
+        "computer": 8
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 129,
+        "computer": 5
+      },
+      {
+        "branch": "TWA",
+        "english": 86,
+        "computer": 4
+      },
+      {
+        "branch": "Pemalang",
+        "english": 53,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 55,
+        "computer": 7
+      },
+      {
+        "branch": "Ungaran",
+        "english": 52,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 43,
+        "computer": 17
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 61,
+        "computer": 0
+      },
+      {
+        "branch": "Cipinang",
+        "english": 12,
+        "computer": 0
+      },
+      {
+        "branch": "Karadenan",
+        "english": 39,
+        "computer": 1
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 17,
+        "computer": 25
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 36,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 31,
+        "computer": 16
+      },
+      {
+        "branch": "TNI",
+        "english": 26,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 25,
+        "computer": 5
+      },
+      {
+        "branch": "Solo",
+        "english": 5,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 5,
+        "computer": 0
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 38,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2026-01",
+    "reporting_year": 2026,
+    "reporting_month": 1,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 240,
+        "computer": 89
+      },
+      {
+        "branch": "Tambun",
+        "english": 85,
+        "computer": 20
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 61,
+        "computer": 12
+      },
+      {
+        "branch": "Cibinong",
+        "english": 71,
+        "computer": 10
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 134,
+        "computer": 8
+      },
+      {
+        "branch": "TWA",
+        "english": 89,
+        "computer": 4
+      },
+      {
+        "branch": "Pemalang",
+        "english": 53,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 69,
+        "computer": 7
+      },
+      {
+        "branch": "Ungaran",
+        "english": 50,
+        "computer": 2
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 37,
+        "computer": 19
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 63,
+        "computer": 1
+      },
+      {
+        "branch": "Cipinang",
+        "english": 12,
+        "computer": 0
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 2
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 21
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 38,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 29,
+        "computer": 15
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 32,
+        "computer": 6
+      },
+      {
+        "branch": "Solo",
+        "english": 29,
+        "computer": 0
+      },
+      {
+        "branch": "Jatiwarna",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 39,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-12",
+    "reporting_year": 2025,
+    "reporting_month": 12,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 240,
+        "computer": 87
+      },
+      {
+        "branch": "Tambun",
+        "english": 85,
+        "computer": 25
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 124,
+        "computer": 9
+      },
+      {
+        "branch": "TWA",
+        "english": 87,
+        "computer": 3
+      },
+      {
+        "branch": "Cibinong",
+        "english": 68,
+        "computer": 13
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 55,
+        "computer": 10
+      },
+      {
+        "branch": "Pemalang",
+        "english": 55,
+        "computer": 16
+      },
+      {
+        "branch": "Setu",
+        "english": 59,
+        "computer": 5
+      },
+      {
+        "branch": "Cipinang",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 66,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 46,
+        "computer": 2
+      },
+      {
+        "branch": "Rawasari",
+        "english": 20,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 36,
+        "computer": 16
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 37,
+        "computer": 4
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 37,
+        "computer": 3
+      },
+      {
+        "branch": "Karadenan",
+        "english": 40,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 21
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 30,
+        "computer": 15
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 32,
+        "computer": 8
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-11",
+    "reporting_year": 2025,
+    "reporting_month": 11,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 245,
+        "computer": 85
+      },
+      {
+        "branch": "Tambun",
+        "english": 85,
+        "computer": 24
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 131,
+        "computer": 10
+      },
+      {
+        "branch": "TWA",
+        "english": 88,
+        "computer": 2
+      },
+      {
+        "branch": "Cibinong",
+        "english": 73,
+        "computer": 14
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 58,
+        "computer": 13
+      },
+      {
+        "branch": "Pemalang",
+        "english": 56,
+        "computer": 15
+      },
+      {
+        "branch": "Setu",
+        "english": 58,
+        "computer": 5
+      },
+      {
+        "branch": "Cipinang",
+        "english": 10,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 61,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 48,
+        "computer": 2
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 38,
+        "computer": 17
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 33,
+        "computer": 6
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 37,
+        "computer": 3
+      },
+      {
+        "branch": "Karadenan",
+        "english": 40,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 20,
+        "computer": 22
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 31,
+        "computer": 14
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 5,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 34,
+        "computer": 8
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 49,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-10",
+    "reporting_year": 2025,
+    "reporting_month": 10,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 246,
+        "computer": 92
+      },
+      {
+        "branch": "Tambun",
+        "english": 84,
+        "computer": 19
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 139,
+        "computer": 9
+      },
+      {
+        "branch": "TWA",
+        "english": 93,
+        "computer": 10
+      },
+      {
+        "branch": "Cibinong",
+        "english": 78,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 59,
+        "computer": 12
+      },
+      {
+        "branch": "Pemalang",
+        "english": 58,
+        "computer": 14
+      },
+      {
+        "branch": "Setu",
+        "english": 64,
+        "computer": 7
+      },
+      {
+        "branch": "Cipinang",
+        "english": 10,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 65,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 45,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 35,
+        "computer": 13
+      },
+      {
+        "branch": "Ciracas",
+        "english": 76,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 34,
+        "computer": 10
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 40,
+        "computer": 4
+      },
+      {
+        "branch": "Karadenan",
+        "english": 38,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 26,
+        "computer": 21
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 35,
+        "computer": 11
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 34,
+        "computer": 7
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 49,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-09",
+    "reporting_year": 2025,
+    "reporting_month": 9,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 246,
+        "computer": 84
+      },
+      {
+        "branch": "Tambun",
+        "english": 92,
+        "computer": 17
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 136,
+        "computer": 11
+      },
+      {
+        "branch": "TWA",
+        "english": 92,
+        "computer": 10
+      },
+      {
+        "branch": "Cibinong",
+        "english": 79,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 49,
+        "computer": 13
+      },
+      {
+        "branch": "Pemalang",
+        "english": 48,
+        "computer": 11
+      },
+      {
+        "branch": "Setu",
+        "english": 65,
+        "computer": 6
+      },
+      {
+        "branch": "Cipinang",
+        "english": 8,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 69,
+        "computer": 3
+      },
+      {
+        "branch": "Ungaran",
+        "english": 63,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 28,
+        "computer": 16
+      },
+      {
+        "branch": "Ciracas",
+        "english": 76,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 36,
+        "computer": 13
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 38,
+        "computer": 4
+      },
+      {
+        "branch": "Karadenan",
+        "english": 41,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 23,
+        "computer": 26
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 35,
+        "computer": 15
+      },
+      {
+        "branch": "TNI",
+        "english": 31,
+        "computer": 3
+      },
+      {
+        "branch": "Solo",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 34,
+        "computer": 10
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 49,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-08",
+    "reporting_year": 2025,
+    "reporting_month": 8,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 240,
+        "computer": 80
+      },
+      {
+        "branch": "Tambun",
+        "english": 86,
+        "computer": 21
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 138,
+        "computer": 14
+      },
+      {
+        "branch": "TWA",
+        "english": 83,
+        "computer": 7
+      },
+      {
+        "branch": "Cibinong",
+        "english": 70,
+        "computer": 17
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 42,
+        "computer": 15
+      },
+      {
+        "branch": "Pemalang",
+        "english": 46,
+        "computer": 14
+      },
+      {
+        "branch": "Setu",
+        "english": 69,
+        "computer": 6
+      },
+      {
+        "branch": "Cipinang",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 75,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 55,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 20,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 30,
+        "computer": 18
+      },
+      {
+        "branch": "Ciracas",
+        "english": 76,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 31,
+        "computer": 12
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 42,
+        "computer": 5
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 28,
+        "computer": 20
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 37,
+        "computer": 16
+      },
+      {
+        "branch": "TNI",
+        "english": 30,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 35,
+        "computer": 12
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 50,
+        "computer": 3
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-07",
+    "reporting_year": 2025,
+    "reporting_month": 7,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 245,
+        "computer": 76
+      },
+      {
+        "branch": "Tambun",
+        "english": 86,
+        "computer": 23
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 136,
+        "computer": 14
+      },
+      {
+        "branch": "TWA",
+        "english": 74,
+        "computer": 7
+      },
+      {
+        "branch": "Cibinong",
+        "english": 53,
+        "computer": 11
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 35,
+        "computer": 18
+      },
+      {
+        "branch": "Pemalang",
+        "english": 44,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 60,
+        "computer": 6
+      },
+      {
+        "branch": "Cipinang",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 66,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 50,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 26,
+        "computer": 24
+      },
+      {
+        "branch": "Ciracas",
+        "english": 69,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 31,
+        "computer": 8
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 32,
+        "computer": 7
+      },
+      {
+        "branch": "Karadenan",
+        "english": 41,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 26,
+        "computer": 24
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 32,
+        "computer": 15
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 29,
+        "computer": 10
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 52,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-06",
+    "reporting_year": 2025,
+    "reporting_month": 6,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 229,
+        "computer": 75
+      },
+      {
+        "branch": "Tambun",
+        "english": 86,
+        "computer": 24
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 121,
+        "computer": 12
+      },
+      {
+        "branch": "TWA",
+        "english": 66,
+        "computer": 8
+      },
+      {
+        "branch": "Cibinong",
+        "english": 52,
+        "computer": 10
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 37,
+        "computer": 15
+      },
+      {
+        "branch": "Pemalang",
+        "english": 41,
+        "computer": 11
+      },
+      {
+        "branch": "Setu",
+        "english": 56,
+        "computer": 8
+      },
+      {
+        "branch": "Cipinang",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 59,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 40,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 24,
+        "computer": 15
+      },
+      {
+        "branch": "Ciracas",
+        "english": 67,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 30,
+        "computer": 5
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 28,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 30,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 21,
+        "computer": 20
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 40,
+        "computer": 11
+      },
+      {
+        "branch": "TNI",
+        "english": 27,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 5,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 28,
+        "computer": 7
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 49,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-05",
+    "reporting_year": 2025,
+    "reporting_month": 5,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 237,
+        "computer": 70
+      },
+      {
+        "branch": "Tambun",
+        "english": 82,
+        "computer": 26
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 125,
+        "computer": 7
+      },
+      {
+        "branch": "TWA",
+        "english": 65,
+        "computer": 7
+      },
+      {
+        "branch": "Cibinong",
+        "english": 43,
+        "computer": 13
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 30,
+        "computer": 5
+      },
+      {
+        "branch": "Pemalang",
+        "english": 42,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 63,
+        "computer": 4
+      },
+      {
+        "branch": "Cipinang",
+        "english": 20,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 56,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 33,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 18,
+        "computer": 1
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 23,
+        "computer": 19
+      },
+      {
+        "branch": "Ciracas",
+        "english": 67,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 30,
+        "computer": 4
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 30,
+        "computer": 5
+      },
+      {
+        "branch": "Karadenan",
+        "english": 40,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 64,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 40,
+        "computer": 11
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 3
+      },
+      {
+        "branch": "Solo",
+        "english": 7,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 25,
+        "computer": 6
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 51,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-04",
+    "reporting_year": 2025,
+    "reporting_month": 4,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 254,
+        "computer": 63
+      },
+      {
+        "branch": "Tambun",
+        "english": 71,
+        "computer": 18
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 135,
+        "computer": 6
+      },
+      {
+        "branch": "TWA",
+        "english": 62,
+        "computer": 3
+      },
+      {
+        "branch": "Cibinong",
+        "english": 40,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 33,
+        "computer": 6
+      },
+      {
+        "branch": "Pemalang",
+        "english": 38,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 66,
+        "computer": 5
+      },
+      {
+        "branch": "Cipinang",
+        "english": 25,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 60,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 38,
+        "computer": 2
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 28,
+        "computer": 13
+      },
+      {
+        "branch": "Ciracas",
+        "english": 69,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 35,
+        "computer": 4
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 32,
+        "computer": 4
+      },
+      {
+        "branch": "Karadenan",
+        "english": 38,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 25,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 40,
+        "computer": 11
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 2
+      },
+      {
+        "branch": "Solo",
+        "english": 7,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 29,
+        "computer": 7
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 56,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-03",
+    "reporting_year": 2025,
+    "reporting_month": 3,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 252,
+        "computer": 56
+      },
+      {
+        "branch": "Tambun",
+        "english": 83,
+        "computer": 17
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 129,
+        "computer": 9
+      },
+      {
+        "branch": "TWA",
+        "english": 64,
+        "computer": 3
+      },
+      {
+        "branch": "Cibinong",
+        "english": 40,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 36,
+        "computer": 6
+      },
+      {
+        "branch": "Pemalang",
+        "english": 42,
+        "computer": 9
+      },
+      {
+        "branch": "Setu",
+        "english": 69,
+        "computer": 3
+      },
+      {
+        "branch": "Cipinang",
+        "english": 30,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 60,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 43,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 3
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 35,
+        "computer": 16
+      },
+      {
+        "branch": "Ciracas",
+        "english": 71,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 41,
+        "computer": 5
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 28,
+        "computer": 5
+      },
+      {
+        "branch": "Karadenan",
+        "english": 38,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 23,
+        "computer": 18
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 41,
+        "computer": 12
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 2
+      },
+      {
+        "branch": "Solo",
+        "english": 6,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 30,
+        "computer": 8
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 52,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-02",
+    "reporting_year": 2025,
+    "reporting_month": 2,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 251,
+        "computer": 61
+      },
+      {
+        "branch": "Tambun",
+        "english": 80,
+        "computer": 17
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 134,
+        "computer": 9
+      },
+      {
+        "branch": "TWA",
+        "english": 66,
+        "computer": 4
+      },
+      {
+        "branch": "Cibinong",
+        "english": 43,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 37,
+        "computer": 7
+      },
+      {
+        "branch": "Pemalang",
+        "english": 46,
+        "computer": 9
+      },
+      {
+        "branch": "Setu",
+        "english": 72,
+        "computer": 3
+      },
+      {
+        "branch": "Cipinang",
+        "english": 40,
+        "computer": 4
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 69,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 49,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 5
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 43,
+        "computer": 18
+      },
+      {
+        "branch": "Ciracas",
+        "english": 71,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 43,
+        "computer": 5
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 31,
+        "computer": 7
+      },
+      {
+        "branch": "Karadenan",
+        "english": 42,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 24,
+        "computer": 25
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 41,
+        "computer": 12
+      },
+      {
+        "branch": "TNI",
+        "english": 30,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 9,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 27,
+        "computer": 6
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 54,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2025-01",
+    "reporting_year": 2025,
+    "reporting_month": 1,
+    "listed_branches": 23,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 248,
+        "computer": 50
+      },
+      {
+        "branch": "Tambun",
+        "english": 85,
+        "computer": 23
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 148,
+        "computer": 8
+      },
+      {
+        "branch": "TWA",
+        "english": 74,
+        "computer": 6
+      },
+      {
+        "branch": "Cibinong",
+        "english": 44,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 39,
+        "computer": 7
+      },
+      {
+        "branch": "Pemalang",
+        "english": 47,
+        "computer": 10
+      },
+      {
+        "branch": "Setu",
+        "english": 82,
+        "computer": 6
+      },
+      {
+        "branch": "Cipinang",
+        "english": 40,
+        "computer": 4
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 69,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 43,
+        "computer": 2
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 4
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 45,
+        "computer": 18
+      },
+      {
+        "branch": "Ciracas",
+        "english": 69,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 39,
+        "computer": 5
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 31,
+        "computer": 7
+      },
+      {
+        "branch": "Karadenan",
+        "english": 41,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 24,
+        "computer": 20
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 39,
+        "computer": 11
+      },
+      {
+        "branch": "TNI",
+        "english": 30,
+        "computer": 3
+      },
+      {
+        "branch": "Solo",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 30,
+        "computer": 3
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 58,
+        "computer": 3
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-12",
+    "reporting_year": 2024,
+    "reporting_month": 12,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 223,
+        "computer": 50
+      },
+      {
+        "branch": "Tambun",
+        "english": 78,
+        "computer": 22
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 42,
+        "computer": 6
+      },
+      {
+        "branch": "Pemalang",
+        "english": 44,
+        "computer": 15
+      },
+      {
+        "branch": "Cibinong",
+        "english": 45,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 40,
+        "computer": 8
+      },
+      {
+        "branch": "Setu",
+        "english": 76,
+        "computer": 4
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 53,
+        "computer": 1
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 143,
+        "computer": 6
+      },
+      {
+        "branch": "Ciracas",
+        "english": 75,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 24,
+        "computer": 21
+      },
+      {
+        "branch": "TWA",
+        "english": 71,
+        "computer": 7
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 24,
+        "computer": 20
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 45,
+        "computer": 5
+      },
+      {
+        "branch": "Karadenan",
+        "english": 38,
+        "computer": 4
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 32,
+        "computer": 7
+      },
+      {
+        "branch": "TNI",
+        "english": 33,
+        "computer": 1
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 29,
+        "computer": 4
+      },
+      {
+        "branch": "Cipinang",
+        "english": 24,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 38,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 12,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 66,
+        "computer": 2
+      },
+      {
+        "branch": "Depok Margonda",
+        "english": 0,
+        "computer": null
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-11",
+    "reporting_year": 2024,
+    "reporting_month": 11,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 228,
+        "computer": 49
+      },
+      {
+        "branch": "Tambun",
+        "english": 75,
+        "computer": 24
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 44,
+        "computer": 10
+      },
+      {
+        "branch": "Pemalang",
+        "english": 47,
+        "computer": 15
+      },
+      {
+        "branch": "Cibinong",
+        "english": 46,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 45,
+        "computer": 10
+      },
+      {
+        "branch": "Setu",
+        "english": 77,
+        "computer": 5
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 58,
+        "computer": 0
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 147,
+        "computer": 7
+      },
+      {
+        "branch": "Ciracas",
+        "english": 78,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 25,
+        "computer": 21
+      },
+      {
+        "branch": "TWA",
+        "english": 69,
+        "computer": 8
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 32,
+        "computer": 24
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 46,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 38,
+        "computer": 4
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 35,
+        "computer": 8
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 1
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 25,
+        "computer": 4
+      },
+      {
+        "branch": "Cipinang",
+        "english": 24,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 43,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 70,
+        "computer": 4
+      },
+      {
+        "branch": "Depok Margonda",
+        "english": 0,
+        "computer": 3
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-10",
+    "reporting_year": 2024,
+    "reporting_month": 10,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 239,
+        "computer": 51
+      },
+      {
+        "branch": "Tambun",
+        "english": 77,
+        "computer": 24
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 50,
+        "computer": 7
+      },
+      {
+        "branch": "Pemalang",
+        "english": 40,
+        "computer": 20
+      },
+      {
+        "branch": "Cibinong",
+        "english": 46,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 47,
+        "computer": 13
+      },
+      {
+        "branch": "Setu",
+        "english": 86,
+        "computer": 6
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 59,
+        "computer": 0
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 142,
+        "computer": 8
+      },
+      {
+        "branch": "Ciracas",
+        "english": 73,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 24,
+        "computer": 33
+      },
+      {
+        "branch": "TWA",
+        "english": 69,
+        "computer": 12
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 22,
+        "computer": 24
+      },
+      {
+        "branch": "Rawasari",
+        "english": 13,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 40,
+        "computer": 5
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 5
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 38,
+        "computer": 8
+      },
+      {
+        "branch": "TNI",
+        "english": 31,
+        "computer": 1
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 20,
+        "computer": 4
+      },
+      {
+        "branch": "Cipinang",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 43,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 9,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 70,
+        "computer": 1
+      },
+      {
+        "branch": "Depok Margonda",
+        "english": 2,
+        "computer": null
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-09",
+    "reporting_year": 2024,
+    "reporting_month": 9,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 232,
+        "computer": 46
+      },
+      {
+        "branch": "Tambun",
+        "english": 78,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 51,
+        "computer": 3
+      },
+      {
+        "branch": "Pemalang",
+        "english": 41,
+        "computer": 15
+      },
+      {
+        "branch": "Cibinong",
+        "english": 45,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 46,
+        "computer": 22
+      },
+      {
+        "branch": "Setu",
+        "english": 84,
+        "computer": 10
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 55,
+        "computer": 2
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 154,
+        "computer": 10
+      },
+      {
+        "branch": "Ciracas",
+        "english": 76,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 20,
+        "computer": 35
+      },
+      {
+        "branch": "TWA",
+        "english": 65,
+        "computer": 11
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 23,
+        "computer": 18
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 48,
+        "computer": 4
+      },
+      {
+        "branch": "Karadenan",
+        "english": 40,
+        "computer": 6
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 40,
+        "computer": 8
+      },
+      {
+        "branch": "TNI",
+        "english": 33,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 19,
+        "computer": 3
+      },
+      {
+        "branch": "Cipinang",
+        "english": 21,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 41,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 7,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 66,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-08",
+    "reporting_year": 2024,
+    "reporting_month": 8,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 240,
+        "computer": 52
+      },
+      {
+        "branch": "Tambun",
+        "english": 76,
+        "computer": 20
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 51,
+        "computer": 4
+      },
+      {
+        "branch": "Pemalang",
+        "english": 40,
+        "computer": 15
+      },
+      {
+        "branch": "Cibinong",
+        "english": 47,
+        "computer": 10
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 45,
+        "computer": 24
+      },
+      {
+        "branch": "Setu",
+        "english": 85,
+        "computer": 8
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 59,
+        "computer": 3
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 147,
+        "computer": 10
+      },
+      {
+        "branch": "Ciracas",
+        "english": 78,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 34
+      },
+      {
+        "branch": "TWA",
+        "english": 63,
+        "computer": 11
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 21,
+        "computer": 20
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 40,
+        "computer": 7
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 6
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 42,
+        "computer": 7
+      },
+      {
+        "branch": "TNI",
+        "english": 32,
+        "computer": 1
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 19,
+        "computer": 5
+      },
+      {
+        "branch": "Cipinang",
+        "english": 22,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 32,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 9,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 60,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-07",
+    "reporting_year": 2024,
+    "reporting_month": 7,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 217,
+        "computer": 50
+      },
+      {
+        "branch": "Tambun",
+        "english": 71,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 54,
+        "computer": 8
+      },
+      {
+        "branch": "Pemalang",
+        "english": 30,
+        "computer": 15
+      },
+      {
+        "branch": "Cibinong",
+        "english": 49,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 45,
+        "computer": 22
+      },
+      {
+        "branch": "Setu",
+        "english": 74,
+        "computer": 8
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 57,
+        "computer": 3
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 135,
+        "computer": 7
+      },
+      {
+        "branch": "Ciracas",
+        "english": 76,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 17,
+        "computer": 30
+      },
+      {
+        "branch": "TWA",
+        "english": 56,
+        "computer": 15
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 27,
+        "computer": 20
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 37,
+        "computer": 7
+      },
+      {
+        "branch": "Karadenan",
+        "english": 43,
+        "computer": 2
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 40,
+        "computer": 10
+      },
+      {
+        "branch": "TNI",
+        "english": 30,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 18,
+        "computer": 6
+      },
+      {
+        "branch": "Cipinang",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 35,
+        "computer": 5
+      },
+      {
+        "branch": "Solo",
+        "english": 9,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 59,
+        "computer": 1
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-06",
+    "reporting_year": 2024,
+    "reporting_month": 6,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 186,
+        "computer": 37
+      },
+      {
+        "branch": "Tambun",
+        "english": 63,
+        "computer": 15
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 51,
+        "computer": 9
+      },
+      {
+        "branch": "Pemalang",
+        "english": 24,
+        "computer": 18
+      },
+      {
+        "branch": "Cibinong",
+        "english": 47,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 38,
+        "computer": 15
+      },
+      {
+        "branch": "Setu",
+        "english": 63,
+        "computer": 6
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 58,
+        "computer": 1
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 131,
+        "computer": 6
+      },
+      {
+        "branch": "Ciracas",
+        "english": 70,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 21,
+        "computer": 31
+      },
+      {
+        "branch": "TWA",
+        "english": 56,
+        "computer": 10
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 18,
+        "computer": 12
+      },
+      {
+        "branch": "Rawasari",
+        "english": 14,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 36,
+        "computer": 5
+      },
+      {
+        "branch": "Karadenan",
+        "english": 33,
+        "computer": 3
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 24,
+        "computer": 6
+      },
+      {
+        "branch": "TNI",
+        "english": 26,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 20,
+        "computer": 5
+      },
+      {
+        "branch": "Cipinang",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 5,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 58,
+        "computer": 1
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-05",
+    "reporting_year": 2024,
+    "reporting_month": 5,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 193,
+        "computer": 34
+      },
+      {
+        "branch": "Tambun",
+        "english": 68,
+        "computer": 14
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 53,
+        "computer": 10
+      },
+      {
+        "branch": "Pemalang",
+        "english": 28,
+        "computer": 18
+      },
+      {
+        "branch": "Cibinong",
+        "english": 46,
+        "computer": 9
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 43,
+        "computer": 15
+      },
+      {
+        "branch": "Setu",
+        "english": 66,
+        "computer": 6
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 54,
+        "computer": 1
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 133,
+        "computer": 5
+      },
+      {
+        "branch": "Ciracas",
+        "english": 71,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 29
+      },
+      {
+        "branch": "TWA",
+        "english": 55,
+        "computer": 9
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 20,
+        "computer": 12
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 35,
+        "computer": 5
+      },
+      {
+        "branch": "Karadenan",
+        "english": 33,
+        "computer": 3
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 23,
+        "computer": 4
+      },
+      {
+        "branch": "TNI",
+        "english": 27,
+        "computer": 4
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 20,
+        "computer": 5
+      },
+      {
+        "branch": "Cipinang",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Ungaran",
+        "english": 24,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 54,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-04",
+    "reporting_year": 2024,
+    "reporting_month": 4,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 200,
+        "computer": 33
+      },
+      {
+        "branch": "Tambun",
+        "english": 66,
+        "computer": 15
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 53,
+        "computer": 9
+      },
+      {
+        "branch": "Pemalang",
+        "english": 30,
+        "computer": 13
+      },
+      {
+        "branch": "Cibinong",
+        "english": 50,
+        "computer": 9
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 47,
+        "computer": 15
+      },
+      {
+        "branch": "Setu",
+        "english": 58,
+        "computer": 6
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 62,
+        "computer": 2
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 143,
+        "computer": 5
+      },
+      {
+        "branch": "Ciracas",
+        "english": 71,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 26
+      },
+      {
+        "branch": "TWA",
+        "english": 60,
+        "computer": 5
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 17,
+        "computer": 6
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 45,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 1
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 27,
+        "computer": 3
+      },
+      {
+        "branch": "TNI",
+        "english": 32,
+        "computer": 4
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 19,
+        "computer": 4
+      },
+      {
+        "branch": "Cipinang",
+        "english": 16,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 28,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 63,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-03",
+    "reporting_year": 2024,
+    "reporting_month": 3,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 205,
+        "computer": 33
+      },
+      {
+        "branch": "Tambun",
+        "english": 66,
+        "computer": 12
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 63,
+        "computer": 6
+      },
+      {
+        "branch": "Pemalang",
+        "english": 29,
+        "computer": 11
+      },
+      {
+        "branch": "Cibinong",
+        "english": 52,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 47,
+        "computer": 12
+      },
+      {
+        "branch": "Setu",
+        "english": 60,
+        "computer": 7
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 65,
+        "computer": 4
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 128,
+        "computer": 3
+      },
+      {
+        "branch": "Ciracas",
+        "english": 73,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 20,
+        "computer": 24
+      },
+      {
+        "branch": "TWA",
+        "english": 60,
+        "computer": 5
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 18,
+        "computer": 4
+      },
+      {
+        "branch": "Rawasari",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 45,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 1
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 24,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 4
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 20,
+        "computer": 3
+      },
+      {
+        "branch": "Cipinang",
+        "english": 16,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 28,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 75,
+        "computer": 2
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-02",
+    "reporting_year": 2024,
+    "reporting_month": 2,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 199,
+        "computer": 54
+      },
+      {
+        "branch": "Tambun",
+        "english": 70,
+        "computer": 13
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 59,
+        "computer": 10
+      },
+      {
+        "branch": "Pemalang",
+        "english": 25,
+        "computer": 11
+      },
+      {
+        "branch": "Cibinong",
+        "english": 57,
+        "computer": 11
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 52,
+        "computer": 15
+      },
+      {
+        "branch": "Setu",
+        "english": 62,
+        "computer": 7
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 70,
+        "computer": 4
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 128,
+        "computer": 4
+      },
+      {
+        "branch": "Ciracas",
+        "english": 85,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 22,
+        "computer": 23
+      },
+      {
+        "branch": "TWA",
+        "english": 64,
+        "computer": 3
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 13,
+        "computer": 9
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 42,
+        "computer": 3
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 1
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 11,
+        "computer": 2
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 21,
+        "computer": 6
+      },
+      {
+        "branch": "Cipinang",
+        "english": 16,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 27,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 76,
+        "computer": 0
+      },
+      {
+        "branch": "Depok Margonda",
+        "english": 37,
+        "computer": 1
+      }
+    ]
+  },
+  {
+    "key": "monthly-2024-01",
+    "reporting_year": 2024,
+    "reporting_month": 1,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 217,
+        "computer": 64
+      },
+      {
+        "branch": "Tambun",
+        "english": 63,
+        "computer": 12
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 64,
+        "computer": 13
+      },
+      {
+        "branch": "Pemalang",
+        "english": 26,
+        "computer": 9
+      },
+      {
+        "branch": "Cibinong",
+        "english": 57,
+        "computer": 10
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 51,
+        "computer": 11
+      },
+      {
+        "branch": "Setu",
+        "english": 66,
+        "computer": 6
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 60,
+        "computer": 5
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 134,
+        "computer": 4
+      },
+      {
+        "branch": "Ciracas",
+        "english": 76,
+        "computer": 12
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 19,
+        "computer": 17
+      },
+      {
+        "branch": "TWA",
+        "english": 56,
+        "computer": 5
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 7,
+        "computer": 8
+      },
+      {
+        "branch": "Rawasari",
+        "english": 21,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 48,
+        "computer": 3
+      },
+      {
+        "branch": "Karadenan",
+        "english": 32,
+        "computer": 2
+      },
+      {
+        "branch": "Jatisampurna",
+        "english": 11,
+        "computer": 9
+      },
+      {
+        "branch": "TNI",
+        "english": 29,
+        "computer": 2
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 23,
+        "computer": 5
+      },
+      {
+        "branch": "Cipinang",
+        "english": 11,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 15,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 77,
+        "computer": 0
+      },
+      {
+        "branch": "Depok Margonda",
+        "english": 39,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-12",
+    "reporting_year": 2023,
+    "reporting_month": 12,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 222,
+        "computer": 60
+      },
+      {
+        "branch": "Tambun",
+        "english": 66,
+        "computer": 10
+      },
+      {
+        "branch": "Pemalang",
+        "english": 32,
+        "computer": 9
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 125,
+        "computer": 5
+      },
+      {
+        "branch": "Setu",
+        "english": 62,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 69,
+        "computer": 17
+      },
+      {
+        "branch": "Ciracas",
+        "english": 73,
+        "computer": 12
+      },
+      {
+        "branch": "Cibinong",
+        "english": 55,
+        "computer": 12
+      },
+      {
+        "branch": "TWA",
+        "english": 56,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 24,
+        "computer": 20
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 52,
+        "computer": 11
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 2
+      },
+      {
+        "branch": "Kranggan",
+        "english": 41,
+        "computer": 0
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 44,
+        "computer": 5
+      },
+      {
+        "branch": "Rawasari",
+        "english": 16,
+        "computer": 4
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 78,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 25,
+        "computer": 3
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 66,
+        "computer": 4
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 37,
+        "computer": 24
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 20,
+        "computer": 3
+      },
+      {
+        "branch": "Ungaran",
+        "english": 27,
+        "computer": 1
+      },
+      {
+        "branch": "Klender",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 7,
+        "computer": 8
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-11",
+    "reporting_year": 2023,
+    "reporting_month": 11,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 233,
+        "computer": 48
+      },
+      {
+        "branch": "Tambun",
+        "english": 60,
+        "computer": 20
+      },
+      {
+        "branch": "Pemalang",
+        "english": 34,
+        "computer": 14
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 129,
+        "computer": 8
+      },
+      {
+        "branch": "Setu",
+        "english": 67,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 64,
+        "computer": 16
+      },
+      {
+        "branch": "Ciracas",
+        "english": 71,
+        "computer": 8
+      },
+      {
+        "branch": "Cibinong",
+        "english": 52,
+        "computer": 14
+      },
+      {
+        "branch": "TWA",
+        "english": 67,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 22,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 53,
+        "computer": 8
+      },
+      {
+        "branch": "Karadenan",
+        "english": 44,
+        "computer": 1
+      },
+      {
+        "branch": "Kranggan",
+        "english": 48,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 36,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 4
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 74,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 27,
+        "computer": 2
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 51,
+        "computer": 3
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 37,
+        "computer": 25
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 20,
+        "computer": 4
+      },
+      {
+        "branch": "Ungaran",
+        "english": 19,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 4,
+        "computer": 4
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-10",
+    "reporting_year": 2023,
+    "reporting_month": 10,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 217,
+        "computer": 53
+      },
+      {
+        "branch": "Tambun",
+        "english": 59,
+        "computer": 23
+      },
+      {
+        "branch": "Pemalang",
+        "english": 37,
+        "computer": 16
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 132,
+        "computer": 7
+      },
+      {
+        "branch": "Setu",
+        "english": 67,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 65,
+        "computer": 13
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 8
+      },
+      {
+        "branch": "Cibinong",
+        "english": 54,
+        "computer": 16
+      },
+      {
+        "branch": "TWA",
+        "english": 60,
+        "computer": 9
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 22,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 54,
+        "computer": 8
+      },
+      {
+        "branch": "Karadenan",
+        "english": 44,
+        "computer": 3
+      },
+      {
+        "branch": "Kranggan",
+        "english": 48,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 54,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 20,
+        "computer": 4
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 71,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 23,
+        "computer": 3
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 56,
+        "computer": 4
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 38,
+        "computer": 25
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 21,
+        "computer": 3
+      },
+      {
+        "branch": "Ungaran",
+        "english": 30,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 10,
+        "computer": 0
+      },
+      {
+        "branch": "Cikarang JB",
+        "english": 4,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 10,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-09",
+    "reporting_year": 2023,
+    "reporting_month": 9,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 234,
+        "computer": 47
+      },
+      {
+        "branch": "Tambun",
+        "english": 61,
+        "computer": 22
+      },
+      {
+        "branch": "Pemalang",
+        "english": 35,
+        "computer": 17
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 133,
+        "computer": 6
+      },
+      {
+        "branch": "Setu",
+        "english": 66,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 65,
+        "computer": 22
+      },
+      {
+        "branch": "Ciracas",
+        "english": 63,
+        "computer": 6
+      },
+      {
+        "branch": "Cibinong",
+        "english": 50,
+        "computer": 16
+      },
+      {
+        "branch": "TWA",
+        "english": 58,
+        "computer": 7
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 20,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 52,
+        "computer": 8
+      },
+      {
+        "branch": "Karadenan",
+        "english": 45,
+        "computer": 7
+      },
+      {
+        "branch": "Kranggan",
+        "english": 48,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 52,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 15,
+        "computer": 3
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 68,
+        "computer": 0
+      },
+      {
+        "branch": "TNI",
+        "english": 24,
+        "computer": 3
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 57,
+        "computer": 4
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 34,
+        "computer": 23
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 18,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 26,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 11,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 0,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-08",
+    "reporting_year": 2023,
+    "reporting_month": 8,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 225,
+        "computer": 39
+      },
+      {
+        "branch": "Tambun",
+        "english": 77,
+        "computer": 18
+      },
+      {
+        "branch": "Pemalang",
+        "english": 36,
+        "computer": 14
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 124,
+        "computer": 6
+      },
+      {
+        "branch": "Setu",
+        "english": 68,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 83,
+        "computer": 16
+      },
+      {
+        "branch": "Ciracas",
+        "english": 62,
+        "computer": 5
+      },
+      {
+        "branch": "Cibinong",
+        "english": 48,
+        "computer": 16
+      },
+      {
+        "branch": "TWA",
+        "english": 63,
+        "computer": 5
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 21,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 54,
+        "computer": 7
+      },
+      {
+        "branch": "Karadenan",
+        "english": 42,
+        "computer": 2
+      },
+      {
+        "branch": "Kranggan",
+        "english": 44,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 50,
+        "computer": 5
+      },
+      {
+        "branch": "Rawasari",
+        "english": 24,
+        "computer": 1
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 64,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 26,
+        "computer": 1
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 50,
+        "computer": 4
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 27,
+        "computer": 20
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 17,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 8,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 6,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-07",
+    "reporting_year": 2023,
+    "reporting_month": 7,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 226,
+        "computer": 36
+      },
+      {
+        "branch": "Tambun",
+        "english": 81,
+        "computer": 20
+      },
+      {
+        "branch": "Pemalang",
+        "english": 34,
+        "computer": 15
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 122,
+        "computer": 8
+      },
+      {
+        "branch": "Setu",
+        "english": 63,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 63,
+        "computer": 17
+      },
+      {
+        "branch": "Ciracas",
+        "english": 60,
+        "computer": 5
+      },
+      {
+        "branch": "Cibinong",
+        "english": 47,
+        "computer": 13
+      },
+      {
+        "branch": "TWA",
+        "english": 64,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 17
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 53,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 35,
+        "computer": 2
+      },
+      {
+        "branch": "Kranggan",
+        "english": 46,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 45,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 22,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 64,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 23,
+        "computer": 3
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 34,
+        "computer": 3
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 25,
+        "computer": 17
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 14,
+        "computer": 1
+      },
+      {
+        "branch": "Ungaran",
+        "english": 17,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 8,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 4,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-06",
+    "reporting_year": 2023,
+    "reporting_month": 6,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 182,
+        "computer": 29
+      },
+      {
+        "branch": "Tambun",
+        "english": 66,
+        "computer": 18
+      },
+      {
+        "branch": "Pemalang",
+        "english": 35,
+        "computer": 18
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 95,
+        "computer": 6
+      },
+      {
+        "branch": "Setu",
+        "english": 57,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 53,
+        "computer": 7
+      },
+      {
+        "branch": "Ciracas",
+        "english": 66,
+        "computer": 5
+      },
+      {
+        "branch": "Cibinong",
+        "english": 42,
+        "computer": 10
+      },
+      {
+        "branch": "TWA",
+        "english": 56,
+        "computer": 6
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 16,
+        "computer": 18
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 40,
+        "computer": 7
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 4
+      },
+      {
+        "branch": "Kranggan",
+        "english": 40,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 34,
+        "computer": 3
+      },
+      {
+        "branch": "Rawasari",
+        "english": 10,
+        "computer": 3
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 50,
+        "computer": 0
+      },
+      {
+        "branch": "TNI",
+        "english": 18,
+        "computer": 3
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 36,
+        "computer": 6
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 10,
+        "computer": 11
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 15,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 24,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 11,
+        "computer": 1
+      },
+      {
+        "branch": "Solo",
+        "english": 4,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-05",
+    "reporting_year": 2023,
+    "reporting_month": 5,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 159,
+        "computer": 33
+      },
+      {
+        "branch": "Tambun",
+        "english": 58,
+        "computer": 18
+      },
+      {
+        "branch": "Pemalang",
+        "english": 31,
+        "computer": 15
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 104,
+        "computer": 5
+      },
+      {
+        "branch": "Setu",
+        "english": 53,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 56,
+        "computer": 4
+      },
+      {
+        "branch": "Ciracas",
+        "english": 70,
+        "computer": 5
+      },
+      {
+        "branch": "Cibinong",
+        "english": 38,
+        "computer": 8
+      },
+      {
+        "branch": "TWA",
+        "english": 57,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 39,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 2
+      },
+      {
+        "branch": "Kranggan",
+        "english": 42,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 37,
+        "computer": 5
+      },
+      {
+        "branch": "Rawasari",
+        "english": 12,
+        "computer": 1
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 56,
+        "computer": 0
+      },
+      {
+        "branch": "TNI",
+        "english": 22,
+        "computer": 2
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 38,
+        "computer": 4
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 6,
+        "computer": 11
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 13,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 16,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 3,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-04",
+    "reporting_year": 2023,
+    "reporting_month": 4,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 160,
+        "computer": 24
+      },
+      {
+        "branch": "Tambun",
+        "english": 62,
+        "computer": 21
+      },
+      {
+        "branch": "Pemalang",
+        "english": 42,
+        "computer": 14
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 95,
+        "computer": 3
+      },
+      {
+        "branch": "Setu",
+        "english": 55,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 52,
+        "computer": 2
+      },
+      {
+        "branch": "Ciracas",
+        "english": 70,
+        "computer": 7
+      },
+      {
+        "branch": "Cibinong",
+        "english": 38,
+        "computer": 5
+      },
+      {
+        "branch": "TWA",
+        "english": 59,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 14,
+        "computer": 14
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 31,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 0
+      },
+      {
+        "branch": "Kranggan",
+        "english": 43,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 40,
+        "computer": 4
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 59,
+        "computer": 2
+      },
+      {
+        "branch": "TNI",
+        "english": 23,
+        "computer": 0
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 44,
+        "computer": 3
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 0,
+        "computer": 10
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 13,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 13,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 7,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-03",
+    "reporting_year": 2023,
+    "reporting_month": 3,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 164,
+        "computer": 24
+      },
+      {
+        "branch": "Tambun",
+        "english": 52,
+        "computer": 22
+      },
+      {
+        "branch": "Pemalang",
+        "english": 30,
+        "computer": 13
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 100,
+        "computer": 3
+      },
+      {
+        "branch": "Setu",
+        "english": 57,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 50,
+        "computer": 4
+      },
+      {
+        "branch": "Ciracas",
+        "english": 69,
+        "computer": 7
+      },
+      {
+        "branch": "Cibinong",
+        "english": 40,
+        "computer": 4
+      },
+      {
+        "branch": "TWA",
+        "english": 59,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 18,
+        "computer": 14
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 31,
+        "computer": 6
+      },
+      {
+        "branch": "Karadenan",
+        "english": 37,
+        "computer": 2
+      },
+      {
+        "branch": "Kranggan",
+        "english": 39,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 44,
+        "computer": 4
+      },
+      {
+        "branch": "Rawasari",
+        "english": 22,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 54,
+        "computer": 0
+      },
+      {
+        "branch": "TNI",
+        "english": 26,
+        "computer": 0
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 37,
+        "computer": 3
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 5,
+        "computer": 10
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 14,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 21,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 18,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 6,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-02",
+    "reporting_year": 2023,
+    "reporting_month": 2,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 156,
+        "computer": 32
+      },
+      {
+        "branch": "Tambun",
+        "english": 51,
+        "computer": 24
+      },
+      {
+        "branch": "Pemalang",
+        "english": 31,
+        "computer": 16
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 76,
+        "computer": 5
+      },
+      {
+        "branch": "Setu",
+        "english": 62,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 46,
+        "computer": 5
+      },
+      {
+        "branch": "Ciracas",
+        "english": 60,
+        "computer": 9
+      },
+      {
+        "branch": "Cibinong",
+        "english": 43,
+        "computer": 5
+      },
+      {
+        "branch": "TWA",
+        "english": 59,
+        "computer": 2
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 17,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 39,
+        "computer": 13
+      },
+      {
+        "branch": "Karadenan",
+        "english": 30,
+        "computer": 2
+      },
+      {
+        "branch": "Kranggan",
+        "english": 37,
+        "computer": 3
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 50,
+        "computer": 6
+      },
+      {
+        "branch": "Rawasari",
+        "english": 17,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 53,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 28,
+        "computer": 2
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 47,
+        "computer": 5
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 5,
+        "computer": 1
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 14,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 19,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 8,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 6,
+        "computer": 0
+      }
+    ]
+  },
+  {
+    "key": "monthly-2023-01",
+    "reporting_year": 2023,
+    "reporting_month": 1,
+    "listed_branches": 24,
+    "branches": [
+      {
+        "branch": "Buaran",
+        "english": 144,
+        "computer": 34
+      },
+      {
+        "branch": "Tambun",
+        "english": 54,
+        "computer": 23
+      },
+      {
+        "branch": "Pemalang",
+        "english": 32,
+        "computer": 18
+      },
+      {
+        "branch": "D Zamrud",
+        "english": 95,
+        "computer": 6
+      },
+      {
+        "branch": "Setu",
+        "english": 61,
+        "computer": 8
+      },
+      {
+        "branch": "Pd Gede",
+        "english": 54,
+        "computer": 6
+      },
+      {
+        "branch": "Ciracas",
+        "english": 68,
+        "computer": 7
+      },
+      {
+        "branch": "Cibinong",
+        "english": 43,
+        "computer": 6
+      },
+      {
+        "branch": "TWA",
+        "english": 56,
+        "computer": 1
+      },
+      {
+        "branch": "Pd Cabe",
+        "english": 14,
+        "computer": 19
+      },
+      {
+        "branch": "Pd Labu",
+        "english": 40,
+        "computer": 15
+      },
+      {
+        "branch": "Karadenan",
+        "english": 20,
+        "computer": 0
+      },
+      {
+        "branch": "Kranggan",
+        "english": 39,
+        "computer": 4
+      },
+      {
+        "branch": "Pd Kelapa",
+        "english": 51,
+        "computer": 7
+      },
+      {
+        "branch": "Rawasari",
+        "english": 19,
+        "computer": 2
+      },
+      {
+        "branch": "Jatimurni",
+        "english": 47,
+        "computer": 1
+      },
+      {
+        "branch": "TNI",
+        "english": 25,
+        "computer": 1
+      },
+      {
+        "branch": "Kp Artis",
+        "english": 45,
+        "computer": 5
+      },
+      {
+        "branch": "Cikarang SN",
+        "english": 5,
+        "computer": 1
+      },
+      {
+        "branch": "Tugu Koja",
+        "english": 13,
+        "computer": 2
+      },
+      {
+        "branch": "Ungaran",
+        "english": 15,
+        "computer": 0
+      },
+      {
+        "branch": "Klender",
+        "english": 13,
+        "computer": 0
+      },
+      {
+        "branch": "Solo",
+        "english": 4,
+        "computer": 0
+      }
+    ]
+  }
+]

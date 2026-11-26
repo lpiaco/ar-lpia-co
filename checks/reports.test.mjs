@@ -124,7 +124,8 @@ if (process.env.PLAYWRIGHT_MODULE) {
   ]);
   const mime = {
     '/': 'text/html', '/app.js': 'application/javascript', '/styles.css': 'text/css',
-    '/lib/reports.mjs': 'application/javascript', '/assets/lpia-logo.png': 'image/png'
+    '/lib/reports.mjs': 'application/javascript', '/assets/lpia-logo.png': 'image/png',
+    '/data/active-students.json': 'application/json'
   };
   const server = createServer(async (req, res) => {
     try {
@@ -153,6 +154,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, args: ['--no-sandbox'] });
   try {
     const page = await browser.newPage({ viewport: { width: 360, height: 780 }, isMobile: true, hasTouch: true });
+    let showWeeklyReports = false;
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(error));
     await page.addInitScript(() => {
@@ -168,7 +170,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.route('https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv?*', route =>
       route.fulfill({
         contentType: 'text/csv', headers: { 'Access-Control-Allow-Origin': '*' },
-        body: encodeCSV(browserMock.rows())
+        body: encodeCSV(showWeeklyReports ? browserMock.rows() : [])
       }));
     const url = 'http://127.0.0.1:' + server.address().port;
     await page.goto(url);
@@ -184,6 +186,20 @@ if (process.env.PLAYWRIGHT_MODULE) {
       assert.ok(Math.abs(menu.y + menu.height / 2 - viewport.height / 2) < 1);
     }
     await page.setViewportSize({ width: 360, height: 780 });
+    await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
+    await page.getByRole('heading', { name: 'November 2026 · Monthly figures' }).waitFor();
+    assert.equal(await page.locator('#stats-period').inputValue(), 'monthly-2026-11');
+    await page.getByText('Figures for 23 of 24 listed branches.').waitFor();
+    await page.getByText('1,694', { exact: true }).waitFor();
+    await page.getByText('1,398', { exact: true }).waitFor();
+    await page.getByText('296', { exact: true }).waitFor();
+    await page.getByRole('heading', { name: 'Solo · 0 students' }).waitFor();
+    assert.equal(await page.getByText('Total active classes', { exact: true }).count(), 0);
+    assert.equal(await page.getByRole('heading', { name: /Jatisampurna/ }).count(), 0);
+    await page.locator('#stats-period').selectOption('monthly-2023-01');
+    await page.getByRole('heading', { name: 'January 2023 · Monthly figures' }).waitFor();
+    await page.getByRole('button', { name: 'Back to menu' }).click();
+    showWeeklyReports = true;
     await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
     await page.getByText('Reports from 1 of 24 listed branches.').waitFor();
     await page.getByRole('heading', { name: 'Pd Gede · 87 students' }).waitFor();

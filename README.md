@@ -10,7 +10,7 @@ The app at `ar.lpia.co` uses GitHub Pages and stores reports in [reports.csv](ht
 
 The GitHub issue must keep its prefilled title. Its body contains the form data as JSON, pasted only into GitHub. **Check saved report** and **Check CSV again** can recover a saved receipt. One report is stored per branch and period. A repeated identical submission returns the existing row. A conflicting one leaves the original report in place.
 
-The dashboard, searchable history, report details and Academic Numbers prefill read the public CSV. The WhatsApp button opens a message draft. The coordinator selects and sends to the recipient. Set `ACADEMIC_OFFICE_WHATSAPP` in `app.js` if the office number becomes available. The splash screen uses `assets/lpia-logo.png` from the [LPIA organization repository](https://github.com/lpiaco/lpia/blob/master/gen-ai-for-edu/LPIA-Logo.png).
+The dashboard shows weekly reports from the public CSV and monthly figures imported from the LPIA Active Students spreadsheet. The monthly snapshot in `data/active-students.json` contains branch names and English and Computer student counts from January 2023 through November 2026. Monthly totals use the recorded branch rows. Blank counts stay unknown. Downloading or viewing the dashboard does not require a live spreadsheet request. Report history, details and Academic Numbers prefill read the public CSV. The WhatsApp button opens a message draft. The coordinator selects and sends to the recipient. Set `ACADEMIC_OFFICE_WHATSAPP` in `app.js` if the office number becomes available. The splash screen uses `assets/lpia-logo.png` from the [LPIA organization repository](https://github.com/lpiaco/lpia/blob/master/gen-ai-for-edu/LPIA-Logo.png).
 
 ## Storage and export
 

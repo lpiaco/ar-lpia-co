@@ -4,6 +4,7 @@
 const ACADEMIC_OFFICE_WHATSAPP = '';
 const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=LPIA%20Academic%20Report';
 const PUBLIC_REPORTS_CSV = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv';
+const MONTHLY_STATS_FILE = 'data/active-students.json';
 
 const COUNT_LIMIT = 1000000;
 const FIRST_YEAR = 2020;
@@ -481,19 +482,25 @@ async function openStats() {
   const output = byId('stats-feedback');
   byId('stats-summary').replaceChildren();
   byId('stats-controls').hidden = true;
-  showFeedback(output, 'progress', 'Loading submitted reports…');
+  showFeedback(output, 'progress', 'Loading student statistics…');
   try {
-    const [reports, { publicStats }] = await Promise.all([loadPublicReports(), import('./lib/reports.mjs')]);
+    const [weekly, monthly] = await Promise.allSettled([
+      loadPublicReports().then(async reports => (await import('./lib/reports.mjs')).publicStats(reports)),
+      loadMonthlyStats()
+    ]);
     if (activeScreen !== 'status') return;
-    statsPeriods = publicStats(reports);
-    if (!Array.isArray(statsPeriods) || !statsPeriods.length) {
-      showFeedback(output, 'info', 'No reports have been submitted yet.');
-      return;
-    }
+    statsPeriods = [...(weekly.value ?? []), ...(monthly.value ?? [])].sort((left, right) =>
+      right.reporting_year - left.reporting_year ||
+      right.reporting_month - left.reporting_month ||
+      (right.reporting_week ?? 0) - (left.reporting_week ?? 0)
+    );
+    if (!statsPeriods.length) throw new Error('Student statistics could not be loaded.');
     const select = byId('stats-period');
-    select.replaceChildren(...statsPeriods.map(period => new Option(periodText(period), period.key)));
+    select.replaceChildren(...statsPeriods.map(period => new Option(statsPeriodText(period), period.key)));
     byId('stats-controls').hidden = false;
     output.replaceChildren();
+    if (weekly.status === 'rejected') showFeedback(output, 'info', 'Weekly reports could not be loaded.');
+    else if (monthly.status === 'rejected') showFeedback(output, 'info', 'Monthly figures could not be loaded.');
     renderStats();
   } catch (error) {
     if (activeScreen === 'status') showFeedback(output, 'error',
@@ -501,48 +508,87 @@ async function openStats() {
   }
 }
 
+async function loadMonthlyStats() {
+  const response = await fetch(MONTHLY_STATS_FILE);
+  if (!response.ok) throw new Error('The monthly figures could not be loaded.');
+  const periods = await response.json();
+  if (!Array.isArray(periods)) throw new Error('The monthly figures are invalid.');
+  return periods;
+}
+
+function statsPeriodText(period) {
+  return period.reporting_week
+    ? periodText(period)
+    : MONTHS[period.reporting_month - 1] + ' ' + period.reporting_year + ' · Monthly figures';
+}
+
 function renderStats() {
   const period = statsPeriods.find(item => item.key === byId('stats-period').value);
   const branches = period.branches;
-  const sum = fieldName => branches.reduce((total, row) => total + row[fieldName], 0);
+  const monthly = period.reporting_week == null;
+  const sum = fieldName => branches.reduce((total, row) => total + (row[fieldName] ?? 0), 0);
+  const average = (fieldName, total) => {
+    const reported = branches.filter(row => row[fieldName] != null).length;
+    return reported ? total / reported : null;
+  };
   const english = sum('english');
   const computer = sum('computer');
-  const englishClasses = sum('englishClasses');
-  const computerClasses = sum('computerClasses');
-  const inCount = sum('inCount');
-  const outCount = sum('outCount');
-  const output = byId('stats-summary');
-  output.replaceChildren(
-    textElement('h2', periodText(period)),
-    textElement('p', 'Reports from ' + branches.length + ' of ' + BRANCHES.length + ' listed branches.', 'hint'),
-    metricList([
-      ['Total active students', english + computer], ['English students', english],
-      ['Computer students', computer], ['Total active classes', englishClasses + computerClasses],
-      ['Average English students per reporting branch', english / branches.length],
-      ['Average Computer students per reporting branch', computer / branches.length],
+  const stats = [
+    ['Total active students', english + computer], ['English students', english],
+    ['Computer students', computer],
+    ['Average English students per reporting branch', average('english', english)],
+    ['Average Computer students per reporting branch', average('computer', computer)]
+  ];
+  if (!monthly) {
+    const englishClasses = sum('englishClasses');
+    const computerClasses = sum('computerClasses');
+    const inCount = sum('inCount');
+    const outCount = sum('outCount');
+    stats.push(
+      ['Total active classes', englishClasses + computerClasses],
       ['English students per class', englishClasses ? english / englishClasses : null],
       ['Computer students per class', computerClasses ? computer / computerClasses : null],
       ['Total academic personnel', sum('academia')],
       ['Students IN', inCount], ['Students OUT', outCount], ['Net movement', inCount - outCount]
-    ]),
+    );
+  }
+  const output = byId('stats-summary');
+  const coverage = monthly
+    ? 'Figures for ' + branches.length + ' of ' + period.listed_branches + ' listed branches.'
+    : 'Reports from ' + branches.length + ' of ' + BRANCHES.length + ' listed branches.';
+  output.replaceChildren(
+    textElement('h2', statsPeriodText(period)),
+    textElement('p', coverage, 'hint'),
+    metricList(stats),
     textElement('h2', 'Branch breakdown')
   );
-  const ranking = [...branches].sort((a, b) => b.english + b.computer - a.english - a.computer ||
-    a.branch.localeCompare(b.branch));
-  const max = Math.max(1, ranking[0].english + ranking[0].computer);
+  if (monthly) {
+    const source = textElement('a', 'LPIA Active Students');
+    source.href = 'https://docs.google.com/spreadsheets/d/1Eo9JzotF1V8pDoOe75kJa4ghgOcunoBXVt2bvogXf60/edit';
+    source.target = '_blank';
+    source.rel = 'noopener noreferrer';
+    const note = textElement('p', 'Monthly source: ', 'hint');
+    note.append(source, '. Totals sum the recorded branch figures.');
+    output.firstElementChild.after(note);
+  }
+  const branchTotal = row => (row.english ?? 0) + (row.computer ?? 0);
+  const valueText = value => value == null ? '—' : formatCount.format(value);
+  const ranking = [...branches].sort((a, b) => branchTotal(b) - branchTotal(a) || a.branch.localeCompare(b.branch));
+  const max = Math.max(1, branchTotal(ranking[0]));
   const list = document.createElement('div');
   list.className = 'stats-branches';
   for (const row of ranking) {
     const card = document.createElement('article');
     card.className = 'stat-branch';
-    const total = row.english + row.computer;
+    const total = branchTotal(row);
     const bar = document.createElement('meter');
     bar.max = max;
     bar.value = total;
     bar.setAttribute('aria-label', row.branch + ' active students');
-    card.append(textElement('h3', row.branch + ' · ' + formatCount.format(total) + ' students'), bar,
-      textElement('p', 'English ' + formatCount.format(row.english) + ' · Computer ' + formatCount.format(row.computer) +
-        ' · ' + formatCount.format(row.englishClasses + row.computerClasses) + ' classes', 'hint'));
+    const countLabel = row.english == null || row.computer == null ? ' students recorded' : ' students';
+    const classes = monthly ? '' : ' · ' + formatCount.format(row.englishClasses + row.computerClasses) + ' classes';
+    card.append(textElement('h3', row.branch + ' · ' + formatCount.format(total) + countLabel), bar,
+      textElement('p', 'English ' + valueText(row.english) + ' · Computer ' + valueText(row.computer) + classes, 'hint'));
     list.append(card);
   }
   output.append(list);
