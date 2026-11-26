@@ -85,11 +85,17 @@ assert.equal(month.branches[0].weeksReported, 2);
 
 const mock = fixture();
 assert.deepEqual(await (await mock.api()).json(), { periods: [] });
-assert.equal((await mock.api('submit', setu, 'wrong-access-code')).status, 403);
+assert.equal((await mock.api('status', period, 'wrong-access-code')).status, 403);
 assert.equal((await mock.api('submit', setu, 'setu-test-code', 'https://other.example')).status, 403);
 assert.equal((await mock.api('submit', { ...setu, active_english_students: '66' })).status, 400);
 assert.equal((await mock.api('submit', { ...setu, reporting_year: 2037 })).status, 400);
 assert.equal(mock.writes(), 0);
+const direct = fixture();
+delete direct.env.REPORT_ACCESS_CODES;
+const submittedWithoutCode = await direct.api('submit', setu, '');
+assert.equal(submittedWithoutCode.status, 200);
+assert.equal((await submittedWithoutCode.json()).report.report_id, '2026-11-W3-08');
+assert.equal(direct.rows().length, 1);
 mock.collide();
 const saved = await (await mock.api('submit')).json();
 assert.equal(saved.status, 'saved');
@@ -333,11 +339,6 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByText('Copy the selected report text.').waitFor();
     assert.equal(JSON.parse(await page.getByLabel('Report to copy').inputValue()).remarks, longRemarks);
     await field('remarks').fill(setu.remarks);
-    endpointAvailable = true;
-    await submit.click();
-    await page.getByLabel('Reporting access code').waitFor();
-    assert.equal(await fallback.isVisible(), false);
-    endpointAvailable = false;
     await submit.click();
     await page.getByText(fallbackMessage).waitFor();
     assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
@@ -384,6 +385,26 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByText('Reports from 2 of 24 listed branches.').waitFor();
     await page.getByRole('button', { name: 'No', exact: true }).click();
     await page.getByText('Thank you for using Academic Report App.').waitFor();
+
+    endpointAvailable = true;
+    delete browserMock.env.REPORT_ACCESS_CODES;
+    await page.reload();
+    await page.getByRole('button', { name: 'START', exact: true }).click();
+    await page.getByRole('button', { name: 'Enter Data of LPIA Students' }).click();
+    for (const name of ['branch_id', 'reporting_year', 'reporting_month', 'reporting_week']) {
+      await field(name).evaluate((control, value) => {
+        control.value = value;
+        control.dispatchEvent(new Event('change', { bubbles: true }));
+      }, String(setu[name]));
+    }
+    await field('reporter_name').fill(setu.reporter_name);
+    await field('remarks').fill(setu.remarks);
+    for (const key of COUNT_FIELDS) await field(key).fill(String(setu[key]));
+    await page.getByRole('button', { name: 'SUBMIT', exact: true }).click();
+    await page.getByRole('heading', { name: 'Laporan tersimpan' }).waitFor();
+    assert.match(await page.locator('#saved-receipt').textContent(), /2026-11-W3-08/);
+    assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
+    assert.equal(browserMock.rows().length, 3);
     assert.deepEqual(pageErrors, []);
     console.log('PASS browser mock: START, statistics, entry, verified receipt, WhatsApp link, history and both finish paths');
   } finally {

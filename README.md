@@ -14,14 +14,11 @@ The site at `ar.lpia.co` is served by GitHub Pages from `main`. The public [repo
 
 The endpoint implementation is `lib/report-store.mjs`. GitHub Pages serves static files. Deploy the endpoint with the included `wrangler.jsonc` to the existing Cloudflare zone at `ar.lpia.co/api/reports`. It uses a GitHub token scoped to the repository and writes only to the `report-data` branch.
 
-The two runtime secrets are:
+Direct submissions do not require a coordinator access code. Configure `GITHUB_REPORT_TOKEN` with Contents read/write permission for the report repository. `REPORT_ACCESS_CODES` is used only by restricted API queries. The site’s reporting views read the public CSV.
 
-- `GITHUB_REPORT_TOKEN`: GitHub token with repository Contents read/write access.
-- `REPORT_ACCESS_CODES`: JSON mapping zero-padded branch IDs to reporting access codes. The `all` key is optional central access. Codes must be 12 to 128 characters and are requested in the form when needed.
+An authorized Cloudflare deployment must attach the token and the route. Keep token values outside the repository and ZIP. The existing issue workflow remains available through the explicit fallback link.
 
-An authorized Cloudflare deployment must attach those secrets and the route. Keep actual values outside this repository and ZIP. The existing issue workflow remains available for previously created GitHub issues. The application opens the GitHub issue form only through the explicit fallback link.
-
-At the handoff, GitHub Pages returned HTTP 404 for GET /api/reports and HTTP 405 for POST /api/reports. The Cloudflare route had no deployed handler. The browser success, access-code prompt, validation, and error paths were exercised against a simulated endpoint. The production direct-write test is pending a deployment with the required access.
+The production Worker route is responding. While it returns HTTP 503 with `Report storage is not connected yet.`, verify its repository settings and token binding. The browser tests exercise a direct submission without any access-code binding and the fallback path.
 
 ## Local checks
 
