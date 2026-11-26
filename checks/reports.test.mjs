@@ -72,6 +72,7 @@ assert.equal(record.total_net_movement, -1);
 assert.equal(record.report_id, '2026-11-W3-08');
 assert.match(encodeCSV([record]), /"'=Contoh/);
 assert.deepEqual(decodeCSV(encodeCSV([record])), [record]);
+assert.deepEqual(decodeCSV(encodeCSV([{ ...record, branch_name: 'Setu' }])), [record]);
 assert.equal(publicStats([record])[0].branches[0].academia, 3);
 assert.equal(Object.hasOwn(publicStats([record])[0].branches[0], 'reporter_name'), false);
 
@@ -80,6 +81,7 @@ assert.deepEqual(await (await mock.api()).json(), { periods: [] });
 assert.equal((await mock.api('submit', setu, 'wrong-access-code')).status, 403);
 assert.equal((await mock.api('submit', setu, 'setu-test-code', 'https://other.example')).status, 403);
 assert.equal((await mock.api('submit', { ...setu, active_english_students: '66' })).status, 400);
+assert.equal((await mock.api('submit', { ...setu, reporting_year: 2037 })).status, 400);
 assert.equal(mock.writes(), 0);
 mock.collide();
 const saved = await (await mock.api('submit')).json();
@@ -127,9 +129,14 @@ if (process.env.PLAYWRIGHT_MODULE) {
     '/lib/reports.mjs': 'application/javascript', '/assets/lpia-logo.png': 'image/png',
     '/data/active-students.json': 'application/json'
   };
+  let endpointAvailable = false;
   const server = createServer(async (req, res) => {
     try {
       if (req.url === '/api/reports') {
+        if (!endpointAvailable) {
+          res.writeHead(404, { 'Content-Type': 'text/html' }).end('Page not found.');
+          return;
+        }
         let body = '';
         for await (const chunk of req) body += chunk;
         const origin = 'http://127.0.0.1:' + server.address().port;
@@ -162,10 +169,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
         window.fullscreenRequested = true;
         return Promise.reject(new Error('Simulated fullscreen permission denial'));
       };
-      window.open = url => { window.openedIssue = url; };
-      Object.defineProperty(navigator, 'clipboard', {
-        value: { writeText: async text => { window.copiedReport = text; } }
-      });
+      window.open = url => { window.openedWindow = url; };
     });
     await page.route('https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv?*', route =>
       route.fulfill({
@@ -177,6 +181,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByRole('heading', { name: 'LPIA Academic Report' }).waitFor();
     await page.waitForFunction(() => document.getElementById('brand-logo').naturalWidth > 0);
     assert.ok(await page.locator('#brand-logo').isVisible());
+    assert.equal((await page.locator('#brand-logo').boundingBox()).width, 168);
     await page.getByRole('button', { name: 'START', exact: true }).click();
     assert.equal(await page.evaluate(() => window.fullscreenRequested), true);
     for (const viewport of [{ width: 360, height: 780 }, { width: 1366, height: 768 }]) {
@@ -202,34 +207,56 @@ if (process.env.PLAYWRIGHT_MODULE) {
     showWeeklyReports = true;
     await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
     await page.getByText('Reports from 1 of 24 listed branches.').waitFor();
-    await page.getByRole('heading', { name: 'Pd Gede · 87 students' }).waitFor();
+    await page.getByRole('heading', { name: 'Pondok Gede · 87 students' }).waitFor();
     await page.locator('#stats-period').selectOption('2026-11-W2');
-    await page.getByRole('heading', { name: 'Setu · 73 students' }).waitFor();
+    await page.getByRole('heading', { name: 'Setu Bekasi · 73 students' }).waitFor();
     await page.getByRole('button', { name: 'Yes', exact: true }).click();
     const field = name => page.locator('[name="' + name + '"]');
-    await field('branch_id').selectOption('08');
-    await field('reporting_year').selectOption('2026');
-    await field('reporting_month').selectOption('11');
+    assert.ok(await page.locator('#masthead .brand-heading img').isVisible());
+    assert.equal(await page.locator('#masthead .brand-heading').evaluate(el => getComputedStyle(el).fontWeight), '800');
+    assert.equal(await page.locator('legend').first().evaluate(el => getComputedStyle(el).fontWeight), '800');
+    assert.equal(await page.evaluate(() => document.scrollingElement.scrollHeight), 780);
+    const picker = page.getByRole('dialog');
+    const openPicker = async (name, expectedHeight) => {
+      await page.getByRole('button', { name }).click();
+      await picker.waitFor();
+      const box = await picker.boundingBox();
+      assert.ok(Math.abs(box.height - expectedHeight) < 1);
+      assert.ok(Math.abs(box.y + box.height / 2 - 390) < 1);
+    };
+    await openPicker(/^Branch,/, 390);
+    assert.ok(await picker.locator('#picker-options').evaluate(el => el.scrollHeight > el.clientHeight));
+    await picker.getByRole('button', { name: 'Setu Bekasi', exact: true }).click();
+    await openPicker(/^Reporting year,/, 585);
+    assert.equal(await picker.locator('#picker-options button').count(), 11);
+    assert.equal(await picker.locator('#picker-options button').last().textContent(), '2036');
+    await picker.getByRole('button', { name: '2026', exact: true }).click();
+    await openPicker(/^Reporting month,/, 585);
+    await picker.getByRole('button', { name: 'November', exact: true }).click();
     await field('reporting_week').selectOption('3');
     await field('reporter_name').fill(setu.reporter_name);
-    await page.getByRole('button', { name: 'Fill from last report' }).click();
-    await page.getByText('Blank fields filled from Week 2, November 2026.').waitFor();
+    await page.getByText('Filled from Week 2, November 2026.').waitFor();
     assert.equal(await field('academic_staff').inputValue(), '2');
     for (const key of COUNT_FIELDS) await field(key).fill(String(setu[key]));
     await field('remarks').fill(setu.remarks);
     assert.equal(await page.locator('#english_students_per_class').textContent(), '3');
     assert.equal(await page.locator('#computer_students_per_class').textContent(), '1.4');
-    await page.getByRole('button', { name: 'Submit report' }).click();
-    await page.getByRole('heading', { name: 'Confirm on GitHub' }).waitFor();
-    const submitted = await page.evaluate(() => ({ url: window.openedIssue, report: JSON.parse(window.copiedReport) }));
-    assert.equal(new URL(submitted.url).searchParams.get('title'), 'LPIA Academic Report');
-    assert.equal(new URL(submitted.url).searchParams.has('body'), false);
-    assert.equal(submitted.report.reporter_name, setu.reporter_name);
-    assert.equal((await browserMock.api('submit', submitted.report)).status, 200);
+    const submit = page.getByRole('button', { name: 'SUBMIT', exact: true });
+    const check = page.getByRole('button', { name: 'Check Report', exact: true });
+    await submit.scrollIntoViewIfNeeded();
+    assert.ok(Math.abs((await submit.boundingBox()).y - (await check.boundingBox()).y) < 1);
+    await submit.click();
+    await page.getByText('Direct submission is not available yet. Your entries are still here.').waitFor();
+    assert.equal(await field('reporter_name').inputValue(), setu.reporter_name);
+    assert.equal(await page.evaluate(() => window.openedWindow), undefined);
+    endpointAvailable = true;
+    await submit.click();
+    await page.getByLabel('Reporting access code').fill('setu-test-code');
+    await submit.click();
     await page.getByRole('heading', { name: 'Laporan tersimpan' }).waitFor();
     assert.ok((await page.getByRole('link', { name: /WhatsApp/ }).getAttribute('href')).startsWith('https://wa.me/?text='));
     await page.getByRole('button', { name: 'Lihat laporan yang baru saja di-update' }).click();
-    await page.getByText('Academic Name: ' + setu.reporter_name).waitFor();
+    await page.getByText("Coordinator's/Staff's Name: " + setu.reporter_name).waitFor();
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.getByRole('button', { name: 'Lihat semua laporan yang sudah terkirim' }).click();
     await page.getByText('Laporan yang baru dibuka').waitFor();
@@ -240,7 +267,8 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByRole('button', { name: 'Back to saved report' }).click();
     await page.getByRole('button', { name: 'Selesai' }).click();
     await page.getByText('Thank you for using Academic Report App.').waitFor();
-    assert.equal(await page.locator('#pending-body').inputValue(), '');
+    assert.equal(await page.locator('#submission-code').inputValue(), '');
+    assert.equal(await page.locator('#masthead').isVisible(), false);
     assert.equal(await page.locator('#finished-screen').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(0, 0, 0)');
     await page.reload();
     await page.getByRole('button', { name: 'START', exact: true }).click();

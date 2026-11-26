@@ -1,20 +1,14 @@
-'use strict';
+import {
+  BRANCHES, FIRST_REPORT_YEAR, LAST_REPORT_YEAR, decodeCSV, displayBranchName, publicStats, reportId
+} from './lib/reports.mjs';
 
 // Public options. Leave blank to use the WhatsApp contact picker.
 const ACADEMIC_OFFICE_WHATSAPP = '';
-const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=LPIA%20Academic%20Report';
+const REPORTS_API = '/api/reports';
 const PUBLIC_REPORTS_CSV = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv';
 const MONTHLY_STATS_FILE = 'data/active-students.json';
 
 const COUNT_LIMIT = 1000000;
-const FIRST_YEAR = 2020;
-const LAST_YEAR = 2100;
-const BRANCHES = [
-  'Buaran', 'Tambun', 'Pd Gede', 'Cibinong', 'D Zamrud', 'TWA',
-  'Pemalang', 'Setu', 'Ungaran', 'Cikarang JB', 'Jatimurni', 'Cipinang',
-  'Karadenan', 'Rawasari', 'Pd Cabe', 'Ciracas', 'Pd Kelapa', 'Pd Labu',
-  'TNI', 'Tugu Koja', 'Solo', 'Jatiwarna', 'Tanah Baru', 'Jatisampurna'
-];
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
   'September', 'October', 'November', 'December'
@@ -82,8 +76,10 @@ const formatCount = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
 let busy = false;
 let activeScreen = 'start';
 let savedReport;
-let pendingReport;
-let polling = false;
+let academicSource;
+let academicRequest = 0;
+const pickerTriggers = new Map();
+let pickerTrigger;
 let historyReports = [];
 let statsPeriods = [];
 
@@ -91,7 +87,7 @@ function populate() {
   BRANCHES.map((name, index) => ({ name, id: String(index + 1).padStart(2, '0') }))
     .sort((left, right) => left.name.localeCompare(right.name, 'en'))
     .forEach(({ name, id }) => field('branch_id').add(new Option(name, id)));
-  for (let year = FIRST_YEAR; year <= LAST_YEAR; year += 1) {
+  for (let year = FIRST_REPORT_YEAR; year <= LAST_REPORT_YEAR; year += 1) {
     field('reporting_year').add(new Option(String(year), String(year)));
   }
   MONTHS.forEach((name, index) => field('reporting_month').add(new Option(name, String(index + 1))));
@@ -99,7 +95,8 @@ function populate() {
   const today = new Intl.DateTimeFormat('en', {
     timeZone: 'Asia/Jakarta', year: 'numeric', month: 'numeric'
   }).formatToParts();
-  field('reporting_year').value = today.find(part => part.type === 'year').value;
+  const currentYear = Number(today.find(part => part.type === 'year').value);
+  field('reporting_year').value = String(Math.max(FIRST_REPORT_YEAR, Math.min(LAST_REPORT_YEAR, currentYear)));
   field('reporting_month').value = today.find(part => part.type === 'month').value;
 
   Object.entries(FIELD_GROUPS).forEach(([group, fields]) => {
@@ -198,15 +195,18 @@ function collectReport(operation, output) {
     control.setCustomValidity(message);
     if (message) {
       control.setAttribute('aria-invalid', 'true');
-      errors.push(control);
+      const visibleControl = pickerTriggers.get(name) ?? control;
+      visibleControl.setAttribute('aria-invalid', 'true');
+      errors.push(visibleControl);
     } else {
       control.removeAttribute('aria-invalid');
+      pickerTriggers.get(name)?.removeAttribute('aria-invalid');
     }
   };
   const periodChecks = {
     branch_id: /^(0[1-9]|1[0-9]|2[0-4])$/.test(report.branch_id),
-    reporting_year: Number.isInteger(report.reporting_year) && report.reporting_year >= FIRST_YEAR &&
-      report.reporting_year <= LAST_YEAR,
+    reporting_year: Number.isInteger(report.reporting_year) && report.reporting_year >= FIRST_REPORT_YEAR &&
+      report.reporting_year <= LAST_REPORT_YEAR,
     reporting_month: Number.isInteger(report.reporting_month) && report.reporting_month >= 1 && report.reporting_month <= 12,
     reporting_week: Number.isInteger(report.reporting_week) && report.reporting_week >= 1 && report.reporting_week <= 5
   };
@@ -214,7 +214,7 @@ function collectReport(operation, output) {
   if (operation === 'submit') {
     report.reporter_name = field('reporter_name').value.trim();
     report.remarks = field('remarks').value.replace(/\r\n?/g, '\n');
-    mark('reporter_name', report.reporter_name && report.reporter_name.length <= 100 ? '' : 'Enter an Academic Name.');
+    mark('reporter_name', report.reporter_name && report.reporter_name.length <= 100 ? '' : "Enter the coordinator's or staff member's name.");
     mark('remarks', report.remarks.length <= 1000 ? '' : 'Keep remarks to 1,000 characters or fewer.');
     countNames.forEach(name => {
       const value = parseCount(field(name).value);
@@ -225,7 +225,7 @@ function collectReport(operation, output) {
   if (errors.length) {
     showFeedback(output, 'error', 'Check the highlighted fields.');
     errors[0].focus();
-    errors[0].reportValidity();
+    if (!errors[0].classList.contains('picker-trigger')) errors[0].reportValidity();
     return null;
   }
   return report;
@@ -248,74 +248,66 @@ function setBusy(value) {
   form.querySelectorAll('fieldset').forEach(section => { section.disabled = value; });
 }
 
-function fillAcademicNumbers(response, report) {
-  if (response.status !== 'academia_found') {
-    showFeedback(academicFeedback, response.status === 'not_found' ? 'info' : 'error',
-      typeof response.message === 'string' ? response.message : 'Previous Academic Numbers could not be confirmed.');
-    return;
-  }
-  const { counts, period } = response;
-  if (!period || period.branch_id !== report.branch_id || !MONTHS[period.reporting_month - 1] ||
-      !counts || !academicNames.every(name =>
-        Number.isSafeInteger(counts[name]) && counts[name] >= 0 && counts[name] <= COUNT_LIMIT
-      )) {
-    showFeedback(academicFeedback, 'error', 'Previous Academic Numbers could not be confirmed.');
-    return;
-  }
-
-  const blankFields = academicNames.filter(name => field(name).value === '');
-  blankFields.forEach(name => {
-    const control = field(name);
-    control.value = String(counts[name]);
-    control.setCustomValidity('');
-    control.removeAttribute('aria-invalid');
-    carriedAcademicFields.add(name);
-  });
-  showFeedback(academicFeedback, 'success', blankFields.length
-    ? 'Blank fields filled from ' + periodText(period) + '. Review the counts for this report.'
-    : 'All Academic Numbers already have values.');
-}
-
-
-populate();
-updateTotals();
-updateSelection();
-form.addEventListener('input', event => {
-  carriedAcademicFields.delete(event.target.name);
-  if (event.target.hasAttribute('aria-invalid')) {
-    event.target.setCustomValidity('');
-    event.target.removeAttribute('aria-invalid');
-  }
-  if (countNames.includes(event.target.name)) updateTotals();
-});
-form.addEventListener('change', event => {
-  if (!PERIOD_FIELDS.includes(event.target.name)) return;
+async function autoFillAcademicNumbers() {
+  const request = ++academicRequest;
   carriedAcademicFields.forEach(name => { field(name).value = ''; });
   carriedAcademicFields.clear();
   academicFeedback.replaceChildren();
-  updateSelection();
-});
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  sendReport('submit');
-});
-checkButton.addEventListener('click', () => sendReport('status'));
-document.querySelector('#load-academia').addEventListener('click', () => sendReport('academia'));
+
+  const period = selectedPeriod();
+  if (!period.branch_id) return;
+  if (!academicSource) {
+    academicSource = loadPublicReports().catch(error => {
+      academicSource = undefined;
+      throw error;
+    });
+  }
+
+  try {
+    const reports = await academicSource;
+    if (request !== academicRequest) return;
+    const limit = period.reporting_week ? reportId(period) : null;
+    const latest = reports.filter(row => row.branch_id === period.branch_id && (!limit || row.report_id <= limit))
+      .sort((left, right) => right.report_id.localeCompare(left.report_id))[0];
+    if (!latest) return;
+    for (const name of academicNames) {
+      const control = field(name);
+      if (control.value !== '') continue;
+      control.value = String(latest[name]);
+      control.setCustomValidity('');
+      control.removeAttribute('aria-invalid');
+      carriedAcademicFields.add(name);
+    }
+    if (carriedAcademicFields.size) {
+      showFeedback(academicFeedback, 'info', 'Filled from ' + periodText(latest) + '.');
+    }
+  } catch {
+    if (request === academicRequest) {
+      showFeedback(academicFeedback, 'info', 'Previous counts could not be loaded. You can enter them here.');
+    }
+  }
+}
 
 const byId = id => document.getElementById(id);
 const headings = {
   menu: 'menu-title', status: 'status-title', entry: 'entry-title',
-  pending: 'pending-title', saved: 'saved-title', history: 'history-title', detail: 'detail-title', finished: 'finished-title'
+  saved: 'saved-title', history: 'history-title', detail: 'detail-title', finished: 'finished-title'
 };
 
 function showScreen(name) {
   activeScreen = name;
   document.querySelectorAll('.screen').forEach(section => { section.hidden = section.id !== name + '-screen'; });
   const standalone = name === 'start' || name === 'menu' || name === 'finished';
+  document.body.classList.toggle('app-running', name !== 'start' && name !== 'finished');
   byId('app-content').hidden = standalone;
   byId('masthead').hidden = standalone;
+  byId('app-content').scrollTop = 0;
   window.scrollTo(0, 0);
   byId(headings[name])?.focus({ preventScroll: true });
+  if (name === 'entry') {
+    academicSource = undefined;
+    autoFillAcademicNumbers();
+  }
 }
 
 function beginFullscreen() {
@@ -333,12 +325,9 @@ async function loadPublicReports() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const [response, { decodeCSV }] = await Promise.all([
-      fetch(PUBLIC_REPORTS_CSV + '?read=' + Date.now(), {
-        cache: 'no-store', signal: controller.signal
-      }),
-      import('./lib/reports.mjs')
-    ]);
+    const response = await fetch(PUBLIC_REPORTS_CSV + '?read=' + Date.now(), {
+      cache: 'no-store', signal: controller.signal
+    });
     if (!response.ok) throw new Error('The report CSV could not be loaded.');
     return decodeCSV(await response.text());
   } finally {
@@ -346,15 +335,8 @@ async function loadPublicReports() {
   }
 }
 
-function idFor(period) {
-  return period.reporting_year + '-' + String(period.reporting_month).padStart(2, '0') +
-    '-W' + period.reporting_week + '-' + period.branch_id;
-}
-
 function showReceipt(report) {
   savedReport = report;
-  pendingReport = undefined;
-  byId('pending-body').value = '';
   byId('saved-receipt').textContent = report.branch_name + ' · ' + periodText(report) + ' · ' + report.report_id;
   const text = [
     'LPIA Academic Report', report.branch_name + ' · ' + periodText(report),
@@ -368,93 +350,65 @@ function showReceipt(report) {
   showScreen('saved');
 }
 
-function copyPendingReport() {
-  const body = byId('pending-body');
-  const message = byId('copy-feedback');
-  if (!navigator.clipboard) {
-    body.select();
-    message.textContent = 'Copy the selected text and paste it into GitHub.';
-    return;
-  }
-  navigator.clipboard.writeText(body.value).then(() => {
-    message.textContent = 'Report copied.';
-  }).catch(() => {
-    body.select();
-    message.textContent = 'Copy the selected text and paste it into GitHub.';
-  });
-}
-
-function startSubmission(report) {
-  pendingReport = report;
-  byId('pending-body').value = JSON.stringify(report);
-  byId('copy-feedback').textContent = '';
-  showScreen('pending');
-  copyPendingReport();
-  window.open(GITHUB_ISSUE_URL, '_blank', 'noopener,noreferrer');
-  pollForReceipt();
-}
-
-async function pollForReceipt() {
-  if (polling || !pendingReport || activeScreen !== 'pending') return;
-  polling = true;
-  const candidate = pendingReport;
-  const output = byId('pending-feedback');
-  showFeedback(output, 'progress', 'Waiting for the report to appear in the GitHub CSV…');
+async function submitDirectly(report) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
   try {
-    for (let attempt = 0; attempt < 20; attempt += 1) {
-      if (activeScreen !== 'pending' || pendingReport !== candidate) return;
-      let reports;
-      try { reports = await loadPublicReports(); }
-      catch {
-        // A temporary read failure can happen while GitHub publishes the new commit.
-      }
-      if (activeScreen !== 'pending' || pendingReport !== candidate) return;
-      const saved = reports?.find(row => row.report_id === idFor(candidate));
-      if (saved) {
-        if (Object.keys(candidate).every(key => candidate[key] === saved[key])) {
-          showReceipt(saved);
-        } else {
-          showFeedback(output, 'error', 'A different report already exists for this branch and period. Use Check saved report to review it.');
-        }
-        return;
-      }
-      await new Promise(resolve => setTimeout(resolve, 4000));
+    const response = await fetch(REPORTS_API, {
+      method: 'POST', cache: 'no-store', signal: controller.signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        operation: 'submit', report, accessCode: byId('submission-code').value
+      })
+    });
+    if (!response.headers.get('Content-Type')?.includes('application/json')) {
+      throw new Error('Direct submission is not available yet. Your entries are still here.');
     }
-    showFeedback(output, 'info', 'The CSV has not confirmed this report yet. Check the GitHub issue for its status, then choose Check CSV again.');
+
+    const result = await response.json();
+    if (response.status === 403 && result.message === 'The access code is invalid for this branch.') {
+      byId('submission-access').hidden = false;
+      byId('submission-code').value = '';
+      throw new Error('Enter the reporting access code for your branch, then press SUBMIT.');
+    }
+    if (!response.ok) throw new Error(result.message || 'The report could not be saved.');
+    if (!['saved', 'already_saved'].includes(result.status) ||
+        result.report?.report_id !== reportId(report) ||
+        !Object.keys(report).every(key => result.report[key] === report[key])) {
+      throw new Error('The saved report could not be verified. Use Check Report before trying again.');
+    }
+    academicSource = undefined;
+    showReceipt(result.report);
   } finally {
-    polling = false;
-    if (activeScreen === 'pending' && pendingReport && pendingReport !== candidate) pollForReceipt();
+    clearTimeout(timeout);
   }
 }
 
 async function sendReport(operation) {
   if (busy || activeScreen !== 'entry') return;
-  const output = operation === 'academia' ? academicFeedback : feedback;
-  const report = collectReport(operation, output);
+  const report = collectReport(operation, feedback);
   if (!report) return;
-  if (operation === 'submit') {
-    startSubmission(report);
-    return;
-  }
   setBusy(true);
-  showFeedback(output, 'progress', 'Checking saved reports…');
+  showFeedback(feedback, 'progress', operation === 'submit' ? 'Saving and verifying your report…' : 'Checking saved reports…');
   try {
-    const records = (await loadPublicReports())
-      .filter(row => row.branch_id === report.branch_id).sort((a, b) => b.report_id.localeCompare(a.report_id));
-    const id = idFor(report);
-    const saved = records.find(row => operation === 'academia' ? row.report_id <= id : row.report_id === id);
-    if (operation === 'academia' && saved) {
-      fillAcademicNumbers({ status: 'academia_found', period: saved, counts: saved }, report);
-    } else if (saved) {
-      showReceipt(saved);
+    if (operation === 'submit') {
+      await submitDirectly(report);
     } else {
-      showFeedback(output, 'info', 'No saved report was found for this branch and period.');
+      const saved = (await loadPublicReports()).find(row => row.report_id === reportId(report));
+      if (saved) showReceipt(saved);
+      else showFeedback(feedback, 'info', 'No saved report was found for this branch and period.');
     }
   } catch (error) {
-    showFeedback(output, 'error', error.name === 'AbortError' ? 'The request timed out.' : error.message);
+    showFeedback(feedback, 'error', error.name === 'AbortError'
+      ? 'The request timed out. Use Check Report before trying again.'
+      : error.message);
   } finally {
     setBusy(false);
-    if (activeScreen === 'entry') output.focus({ preventScroll: true });
+    if (activeScreen === 'entry') {
+      const access = byId('submission-access');
+      if (operation === 'submit' && !access.hidden && !byId('submission-code').value) byId('submission-code').focus();
+      else feedback.focus({ preventScroll: true });
+    }
   }
 }
 
@@ -485,7 +439,7 @@ async function openStats() {
   showFeedback(output, 'progress', 'Loading student statistics…');
   try {
     const [weekly, monthly] = await Promise.allSettled([
-      loadPublicReports().then(async reports => (await import('./lib/reports.mjs')).publicStats(reports)),
+      loadPublicReports().then(publicStats),
       loadMonthlyStats()
     ]);
     if (activeScreen !== 'status') return;
@@ -513,7 +467,9 @@ async function loadMonthlyStats() {
   if (!response.ok) throw new Error('The monthly figures could not be loaded.');
   const periods = await response.json();
   if (!Array.isArray(periods)) throw new Error('The monthly figures are invalid.');
-  return periods;
+  return periods.map(period => ({
+    ...period, branches: period.branches.map(row => ({ ...row, branch: displayBranchName(row.branch) }))
+  }));
 }
 
 function statsPeriodText(period) {
@@ -653,7 +609,7 @@ function showDetail(report, previousScreen) {
   output.replaceChildren(
     textElement('h2', report.branch_name + ' · ' + periodText(report)),
     textElement('p', report.report_id + ' · Saved ' + when + ' WIB', 'hint'),
-    textElement('p', 'Academic Name: ' + report.reporter_name),
+    textElement('p', "Coordinator's/Staff's Name: " + report.reporter_name),
     metricList([
       ['Total Active Students', report.total_active_students], ['Total Active Classes', report.total_active_classes],
       ['English Students per Class', report.active_english_classes ? report.active_english_students / report.active_english_classes : null],
@@ -682,9 +638,12 @@ function showDetail(report, previousScreen) {
 
 function finish() {
   form.reset();
+  academicRequest += 1;
+  const exit = document.exitFullscreen || document.webkitExitFullscreen || document.webkitCancelFullScreen;
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    try { Promise.resolve(exit?.call(document)).catch(() => {}); } catch { /* Browser-controlled fullscreen. */ }
+  }
   savedReport = undefined;
-  pendingReport = undefined;
-  byId('pending-body').value = '';
   historyReports = [];
   carriedAcademicFields.clear();
   for (const id of ['history-list', 'report-detail', 'saved-receipt', 'feedback', 'academic-feedback']) {
@@ -707,11 +666,95 @@ byId('view-history').addEventListener('click', openHistory);
 byId('history-search').addEventListener('input', renderHistory);
 byId('finish').addEventListener('click', finish);
 
-byId('open-github').href = GITHUB_ISSUE_URL;
-byId('copy-pending').addEventListener('click', copyPendingReport);
-byId('check-pending').addEventListener('click', pollForReceipt);
-byId('pending-back').addEventListener('click', () => {
-  pendingReport = undefined;
-  byId('pending-body').value = '';
-  showScreen('entry');
+function initPickers() {
+  const dialog = byId('field-picker');
+  if (typeof dialog.showModal !== 'function') return;
+  const optionsList = byId('picker-options');
+  const settings = {
+    branch: ['Branch', 'Select a branch'],
+    year: ['Reporting year', 'Select a year'],
+    month: ['Reporting month', 'Select a month']
+  };
+  for (const select of form.querySelectorAll('[data-picker]')) {
+    const [name, placeholder] = settings[select.dataset.picker];
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'secondary picker-trigger';
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.setAttribute('aria-controls', dialog.id);
+
+    const sync = () => {
+      trigger.textContent = select.value ? select.selectedOptions[0].textContent : placeholder;
+      trigger.setAttribute('aria-label', name + ', ' + trigger.textContent);
+    };
+
+    trigger.addEventListener('click', () => {
+      pickerTrigger = trigger;
+      byId('picker-title').textContent = name;
+      dialog.dataset.kind = select.dataset.picker;
+      const choices = [...select.options].filter(option => option.value).map(option => {
+        const choice = document.createElement('button');
+        choice.type = 'button';
+        choice.className = 'secondary';
+        choice.textContent = option.textContent;
+        if (option.value === select.value) choice.setAttribute('aria-current', 'true');
+        choice.addEventListener('click', () => {
+          select.value = option.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          dialog.close();
+        });
+        return choice;
+      });
+      optionsList.replaceChildren(...choices);
+      dialog.showModal();
+      const current = optionsList.querySelector('[aria-current]') ?? choices[0];
+      current?.focus();
+      optionsList.scrollTop = current ? current.offsetTop - choices[0].offsetTop : 0;
+    });
+
+    const label = select.closest('label');
+    const wrapper = document.createElement('div');
+    label.before(wrapper);
+    wrapper.append(label, trigger);
+    select.hidden = true;
+    select.addEventListener('change', sync);
+    pickerTriggers.set(select.name, trigger);
+    sync();
+  }
+  byId('picker-close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => pickerTrigger?.focus({ preventScroll: true }));
+  optionsList.addEventListener('keydown', event => {
+    const choices = [...optionsList.querySelectorAll('button')];
+    const index = choices.indexOf(document.activeElement);
+    const target = { ArrowUp: index - 1, ArrowDown: index + 1, Home: 0, End: choices.length - 1 }[event.key];
+    if (target == null) return;
+    event.preventDefault();
+    choices[Math.max(0, Math.min(target, choices.length - 1))]?.focus();
+  });
+}
+
+populate();
+initPickers();
+updateTotals();
+updateSelection();
+form.addEventListener('input', event => {
+  carriedAcademicFields.delete(event.target.name);
+  if (event.target.hasAttribute('aria-invalid')) {
+    event.target.setCustomValidity('');
+    event.target.removeAttribute('aria-invalid');
+  }
+  if (countNames.includes(event.target.name)) updateTotals();
 });
+form.addEventListener('change', event => {
+  if (!PERIOD_FIELDS.includes(event.target.name)) return;
+  field(event.target.name).setCustomValidity('');
+  field(event.target.name).removeAttribute('aria-invalid');
+  pickerTriggers.get(event.target.name)?.removeAttribute('aria-invalid');
+  updateSelection();
+  autoFillAcademicNumbers();
+});
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  sendReport('submit');
+});
+checkButton.addEventListener('click', () => sendReport('status'));

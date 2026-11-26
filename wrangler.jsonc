@@ -1,0 +1,7 @@
+{
+  "name": "lpia-academic-reporter",
+  "main": "lib/report-store.mjs",
+  "compatibility_date": "2025-11-01",
+  "workers_dev": false,
+  "routes": [{ "pattern": "ar.lpia.co/api/reports", "zone_name": "lpia.co" }]
+}

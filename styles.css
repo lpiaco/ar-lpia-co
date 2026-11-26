@@ -94,7 +94,7 @@ button:disabled { opacity: 0.58; cursor: default; }
 }
 .splash-content { width: min(100%, 30rem); }
 .splash-content h1 { margin: 1.2rem 0 1.75rem; }
-.logo-slot { width: 7rem; height: 7rem; margin: 0 auto; display: block; object-fit: contain; }
+.logo-slot { width: 10.5rem; height: 10.5rem; margin: 0 auto; display: block; object-fit: contain; }
 .splash-content button { min-width: 9rem; color: #102e2a; background: #fff; border-color: #fff; }
 .finished-screen { background: #000; color: #fff; }
 .finished-screen h1 { font-size: clamp(1.45rem, 6vw, 2.75rem); }
@@ -129,3 +129,48 @@ button:disabled { opacity: 0.58; cursor: default; }
 .report-panel { margin-block: 0.8rem; }
 .report-panel h2 { margin: 0; }
 .report-panel .notes { overflow-wrap: anywhere; white-space: pre-wrap; margin-top: 0.5rem; }
+
+h1, h2, h3, legend, .masthead .brand-heading { font-weight: 800; }
+.brand-heading { display: flex; align-items: center; gap: 0.35em; }
+.brand-heading img { display: block; flex: none; width: 1em; height: 1em; object-fit: contain; }
+.menu-content .brand-heading { justify-content: center; }
+.masthead .brand-heading { font-size: clamp(1.05rem, 3vw, 1.35rem); }
+body.app-running {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+body.app-running .masthead { flex: none; }
+body.app-running .app-content, body.app-running .menu-screen {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.app-content > .screen { width: min(100% - 2rem, 49rem); margin-inline: auto; }
+.attestation { margin-block: 0.8rem; }
+.submission-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.55rem; margin-top: 0.75rem; }
+.submission-buttons button { width: 100%; }
+.picker-trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; margin-top: 0.25rem; text-align: left; font-weight: 400;
+}
+.picker-trigger::after { content: "▾"; margin-inline-start: 0.5em; }
+.picker-dialog {
+  position: fixed; inset: 0; margin: auto; width: min(100% - 2rem, 27rem);
+  height: 75vh; height: 75dvh; max-height: 75vh; max-height: 75dvh;
+  border: 1px solid var(--border); border-radius: 0.65rem; padding: 0.8rem;
+  color: var(--ink); background: #fff;
+}
+.picker-dialog[open] { display: flex; flex-direction: column; }
+.picker-dialog[data-kind="branch"] {
+  height: 50vh; height: 50dvh; max-height: 50vh; max-height: 50dvh;
+}
+.picker-dialog::backdrop { background: rgb(16 46 42 / 55%); }
+.picker-header { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding-bottom: 0.5rem; }
+.picker-header h2 { margin: 0; font-size: 1.2rem; }
+.picker-options { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0.2rem; }
+.picker-options button { display: block; width: 100%; text-align: left; margin-bottom: 0.35rem; }
+.picker-options button[aria-current="true"] { background: #edf5f2; }

@@ -1,23 +1,28 @@
 # LPIA Academic Report
 
-The app at `ar.lpia.co` uses GitHub Pages and stores reports in [reports.csv](https://github.com/lpiaco/ar-lpia-co/blob/report-data/reports.csv) on the `report-data` branch of this repository. The main branch serves the site. The CSV is public.
+The site at `ar.lpia.co` is served by GitHub Pages from `main`. The public [reports.csv](https://github.com/lpiaco/ar-lpia-co/blob/report-data/reports.csv) lives on this repository's `report-data` branch. Import it as UTF-8 comma-delimited data and set `branch_id` to text to retain leading zeros.
 
-## Submit a report
+## Application
 
-1. Press **START**, select **Enter Data of LPIA Students**, complete the form, and press **Submit report**. The site copies the report and opens a new GitHub issue tab with its title prefilled.
-2. Sign in to GitHub if needed, paste into **Description**, and click **Create**. If the browser could not copy automatically, use **Copy report** or select the text on the confirmation screen. The same screen has an **Open GitHub** button if the new tab was blocked.
-3. Return to `ar.lpia.co`. GitHub Actions validates the issue and writes the row to the CSV. The site shows the receipt only after it reads the matching row from GitHub. The issue receives a verification comment from the workflow.
+- **START** requests fullscreen. The main views scroll inside the app and show the LPIA logo and heading. The closing screen exits fullscreen. Browsers that decline fullscreen keep their browser controls visible.
+- The entry form uses scrollable branch, year, and month pickers where HTML dialogs are supported. The year range is 2026–2036. Academic Numbers use the most recent saved counts for the selected branch, up to the selected week, and remain editable.
+- The dashboard shows weekly data from the CSV alongside monthly snapshots from January 2023 through November 2026. Monthly data contains aggregate branch counts and no coordinator names. Blank counts in the source remain unknown.
+- **Check Report** reads the selected report from the CSV. **SUBMIT** sends JSON to the same-origin `POST /api/reports` endpoint. The site opens no external page and shows a receipt only after the API verifies the GitHub CSV commit. If the endpoint is unavailable, the form displays the problem and retains the entered values.
+- The saved-report screen includes report details, searchable history, and a WhatsApp draft. Set `ACADEMIC_OFFICE_WHATSAPP` in `app.js` if the office number becomes available.
 
-The GitHub issue must keep its prefilled title. Its body contains the form data as JSON, pasted only into GitHub. **Check saved report** and **Check CSV again** can recover a saved receipt. One report is stored per branch and period. A repeated identical submission returns the existing row. A conflicting one leaves the original report in place.
+## Connect direct submission
 
-The dashboard shows weekly reports from the public CSV and monthly figures imported from the LPIA Active Students spreadsheet. The monthly snapshot in `data/active-students.json` contains branch names and English and Computer student counts from January 2023 through November 2026. Monthly totals use the recorded branch rows. Blank counts stay unknown. Downloading or viewing the dashboard does not require a live spreadsheet request. Report history, details and Academic Numbers prefill read the public CSV. The WhatsApp button opens a message draft. The coordinator selects and sends to the recipient. Set `ACADEMIC_OFFICE_WHATSAPP` in `app.js` if the office number becomes available. The splash screen uses `assets/lpia-logo.png` from the [LPIA organization repository](https://github.com/lpiaco/lpia/blob/master/gen-ai-for-edu/LPIA-Logo.png).
+The endpoint implementation is `lib/report-store.mjs`. GitHub Pages serves static files. Deploy the endpoint with the included `wrangler.jsonc` to the existing Cloudflare zone at `ar.lpia.co/api/reports`. It uses a GitHub token scoped to the repository and writes only to the `report-data` branch.
 
-## Storage and export
+The two runtime secrets are:
 
-The GitHub workflow uses its built-in token with contents and issues write permissions. No browser or long-lived project token is required. The workflow writes to `report-data` only. It retries concurrent file-SHA conflicts and reads back the exact commit before posting a receipt.
+- `GITHUB_REPORT_TOKEN`: GitHub token with repository Contents read/write access.
+- `REPORT_ACCESS_CODES`: JSON mapping zero-padded branch IDs to reporting access codes. The `all` key is optional central access. Codes must be 12 to 128 characters and are requested in the form when needed.
 
-Download the raw `reports.csv` from GitHub. The UTF-8, comma-delimited CSV is compatible with spreadsheet import. Set `branch_id` to text to retain leading zeroes. Formula-like user text is escaped. Timestamps are in ISO UTC, and the site displays them in WIB.
+An authorized Cloudflare deployment must attach those secrets and the route. Keep actual values outside this repository and ZIP. The existing issue workflow remains available for previously created GitHub issues. The application no longer opens the issue workflow.
 
-## Checks
+At the handoff, the live endpoint returned HTTP 404. The browser success, access-code prompt, validation, and error paths were exercised against a simulated endpoint. The production direct-write test is pending a deployment with the required access.
 
-Run `node checks/reports.test.mjs`. Set `PLAYWRIGHT_MODULE` and, optionally, `CHROMIUM_PATH` to run the browser suite.
+## Local checks
+
+Run `node checks/reports.test.mjs`. Supply `PLAYWRIGHT_MODULE` and optionally `CHROMIUM_PATH` to exercise the browser suite, including modal dimensions, automatic CSV prefill, direct POST, preserved input on failure, receipt, history, and exit.
