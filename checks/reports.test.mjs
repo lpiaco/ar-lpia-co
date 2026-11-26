@@ -124,7 +124,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
   ]);
   const mime = {
     '/': 'text/html', '/app.js': 'application/javascript', '/styles.css': 'text/css',
-    '/lib/reports.mjs': 'application/javascript'
+    '/lib/reports.mjs': 'application/javascript', '/assets/lpia-logo.png': 'image/png'
   };
   const server = createServer(async (req, res) => {
     try {
@@ -173,7 +173,8 @@ if (process.env.PLAYWRIGHT_MODULE) {
     const url = 'http://127.0.0.1:' + server.address().port;
     await page.goto(url);
     await page.getByRole('heading', { name: 'LPIA Academic Report' }).waitFor();
-    assert.ok(await page.locator('.logo-placeholder').isVisible());
+    await page.waitForFunction(() => document.getElementById('brand-logo').naturalWidth > 0);
+    assert.ok(await page.locator('#brand-logo').isVisible());
     await page.getByRole('button', { name: 'START', exact: true }).click();
     assert.equal(await page.evaluate(() => window.fullscreenRequested), true);
     for (const viewport of [{ width: 360, height: 780 }, { width: 1366, height: 768 }]) {

@@ -2,7 +2,6 @@
 
 // Public options. Leave blank to use the WhatsApp contact picker.
 const ACADEMIC_OFFICE_WHATSAPP = '';
-const BRAND_LOGO_URL = '';
 const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=LPIA%20Academic%20Report';
 const PUBLIC_REPORTS_CSV = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv';
 
@@ -649,14 +648,6 @@ function finish() {
   showScreen('finished');
 }
 
-if (BRAND_LOGO_URL) {
-  const logo = byId('brand-logo');
-  logo.addEventListener('load', () => {
-    logo.hidden = false;
-    document.querySelector('.logo-placeholder').hidden = true;
-  });
-  logo.src = BRAND_LOGO_URL;
-}
 byId('start').addEventListener('click', beginFullscreen);
 byId('open-status').addEventListener('click', openStats);
 byId('open-entry').addEventListener('click', () => showScreen('entry'));
