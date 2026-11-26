@@ -1,1 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LPIA Academic Reporter</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <section id="start-screen" class="start-screen screen" aria-labelledby="start-title">
+    <div class="splash-content">
+      <img id="brand-logo" class="logo-slot" alt="" width="112" height="112" hidden>
+      <div class="logo-slot logo-placeholder" aria-hidden="true"></div>
+      <h1 id="start-title">LPIA Academic Report</h1>
+      <button id="start" type="button">START</button>
+      <noscript><p>Enable JavaScript to use the reporting app.</p></noscript>
+    </div>
+  </section>
 
+  <header class="masthead" id="masthead" hidden>
+    <div class="page-width">
+      <p>LPIA Academic Report</p>
+    </div>
+  </header>
+
+  <main class="page-width app-content" id="app-content" hidden>
+    <section class="screen" id="menu-screen" hidden aria-labelledby="menu-title">
+      <h1 id="menu-title" tabindex="-1">LPIA Academic Report</h1>
+      <div class="menu-options">
+        <button id="open-status" type="button">Current Status of LPIA Students</button>
+        <button id="open-entry" type="button" class="secondary">Enter Data of LPIA Students</button>
+      </div>
+    </section>
+
+    <section class="screen" id="status-screen" hidden aria-labelledby="status-title">
+      <button type="button" class="secondary back" data-menu>Back to menu</button>
+      <h1 id="status-title" tabindex="-1">Current Status of LPIA Students</h1>
+      <div id="stats-controls" hidden>
+        <label>Reporting period <select id="stats-period"></select></label>
+      </div>
+      <div id="stats-feedback" class="feedback" role="status"></div>
+      <div id="stats-summary"></div>
+      <section class="screen-end" aria-labelledby="status-question">
+        <h2 id="status-question">Do you want to update data?</h2>
+        <div class="buttons">
+          <button id="status-yes" type="button">Yes</button>
+          <button id="status-no" type="button" class="secondary">No</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="screen" id="entry-screen" hidden aria-labelledby="entry-title">
+      <button id="entry-back" type="button" class="secondary back" data-menu>Back to menu</button>
+      <h1 id="entry-title" tabindex="-1">Enter Data of LPIA Students</h1>
+    <form id="report-form" novalidate>
+      <p class="intro">Enter 0 when there were none. Remarks are optional.</p>
+
+      <fieldset class="panel" id="identification">
+        <legend>Report identification</legend>
+        <div class="grid">
+          <label>Branch
+            <select name="branch_id" id="branch" required>
+              <option value="">Select a branch</option>
+            </select>
+          </label>
+          <label>Academic Name
+            <input name="reporter_name" type="text" autocomplete="name" maxlength="100" required>
+          </label>
+        </div>
+        <div class="grid period">
+          <label>Reporting year <select name="reporting_year" required></select></label>
+          <label>Reporting month <select name="reporting_month" required></select></label>
+          <label>Reporting week
+            <select name="reporting_week" required>
+              <option value="">Select a week</option>
+              <option value="1">Week 1</option>
+              <option value="2">Week 2</option>
+              <option value="3">Week 3</option>
+              <option value="4">Week 4</option>
+              <option value="5">Week 5</option>
+            </select>
+          </label>
+        </div>
+        <label class="branch-access">Branch access code
+          <input name="access_code" type="password" maxlength="128" autocomplete="off" required>
+        </label>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>New recruits</legend>
+        <p class="hint">Count newly recruited academic personnel.</p>
+        <div class="grid" id="recruits-fields"></div>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Academic Numbers</legend>
+        <div class="grid" id="academia-fields"></div>
+        <div class="section-actions">
+          <button id="load-academia" type="button" class="secondary">Fill from last report</button>
+          <div id="academic-feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Tests</legend>
+        <p class="hint">Count students or persons.</p>
+        <div class="grid" id="test-fields"></div>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Students &amp; Classes</legend>
+        <div class="grid" id="active-fields"></div>
+        <p id="active-warning" class="warning" role="status" hidden></p>
+        <dl id="active-totals" class="totals"></dl>
+        <dl id="class-averages" class="totals"></dl>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Students (IN/OUT)</legend>
+        <div class="grid" id="movement-fields"></div>
+        <dl id="movement-totals" class="totals"></dl>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>Remarks</legend>
+        <label>Academic observations or circumstances (optional)
+          <textarea name="remarks" rows="4" maxlength="1000" aria-describedby="remarks-limit"></textarea>
+        </label>
+        <p id="remarks-limit" class="hint">Up to 1,000 characters.</p>
+      </fieldset>
+
+      <section class="actions" aria-label="Submission">
+        <p id="selection">Choose a branch and reporting period.</p>
+        <p class="hint">Data submission is available to approved branch accounts.</p>
+        <div class="buttons">
+          <button id="submit" type="submit">Submit report</button>
+          <button id="check" type="button" class="secondary">Check saved report</button>
+        </div>
+        <div id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></div>
+      </section>
+    </form>
+    </section>
+
+    <section class="screen" id="saved-screen" hidden aria-labelledby="saved-title">
+      <h1 id="saved-title" tabindex="-1">Laporan tersimpan</h1>
+      <p id="saved-receipt" class="receipt"></p>
+      <div class="menu-options">
+        <button id="view-new-report" type="button">Lihat laporan yang baru saja di-update</button>
+        <button id="view-history" type="button" class="secondary">Lihat semua laporan yang sudah terkirim</button>
+        <a id="share-whatsapp" class="button secondary" target="_blank" rel="noopener noreferrer">Laporkan ke Akademik Pusat lewat WhatsApp</a>
+        <button id="finish" type="button" class="secondary">Selesai</button>
+      </div>
+    </section>
+
+    <section class="screen" id="history-screen" hidden aria-labelledby="history-title">
+      <button type="button" class="secondary back" data-saved>Back to saved report</button>
+      <h1 id="history-title" tabindex="-1">Daftar laporan terkirim</h1>
+      <label>Cari cabang, periode, atau ID laporan
+        <input id="history-search" type="search" autocomplete="off">
+      </label>
+      <div id="history-feedback" class="feedback" role="status"></div>
+      <div id="history-list" class="history-list"></div>
+    </section>
+
+    <section class="screen" id="detail-screen" hidden aria-labelledby="detail-title">
+      <button id="detail-back" type="button" class="secondary back">Back</button>
+      <h1 id="detail-title" tabindex="-1">Detail laporan</h1>
+      <div id="report-detail"></div>
+    </section>
+  </main>
+
+  <section id="finished-screen" class="finished-screen screen" hidden aria-labelledby="finished-title">
+    <h1 id="finished-title" tabindex="-1">Thank you for using Academic Report App.</h1>
+  </section>
+</body>
+</html>
