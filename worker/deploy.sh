@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 
-for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID REPORT_REPOSITORY GITHUB_REPORT_TOKEN REPORT_ACCESS_CODES; do
+for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID GITHUB_REPORT_TOKEN REPORT_ACCESS_CODES; do
   if [[ -z ${!name:-} ]]; then
     printf 'Missing deployment binding: %s\n' "$name" >&2
     exit 1
@@ -16,8 +16,15 @@ trap 'rm -f -- "$secret_file"' EXIT
 node --input-type=module - "$secret_file" <<'JS'
 import { writeFileSync } from 'node:fs';
 const env = process.env;
+const siteRepository = 'lpiaco/ar-lpia-co';
 const keys = ['REPORT_REPOSITORY', 'REPORT_BRANCH', 'GITHUB_REPORT_TOKEN', 'REPORT_ACCESS_CODES'];
 const config = Object.fromEntries(keys.flatMap(key => env[key] ? [[key, env[key]]] : []));
+config.REPORT_REPOSITORY ||= siteRepository;
+const siteRepo = config.REPORT_REPOSITORY.toLowerCase() === siteRepository;
+config.REPORT_BRANCH ||= siteRepo ? 'report-data' : 'main';
+if (siteRepo && config.REPORT_BRANCH !== 'report-data') {
+  throw new Error('The website repository accepts report writes only on report-data.');
+}
 const response = await fetch('https://api.github.com/repos/' + config.REPORT_REPOSITORY, {
   redirect: 'error',
   headers: {
@@ -27,8 +34,8 @@ const response = await fetch('https://api.github.com/repos/' + config.REPORT_REP
   }
 });
 const repository = response.ok ? await response.json() : {};
-if (repository.private !== true || !repository.permissions?.push) {
-  throw new Error('The runtime token must have write access to an initialized private reports repository.');
+if ((!siteRepo && repository.private !== true) || !repository.permissions?.push) {
+  throw new Error('The runtime token must have write access to an approved reports repository.');
 }
 const codes = JSON.parse(config.REPORT_ACCESS_CODES);
 if (!Object.entries(codes).some(([key, value]) =>

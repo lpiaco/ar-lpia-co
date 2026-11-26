@@ -4,6 +4,8 @@ import {
 } from './reports.mjs';
 
 const REPORT_PATH = 'reports.csv';
+const SITE_REPOSITORY = 'lpiaco/ar-lpia-co';
+const SITE_DATA_BRANCH = 'report-data';
 const MAX_ROWS = 4000;
 const SITE_ORIGIN = 'https://ar.lpia.co';
 const errors = {
@@ -20,12 +22,14 @@ function json(body, status = 200) {
 }
 
 function config(env) {
-  if (!/^[\w.-]+\/[\w.-]+$/.test(env.REPORT_REPOSITORY || '') || !env.GITHUB_REPORT_TOKEN) {
+  const repo = env.REPORT_REPOSITORY || SITE_REPOSITORY;
+  const siteRepo = repo.toLowerCase() === SITE_REPOSITORY;
+  const branch = env.REPORT_BRANCH || (siteRepo ? SITE_DATA_BRANCH : 'main');
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo) || !env.GITHUB_REPORT_TOKEN ||
+      !/^[\w./-]+$/.test(branch) || (siteRepo && branch !== SITE_DATA_BRANCH)) {
     throw new ReporterError(503, errors.configuration);
   }
-  const branch = env.REPORT_BRANCH || 'main';
-  if (!/^[\w./-]+$/.test(branch)) throw new ReporterError(503, errors.configuration);
-  return { repo: env.REPORT_REPOSITORY, token: env.GITHUB_REPORT_TOKEN, branch };
+  return { repo, token: env.GITHUB_REPORT_TOKEN, branch, allowPublic: siteRepo };
 }
 
 async function authorize(env, suppliedCode, branch) {
@@ -65,11 +69,13 @@ function github(config, request = fetch) {
     }
   });
 
-  async function assertPrivate() {
+  async function assertStorage() {
     const response = await get('');
     if (!response.ok) throw new ReporterError(503, errors.configuration);
     const repository = await response.json();
-    if (repository.private !== true) throw new ReporterError(503, 'Report storage must use a private repository.');
+    if (repository.private !== true && !config.allowPublic) {
+      throw new ReporterError(503, 'The selected repository is not an approved storage location.');
+    }
   }
 
   async function read(ref = config.branch, allowMissing = true) {
@@ -123,7 +129,7 @@ function github(config, request = fetch) {
     }
     throw new ReporterError(409, 'The report file changed while saving. Retry to confirm the latest result.');
   }
-  return { read, write, assertPrivate };
+  return { read, write, assertStorage };
 }
 
 export function createHandler(requestGithub = fetch) {
@@ -133,7 +139,7 @@ export function createHandler(requestGithub = fetch) {
       if (url.pathname !== '/api/reports') return json({ message: 'Not found.' }, 404);
       if (request.method === 'GET') {
         const store = github(config(env), requestGithub);
-        await store.assertPrivate();
+        await store.assertStorage();
         return json({ periods: publicStats((await store.read()).reports) });
       }
       if (request.method !== 'POST') return json({ message: 'Method not allowed.' }, 405);
@@ -155,7 +161,7 @@ export function createHandler(requestGithub = fetch) {
       const settings = config(env);
       const administrator = await authorize(env, accessCode, branch);
       const store = github(settings, requestGithub);
-      await store.assertPrivate();
+      await store.assertStorage();
       if (operation === 'submit') return json(await store.write(makeReport(report)));
       const { reports } = await store.read();
       const branchReports = reports.filter(row => row.branch_id === branch).sort((a, b) => b.report_id.localeCompare(a.report_id));
