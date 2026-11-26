@@ -172,7 +172,10 @@ if (process.env.PLAYWRIGHT_MODULE) {
       };
       window.open = url => { window.openedWindow = url; };
       Object.defineProperty(navigator, 'clipboard', {
-        value: { writeText: async text => { window.copiedReport = text; } }
+        value: { writeText: async text => {
+          if (window.rejectClipboard) throw new Error('Clipboard permission denied');
+          window.copiedReport = text;
+        } }
       });
     });
     await page.route('https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv?*', route =>
@@ -290,7 +293,19 @@ if (process.env.PLAYWRIGHT_MODULE) {
     const fallback = page.getByRole('link', { name: 'Continue to GitHub' });
     const issueURL = new URL(await fallback.getAttribute('href'));
     assert.equal(issueURL.searchParams.get('title'), 'LPIA Academic Report');
-    assert.equal(issueURL.searchParams.has('body'), false);
+    assert.deepEqual(JSON.parse(issueURL.searchParams.get('body')), setu);
+
+    await page.evaluate(() => { window.rejectClipboard = true; });
+    const longRemarks = '😀'.repeat(500);
+    await field('remarks').fill(longRemarks);
+    await submit.click();
+    await fallback.waitFor();
+    assert.equal(new URL(await fallback.getAttribute('href')).searchParams.has('body'), false);
+    await fallback.evaluate(link => link.addEventListener('click', event => event.preventDefault(), { once: true }));
+    await fallback.click();
+    await page.getByText('Copy the selected report text.').waitFor();
+    assert.equal(JSON.parse(await page.getByLabel('Report to copy').inputValue()).remarks, longRemarks);
+    await field('remarks').fill(setu.remarks);
     endpointAvailable = true;
     await submit.click();
     await page.getByLabel('Reporting access code').waitFor();
@@ -299,13 +314,22 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await submit.click();
     await page.getByText(fallbackMessage).waitFor();
     assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
-    await fallback.evaluate(link => link.addEventListener('click', event => event.preventDefault(), { once: true }));
+    await fallback.evaluate(link => {
+      link.href = 'https://github.com/lpiaco/ar-lpia-co/issues/new';
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        window.clickedIssueUrl = event.currentTarget.href;
+      }, { once: true });
+    });
     await fallback.click();
-    await page.getByText('Report copied. Paste it on GitHub to finish sending.').waitFor();
-    const copiedReport = await page.evaluate(() => JSON.parse(window.copiedReport));
-    assert.deepEqual(copiedReport, setu);
-    assert.equal(Object.hasOwn(copiedReport, 'accessCode'), false);
-    assert.equal((await browserMock.api('submit', copiedReport)).status, 200);
+    await page.getByText('The report is included in the GitHub form. Click Create to send it.').waitFor();
+    const clickedURL = new URL(await page.evaluate(() => window.clickedIssueUrl));
+    const prefilledReport = JSON.parse(clickedURL.searchParams.get('body'));
+    assert.deepEqual(prefilledReport, setu);
+    assert.equal(Object.hasOwn(prefilledReport, 'accessCode'), false);
+    assert.equal(await page.evaluate(() => window.copiedReport), undefined);
+    assert.equal(await page.getByLabel('Report to copy').isVisible(), false);
+    assert.equal((await browserMock.api('submit', prefilledReport)).status, 200);
     await page.getByRole('heading', { name: 'Laporan tersimpan' }).waitFor();
     assert.ok((await page.getByRole('link', { name: /WhatsApp/ }).getAttribute('href')).startsWith('https://wa.me/?text='));
     await page.getByRole('button', { name: 'Lihat laporan yang baru saja di-update' }).click();

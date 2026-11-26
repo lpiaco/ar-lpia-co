@@ -5,6 +5,8 @@ import {
 // Public options. Leave blank to use the WhatsApp contact picker.
 const ACADEMIC_OFFICE_WHATSAPP = '';
 const REPORTS_API = '/api/reports';
+const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=LPIA%20Academic%20Report';
+const MAX_GITHUB_ISSUE_URL_LENGTH = 4000;
 const PUBLIC_REPORTS_CSV = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv';
 const MONTHLY_STATS_FILE = 'data/active-students.json';
 
@@ -362,14 +364,26 @@ function showReceipt(report) {
 function clearSubmissionFallback() {
   fallbackReport = undefined;
   byId('submission-fallback').hidden = true;
+  byId('fallback-github').href = GITHUB_ISSUE_URL;
   byId('fallback-copy-manually').hidden = true;
   byId('fallback-body').value = '';
   byId('fallback-status').textContent = '';
 }
 
+function issueUrlWithReport(body) {
+  const prefilled = GITHUB_ISSUE_URL + '&body=' + encodeURIComponent(body);
+  return prefilled.length <= MAX_GITHUB_ISSUE_URL_LENGTH ? prefilled : GITHUB_ISSUE_URL;
+}
+
 function showSubmissionFallback(report) {
   fallbackReport = report;
-  byId('fallback-body').value = JSON.stringify(report);
+  const body = JSON.stringify(report);
+  const issueUrl = issueUrlWithReport(body);
+  byId('fallback-body').value = body;
+  byId('fallback-github').href = issueUrl;
+  byId('fallback-instructions').textContent = issueUrl === GITHUB_ISSUE_URL
+    ? 'Continue to GitHub, paste the report into Body, and click Create.'
+    : 'Continue to GitHub. The report is already prepared in Body. Click Create to send it.';
   byId('submission-fallback').hidden = false;
 }
 
@@ -380,15 +394,19 @@ async function continueToGitHub(event) {
     return;
   }
   const body = byId('fallback-body');
+  const link = event.currentTarget;
+  link.href = issueUrlWithReport(body.value);
+  const prefilled = link.href !== GITHUB_ISSUE_URL;
   checkFallbackReceipt();
+  if (prefilled) byId('fallback-status').textContent = 'The report is included in the GitHub form. Click Create to send it.';
   try {
     if (!navigator.clipboard) throw new Error('Clipboard unavailable.');
     await navigator.clipboard.writeText(body.value);
-    if (fallbackReport === report) {
+    if (!prefilled && fallbackReport === report) {
       byId('fallback-status').textContent = 'Report copied. Paste it on GitHub to finish sending.';
     }
   } catch {
-    if (fallbackReport !== report) return;
+    if (prefilled || fallbackReport !== report) return;
     byId('fallback-copy-manually').hidden = false;
     body.focus();
     body.select();
