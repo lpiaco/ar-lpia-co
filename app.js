@@ -311,7 +311,7 @@ const headings = {
 function showScreen(name) {
   activeScreen = name;
   document.querySelectorAll('.screen').forEach(section => { section.hidden = section.id !== name + '-screen'; });
-  const standalone = name === 'start' || name === 'finished';
+  const standalone = name === 'start' || name === 'menu' || name === 'finished';
   byId('app-content').hidden = standalone;
   byId('masthead').hidden = standalone;
   window.scrollTo(0, 0);

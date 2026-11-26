@@ -80,7 +80,7 @@ button:disabled { opacity: 0.58; cursor: default; }
   .panel { padding-inline: 1.1rem; }
 }
 
-.start-screen, .finished-screen {
+.start-screen, .menu-screen, .finished-screen {
   min-height: 100vh;
   min-height: 100svh;
   display: grid;
@@ -103,6 +103,9 @@ button:disabled { opacity: 0.58; cursor: default; }
 .app-content h1 { margin-bottom: 1.1rem; }
 .menu-options { display: grid; gap: 0.65rem; max-width: 31rem; margin-block: 1.25rem; }
 .menu-options button, .menu-options .button { text-align: left; }
+.menu-content { width: min(100%, 31rem); }
+.menu-content .menu-options { margin: 1.25rem 0 0; }
+.menu-content .menu-options button { text-align: center; }
 .button {
   display: inline-flex; align-items: center; min-height: 2.85rem; padding: 0.5rem 1rem;
   color: var(--accent); border: 1px solid var(--accent); border-radius: 0.35rem;
