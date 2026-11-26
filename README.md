@@ -7,7 +7,7 @@ The site at `ar.lpia.co` is served by GitHub Pages from `main`. The public [repo
 - **START** requests fullscreen. The main views scroll inside the app and show the LPIA logo and heading. The closing screen exits fullscreen. Browsers that decline fullscreen keep their browser controls visible.
 - The entry form uses scrollable branch, year, and month pickers where HTML dialogs are supported. The year range is 2026–2036. Academic Numbers use the most recent saved counts for the selected branch, up to the selected week, and remain editable.
 - The dashboard shows weekly data from the CSV alongside monthly snapshots from January 2023 through November 2026. Monthly data contains aggregate branch counts and no coordinator names. Blank counts in the source remain unknown.
-- **Check Report** reads the selected report from the CSV. **SUBMIT** sends JSON to the same-origin `POST /api/reports` endpoint. The site opens no external page and shows a receipt only after the API verifies the GitHub CSV commit. If the endpoint is unavailable, the form displays the problem and retains the entered values.
+- **Check Report** reads the selected report from the CSV. **SUBMIT** sends JSON to the same-origin `POST /api/reports` endpoint. The site opens no external page and shows a receipt only after the API verifies the GitHub CSV commit. If the endpoint is unavailable, the form retains the entered values and offers **Copy report** and **Open GitHub**. Paste the copied report into the new issue’s **Description** and click **Create**. The issue workflow writes the CSV and triggers its Google Sheets mirror. The form watches the CSV and shows a receipt when the saved values match.
 - The saved-report screen includes report details, searchable history, and a WhatsApp draft. Set `ACADEMIC_OFFICE_WHATSAPP` in `app.js` if the office number becomes available.
 
 ## Connect direct submission
@@ -19,7 +19,7 @@ The two runtime secrets are:
 - `GITHUB_REPORT_TOKEN`: GitHub token with repository Contents read/write access.
 - `REPORT_ACCESS_CODES`: JSON mapping zero-padded branch IDs to reporting access codes. The `all` key is optional central access. Codes must be 12 to 128 characters and are requested in the form when needed.
 
-An authorized Cloudflare deployment must attach those secrets and the route. Keep actual values outside this repository and ZIP. The existing issue workflow remains available for previously created GitHub issues. The application no longer opens the issue workflow.
+An authorized Cloudflare deployment must attach those secrets and the route. Keep actual values outside this repository and ZIP. The existing issue workflow remains available for previously created GitHub issues. The application opens the GitHub issue form only through the explicit fallback link.
 
 At the handoff, GitHub Pages returned HTTP 404 for GET /api/reports and HTTP 405 for POST /api/reports. The Cloudflare route had no deployed handler. The browser success, access-code prompt, validation, and error paths were exercised against a simulated endpoint. The production direct-write test is pending a deployment with the required access.
 

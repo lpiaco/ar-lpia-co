@@ -171,6 +171,9 @@ if (process.env.PLAYWRIGHT_MODULE) {
         return Promise.reject(new Error('Simulated fullscreen permission denial'));
       };
       window.open = url => { window.openedWindow = url; };
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { writeText: async text => { window.copiedReport = text; } }
+      });
     });
     await page.route('https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv?*', route =>
       route.fulfill({
@@ -272,13 +275,29 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await submit.scrollIntoViewIfNeeded();
     assert.ok(Math.abs((await submit.boundingBox()).y - (await check.boundingBox()).y) < 1);
     await submit.click();
-    await page.getByText('Direct submission is not available yet. Your entries are still here.').waitFor();
+    const fallbackMessage = 'Direct submission is unavailable. Send the report through GitHub below.';
+    await page.getByText(fallbackMessage).waitFor();
     assert.equal(await field('reporter_name').inputValue(), setu.reporter_name);
     assert.equal(await page.evaluate(() => window.openedWindow), undefined);
+    await page.getByRole('button', { name: 'Copy report' }).click();
+    await page.getByText('Report copied.').waitFor();
+    const copiedReport = await page.evaluate(() => JSON.parse(window.copiedReport));
+    assert.deepEqual(copiedReport, setu);
+    assert.equal(Object.hasOwn(copiedReport, 'accessCode'), false);
+    const fallback = page.getByRole('link', { name: 'Open GitHub' });
+    const issueURL = new URL(await fallback.getAttribute('href'));
+    assert.equal(issueURL.searchParams.get('title'), 'LPIA Academic Report');
+    assert.equal(issueURL.searchParams.has('body'), false);
     endpointAvailable = true;
     await submit.click();
-    await page.getByLabel('Reporting access code').fill('setu-test-code');
+    await page.getByLabel('Reporting access code').waitFor();
+    assert.equal(await fallback.isVisible(), false);
+    endpointAvailable = false;
     await submit.click();
+    await page.getByText(fallbackMessage).waitFor();
+    await fallback.evaluate(link => link.addEventListener('click', event => event.preventDefault(), { once: true }));
+    await fallback.click();
+    assert.equal((await browserMock.api('submit', copiedReport)).status, 200);
     await page.getByRole('heading', { name: 'Laporan tersimpan' }).waitFor();
     assert.ok((await page.getByRole('link', { name: /WhatsApp/ }).getAttribute('href')).startsWith('https://wa.me/?text='));
     await page.getByRole('button', { name: 'Lihat laporan yang baru saja di-update' }).click();

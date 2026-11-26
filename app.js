@@ -82,6 +82,10 @@ const pickerTriggers = new Map();
 let pickerTrigger;
 let historyReports = [];
 let statsPeriods = [];
+let fallbackReport;
+let checkingFallback;
+
+class DirectSubmissionUnavailable extends Error {}
 
 function populate() {
   BRANCHES.map((name, index) => ({ name, id: String(index + 1).padStart(2, '0') }))
@@ -337,6 +341,7 @@ async function loadPublicReports() {
 
 function showReceipt(report) {
   savedReport = report;
+  clearSubmissionFallback();
   byId('saved-receipt').textContent = report.branch_name + ' · ' + periodText(report) + ' · ' + report.report_id;
   const text = [
     'LPIA Academic Report', report.branch_name + ' · ' + periodText(report),
@@ -350,6 +355,74 @@ function showReceipt(report) {
   showScreen('saved');
 }
 
+function clearSubmissionFallback() {
+  fallbackReport = undefined;
+  byId('submission-fallback').hidden = true;
+  byId('fallback-copy-manually').hidden = true;
+  byId('fallback-body').value = '';
+  byId('fallback-status').textContent = '';
+}
+
+function showSubmissionFallback(report) {
+  fallbackReport = report;
+  byId('fallback-body').value = JSON.stringify(report);
+  byId('submission-fallback').hidden = false;
+}
+
+async function copyFallbackReport() {
+  const body = byId('fallback-body');
+  try {
+    if (!navigator.clipboard) throw new Error('Clipboard unavailable.');
+    await navigator.clipboard.writeText(body.value);
+    byId('fallback-status').textContent = 'Report copied.';
+  } catch {
+    byId('fallback-copy-manually').hidden = false;
+    body.focus();
+    body.select();
+    byId('fallback-status').textContent = 'Copy the selected report text.';
+  }
+}
+
+function matchesSubmission(expected, saved) {
+  return saved?.report_id === reportId(expected) &&
+    Object.keys(expected).every(key => expected[key] === saved[key]);
+}
+
+async function checkFallbackReceipt() {
+  const expected = fallbackReport;
+  if (!expected || checkingFallback === expected) return;
+  checkingFallback = expected;
+  const status = byId('fallback-status');
+  status.textContent = 'Waiting for GitHub to confirm the report in the CSV…';
+  try {
+    for (let attempt = 0; attempt < 18; attempt += 1) {
+      if (fallbackReport !== expected || activeScreen !== 'entry') return;
+      let saved;
+      try {
+        saved = (await loadPublicReports()).find(row => row.report_id === reportId(expected));
+      } catch {
+        // GitHub may still be publishing the report.
+      }
+      if (fallbackReport !== expected || activeScreen !== 'entry') return;
+      if (matchesSubmission(expected, saved)) {
+        academicSource = undefined;
+        showReceipt(saved);
+        return;
+      }
+      if (saved) {
+        status.textContent = 'A different report already exists for this branch and period. Open Check Report to review it.';
+        return;
+      }
+      await new Promise(resolve => setTimeout(resolve, 4000));
+    }
+    if (fallbackReport === expected && activeScreen === 'entry') {
+      status.textContent = 'The CSV has not confirmed this report yet. Use Check Report to check again.';
+    }
+  } finally {
+    if (checkingFallback === expected) checkingFallback = undefined;
+  }
+}
+
 async function submitDirectly(report) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
@@ -361,8 +434,9 @@ async function submitDirectly(report) {
         operation: 'submit', report, accessCode: byId('submission-code').value
       })
     });
-    if (!response.headers.get('Content-Type')?.includes('application/json')) {
-      throw new Error('Direct submission is not available yet. Your entries are still here.');
+    if ([404, 405, 503].includes(response.status) ||
+        !response.headers.get('Content-Type')?.includes('application/json')) {
+      throw new DirectSubmissionUnavailable('Direct submission is unavailable. Send the report through GitHub below.');
     }
 
     const result = await response.json();
@@ -372,9 +446,7 @@ async function submitDirectly(report) {
       throw new Error('Enter the reporting access code for your branch, then press SUBMIT.');
     }
     if (!response.ok) throw new Error(result.message || 'The report could not be saved.');
-    if (!['saved', 'already_saved'].includes(result.status) ||
-        result.report?.report_id !== reportId(report) ||
-        !Object.keys(report).every(key => result.report[key] === report[key])) {
+    if (!['saved', 'already_saved'].includes(result.status) || !matchesSubmission(report, result.report)) {
       throw new Error('The saved report could not be verified. Use Check Report before trying again.');
     }
     academicSource = undefined;
@@ -388,6 +460,7 @@ async function sendReport(operation) {
   if (busy || activeScreen !== 'entry') return;
   const report = collectReport(operation, feedback);
   if (!report) return;
+  if (operation === 'submit') clearSubmissionFallback();
   setBusy(true);
   showFeedback(feedback, 'progress', operation === 'submit' ? 'Saving and verifying your report…' : 'Checking saved reports…');
   try {
@@ -399,6 +472,7 @@ async function sendReport(operation) {
       else showFeedback(feedback, 'info', 'No saved report was found for this branch and period.');
     }
   } catch (error) {
+    if (error instanceof DirectSubmissionUnavailable) showSubmissionFallback(report);
     showFeedback(feedback, 'error', error.name === 'AbortError'
       ? 'The request timed out. Use Check Report before trying again.'
       : error.message);
@@ -638,6 +712,7 @@ function showDetail(report, previousScreen) {
 
 function finish() {
   form.reset();
+  clearSubmissionFallback();
   academicRequest += 1;
   const exit = document.exitFullscreen || document.webkitExitFullscreen || document.webkitCancelFullScreen;
   if (document.fullscreenElement || document.webkitFullscreenElement) {
@@ -665,6 +740,8 @@ byId('view-new-report').addEventListener('click', () => showDetail(savedReport, 
 byId('view-history').addEventListener('click', openHistory);
 byId('history-search').addEventListener('input', renderHistory);
 byId('finish').addEventListener('click', finish);
+byId('copy-fallback').addEventListener('click', copyFallbackReport);
+byId('fallback-github').addEventListener('click', checkFallbackReceipt);
 
 function initPickers() {
   const dialog = byId('field-picker');
@@ -738,6 +815,7 @@ initPickers();
 updateTotals();
 updateSelection();
 form.addEventListener('input', event => {
+  if (fallbackReport && event.target.name) clearSubmissionFallback();
   carriedAcademicFields.delete(event.target.name);
   if (event.target.hasAttribute('aria-invalid')) {
     event.target.setCustomValidity('');
@@ -747,6 +825,7 @@ form.addEventListener('input', event => {
 });
 form.addEventListener('change', event => {
   if (!PERIOD_FIELDS.includes(event.target.name)) return;
+  if (fallbackReport) clearSubmissionFallback();
   field(event.target.name).setCustomValidity('');
   field(event.target.name).removeAttribute('aria-invalid');
   pickerTriggers.get(event.target.name)?.removeAttribute('aria-invalid');
