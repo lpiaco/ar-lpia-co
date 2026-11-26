@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { createHandler } from '../lib/report-store.mjs';
-import { COUNT_FIELDS, decodeCSV, encodeCSV, makeReport, publicStats } from '../lib/reports.mjs';
+import { COUNT_FIELDS, decodeCSV, encodeCSV, makeReport, monthlyReportStats, publicStats } from '../lib/reports.mjs';
 
 const period = { branch_id: '08', reporting_year: 2026, reporting_month: 11, reporting_week: 3 };
 const setu = {
@@ -75,6 +75,13 @@ assert.deepEqual(decodeCSV(encodeCSV([record])), [record]);
 assert.deepEqual(decodeCSV(encodeCSV([{ ...record, branch_name: 'Setu' }])), [record]);
 assert.equal(publicStats([record])[0].branches[0].academia, 3);
 assert.equal(Object.hasOwn(publicStats([record])[0].branches[0], 'reporter_name'), false);
+const [month] = monthlyReportStats([record, makeReport({
+  ...setu, reporting_week: 2, active_english_students: 60, english_students_in: 2
+}, '2026-11-20T00:00:00.000Z')]);
+assert.equal(month.branches[0].english, 66);
+assert.equal(month.branches[0].latestWeek, 3);
+assert.equal(month.branches[0].inCount, 5);
+assert.equal(month.branches[0].weeksReported, 2);
 
 const mock = fixture();
 assert.deepEqual(await (await mock.api()).json(), { periods: [] });
@@ -171,6 +178,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
         return Promise.reject(new Error('Simulated fullscreen permission denial'));
       };
       window.open = url => { window.openedWindow = url; };
+      window.print = () => { window.printCount = (window.printCount ?? 0) + 1; };
       Object.defineProperty(navigator, 'clipboard', {
         value: { writeText: async text => {
           if (window.rejectClipboard) throw new Error('Clipboard permission denied');
@@ -178,7 +186,12 @@ if (process.env.PLAYWRIGHT_MODULE) {
         } }
       });
     });
-    await page.route('https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv?*', route =>
+    const privateTestSha = 'a'.repeat(40);
+    await page.route('https://api.github.com/repos/lpiaco/ar-lpia-co/git/ref/heads/report-data?*', route =>
+      route.fulfill({
+        json: { object: { sha: privateTestSha } }, headers: { 'Access-Control-Allow-Origin': '*' }
+      }));
+    await page.route('https://raw.githubusercontent.com/lpiaco/ar-lpia-co/' + privateTestSha + '/reports.csv?*', route =>
       route.fulfill({
         contentType: 'text/csv', headers: { 'Access-Control-Allow-Origin': '*' },
         body: encodeCSV(showWeeklyReports ? browserMock.rows() : [])
@@ -242,6 +255,20 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByRole('heading', { name: 'Pondok Gede · 87 students' }).waitFor();
     await page.locator('#stats-period').selectOption('2026-11-W2');
     await page.getByRole('heading', { name: 'Setu Bekasi · 73 students' }).waitFor();
+    await page.locator('#stats-period').selectOption('monthly-reports-2026-11');
+    await page.getByRole('heading', { name: 'November 2026 · Monthly reports' }).waitFor();
+    await page.locator('#stats-summary').getByText('160', { exact: true }).waitFor();
+    const statsDownload = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download CSV' }).click();
+    const exportedStats = await statsDownload;
+    assert.equal(exportedStats.suggestedFilename(), 'LPIA-monthly-reports-2026-11.csv');
+    assert.match(await readFile(await exportedStats.path(), 'utf8'), /"Total","131","29","160"/);
+    await page.getByRole('button', { name: 'Print', exact: true }).click();
+    assert.equal(await page.evaluate(() => window.printCount), 1);
+    await page.emulateMedia({ media: 'print' });
+    assert.equal(await page.locator('#stats-controls').isVisible(), false);
+    assert.equal(await page.locator('#app-content').evaluate(el => getComputedStyle(el).overflow), 'visible');
+    await page.emulateMedia({ media: 'screen' });
     await page.getByRole('button', { name: 'Yes', exact: true }).click();
     const field = name => page.locator('[name="' + name + '"]');
     assert.ok(await page.locator('#masthead .brand-heading img').isVisible());
@@ -290,7 +317,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.equal(await page.evaluate(() => window.openedWindow), undefined);
     assert.equal(await page.getByText(/Direct submission is unavailable/).count(), 0);
     assert.equal(await page.getByRole('button', { name: 'Copy report' }).count(), 0);
-    const fallback = page.getByRole('link', { name: 'Continue to GitHub' });
+    const fallback = page.getByRole('link', { name: 'Continue submission' });
     const issueURL = new URL(await fallback.getAttribute('href'));
     assert.equal(issueURL.searchParams.get('title'), 'LPIA Academic Report');
     assert.deepEqual(JSON.parse(issueURL.searchParams.get('body')), setu);
@@ -322,7 +349,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
       }, { once: true });
     });
     await fallback.click();
-    await page.getByText('The report is included in the GitHub form. Click Create to send it.').waitFor();
+    await page.getByText('The report is filled in. Click Create to send it.').waitFor();
     const clickedURL = new URL(await page.evaluate(() => window.clickedIssueUrl));
     const prefilledReport = JSON.parse(clickedURL.searchParams.get('body'));
     assert.deepEqual(prefilledReport, setu);
@@ -334,6 +361,9 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.ok((await page.getByRole('link', { name: /WhatsApp/ }).getAttribute('href')).startsWith('https://wa.me/?text='));
     await page.getByRole('button', { name: 'Lihat laporan yang baru saja di-update' }).click();
     await page.getByText("Coordinator's/Staff's Name: " + setu.reporter_name).waitFor();
+    const detailDownload = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download CSV' }).click();
+    assert.equal((await detailDownload).suggestedFilename(), '2026-11-W3-08.csv');
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.getByRole('button', { name: 'Lihat semua laporan yang sudah terkirim' }).click();
     await page.getByText('Laporan yang baru dibuka').waitFor();
@@ -349,6 +379,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.equal(await page.locator('#finished-screen').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(0, 0, 0)');
     await page.reload();
     await page.getByRole('button', { name: 'START', exact: true }).click();
+    await page.getByText('Monthly students · November 2026').waitFor();
     await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
     await page.getByText('Reports from 2 of 24 listed branches.').waitFor();
     await page.getByRole('button', { name: 'No', exact: true }).click();

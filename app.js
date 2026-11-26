@@ -1,13 +1,15 @@
 import {
-  BRANCHES, FIRST_REPORT_YEAR, LAST_REPORT_YEAR, decodeCSV, displayBranchName, publicStats, reportId
-} from './lib/reports.mjs';
+  BRANCHES, FIRST_REPORT_YEAR, LAST_REPORT_YEAR, decodeCSV, displayBranchName,
+  encodeCSV, monthlyReportStats, publicStats, reportId
+} from './lib/reports.mjs?v=report-views';
 
 // Public options. Leave blank to use the WhatsApp contact picker.
 const ACADEMIC_OFFICE_WHATSAPP = '';
 const REPORTS_API = '/api/reports';
 const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=LPIA%20Academic%20Report';
 const MAX_GITHUB_ISSUE_URL_LENGTH = 4000;
-const PUBLIC_REPORTS_CSV = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/report-data/reports.csv';
+const REPORT_CSV_ROOT = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/';
+const REPORT_DATA_REF = 'https://api.github.com/repos/lpiaco/ar-lpia-co/git/ref/heads/report-data';
 const MONTHLY_STATS_FILE = 'data/active-students.json';
 
 const COUNT_LIMIT = 1000000;
@@ -78,6 +80,7 @@ const formatCount = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
 let busy = false;
 let activeScreen = 'start';
 let savedReport;
+let currentDetailReport;
 let academicSource;
 let academicRequest = 0;
 const pickerTriggers = new Map();
@@ -313,6 +316,7 @@ function showScreen(name) {
   byId('app-content').scrollTop = 0;
   window.scrollTo(0, 0);
   byId(headings[name])?.focus({ preventScroll: true });
+  if (name === 'menu') showMenuTotals();
   if (name === 'entry') {
     academicSource = undefined;
     autoFillAcademicNumbers();
@@ -334,9 +338,18 @@ async function loadPublicReports() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const response = await fetch(PUBLIC_REPORTS_CSV + '?read=' + Date.now(), {
-      cache: 'no-store', signal: controller.signal
-    });
+    const options = { cache: 'no-store', signal: controller.signal };
+    let ref = 'report-data';
+    try {
+      const response = await fetch(REPORT_DATA_REF + '?read=' + Date.now(), options);
+      if (response.ok) {
+        const head = await response.json();
+        if (/^[0-9a-f]{40}$/.test(head.object?.sha ?? '')) ref = head.object.sha;
+      }
+    } catch {
+      // The public branch URL is still usable if the reference API is unavailable.
+    }
+    const response = await fetch(REPORT_CSV_ROOT + ref + '/reports.csv?read=' + Date.now(), options);
     if (!response.ok) throw new Error('The report CSV could not be loaded.');
     return decodeCSV(await response.text());
   } finally {
@@ -382,8 +395,8 @@ function showSubmissionFallback(report) {
   byId('fallback-body').value = body;
   byId('fallback-github').href = issueUrl;
   byId('fallback-instructions').textContent = issueUrl === GITHUB_ISSUE_URL
-    ? 'Continue to GitHub, paste the report into Body, and click Create.'
-    : 'Continue to GitHub. The report is already prepared in Body. Click Create to send it.';
+    ? 'Continue submission, paste the report into Body, and click Create.'
+    : 'Continue submission. The report is already in Body. Click Create to send it.';
   byId('submission-fallback').hidden = false;
 }
 
@@ -398,12 +411,12 @@ async function continueToGitHub(event) {
   link.href = issueUrlWithReport(body.value);
   const prefilled = link.href !== GITHUB_ISSUE_URL;
   checkFallbackReceipt();
-  if (prefilled) byId('fallback-status').textContent = 'The report is included in the GitHub form. Click Create to send it.';
+  if (prefilled) byId('fallback-status').textContent = 'The report is filled in. Click Create to send it.';
   try {
     if (!navigator.clipboard) throw new Error('Clipboard unavailable.');
     await navigator.clipboard.writeText(body.value);
     if (!prefilled && fallbackReport === report) {
-      byId('fallback-status').textContent = 'Report copied. Paste it on GitHub to finish sending.';
+      byId('fallback-status').textContent = 'Report copied. Paste it into Body to finish sending.';
     }
   } catch {
     if (prefilled || fallbackReport !== report) return;
@@ -424,7 +437,7 @@ async function checkFallbackReceipt() {
   if (!expected || checkingFallback === expected) return;
   checkingFallback = expected;
   const status = byId('fallback-status');
-  status.textContent = 'Waiting for GitHub to confirm the report in the CSV…';
+  status.textContent = 'Waiting for confirmation that the report was saved…';
   try {
     for (let attempt = 0; attempt < 18; attempt += 1) {
       if (fallbackReport !== expected || activeScreen !== 'entry') return;
@@ -447,7 +460,7 @@ async function checkFallbackReceipt() {
       await new Promise(resolve => setTimeout(resolve, 4000));
     }
     if (fallbackReport === expected && activeScreen === 'entry') {
-      status.textContent = 'The CSV has not confirmed this report yet. Use Check Report to check again.';
+      status.textContent = 'This report is still waiting for confirmation. Use Check Report to check again.';
     }
   } finally {
     if (checkingFallback === expected) checkingFallback = undefined;
@@ -553,6 +566,27 @@ function metricList(entries) {
   return list;
 }
 
+function totalStudents(branches) {
+  return branches.reduce((total, row) => total + (row.english ?? 0) + (row.computer ?? 0), 0);
+}
+
+async function showMenuTotals() {
+  const container = byId('menu-report-totals');
+  try {
+    const reports = await loadPublicReports();
+    if (activeScreen !== 'menu' || !reports.length) return;
+    const [weekly] = publicStats(reports);
+    const [monthly] = monthlyReportStats(reports);
+    container.replaceChildren(metricList([
+      ['Weekly students · ' + periodText(weekly), totalStudents(weekly.branches)],
+      ['Monthly students · ' + MONTHS[monthly.reporting_month - 1] + ' ' + monthly.reporting_year, totalStudents(monthly.branches)]
+    ]));
+    container.hidden = false;
+  } catch {
+    // The main menu remains usable when the reports cannot be loaded.
+  }
+}
+
 async function openStats() {
   showScreen('status');
   const output = byId('stats-feedback');
@@ -560,23 +594,35 @@ async function openStats() {
   byId('stats-controls').hidden = true;
   showFeedback(output, 'progress', 'Loading student statistics…');
   try {
-    const [weekly, monthly] = await Promise.allSettled([
-      loadPublicReports().then(publicStats),
+    const [live, historical] = await Promise.allSettled([
+      loadPublicReports().then(reports => [...publicStats(reports), ...monthlyReportStats(reports)]),
       loadMonthlyStats()
     ]);
     if (activeScreen !== 'status') return;
-    statsPeriods = [...(weekly.value ?? []), ...(monthly.value ?? [])].sort((left, right) =>
+    statsPeriods = [...(live.value ?? []), ...(historical.value ?? [])].sort((left, right) =>
       right.reporting_year - left.reporting_year ||
       right.reporting_month - left.reporting_month ||
-      (right.reporting_week ?? 0) - (left.reporting_week ?? 0)
+      (right.reporting_week ?? 0) - (left.reporting_week ?? 0) ||
+      Number(Boolean(right.monthlyReport)) - Number(Boolean(left.monthlyReport))
     );
     if (!statsPeriods.length) throw new Error('Student statistics could not be loaded.');
     const select = byId('stats-period');
-    select.replaceChildren(...statsPeriods.map(period => new Option(statsPeriodText(period), period.key)));
+    const groups = [
+      ['Weekly reports', statsPeriods.filter(period => period.reporting_week)],
+      ['Monthly reports', statsPeriods.filter(period => period.monthlyReport)],
+      ['Historical monthly figures', statsPeriods.filter(period => !period.reporting_week && !period.monthlyReport)]
+    ];
+    select.replaceChildren(...groups.filter(([, periods]) => periods.length).map(([label, periods]) => {
+      const group = document.createElement('optgroup');
+      group.label = label;
+      group.append(...periods.map(period => new Option(statsPeriodText(period), period.key)));
+      return group;
+    }));
+    select.value = statsPeriods[0].key;
     byId('stats-controls').hidden = false;
     output.replaceChildren();
-    if (weekly.status === 'rejected') showFeedback(output, 'info', 'Weekly reports could not be loaded.');
-    else if (monthly.status === 'rejected') showFeedback(output, 'info', 'Monthly figures could not be loaded.');
+    if (live.status === 'rejected') showFeedback(output, 'info', 'Saved reports could not be loaded.');
+    else if (historical.status === 'rejected') showFeedback(output, 'info', 'Historical figures could not be loaded.');
     renderStats();
   } catch (error) {
     if (activeScreen === 'status') showFeedback(output, 'error',
@@ -597,13 +643,18 @@ async function loadMonthlyStats() {
 function statsPeriodText(period) {
   return period.reporting_week
     ? periodText(period)
-    : MONTHS[period.reporting_month - 1] + ' ' + period.reporting_year + ' · Monthly figures';
+    : MONTHS[period.reporting_month - 1] + ' ' + period.reporting_year +
+      (period.monthlyReport ? ' · Monthly reports' : ' · Monthly figures');
+}
+
+function selectedStatsPeriod() {
+  return statsPeriods.find(period => period.key === byId('stats-period').value);
 }
 
 function renderStats() {
-  const period = statsPeriods.find(item => item.key === byId('stats-period').value);
+  const period = selectedStatsPeriod();
   const branches = period.branches;
-  const monthly = period.reporting_week == null;
+  const historical = !period.reporting_week && !period.monthlyReport;
   const sum = fieldName => branches.reduce((total, row) => total + (row[fieldName] ?? 0), 0);
   const average = (fieldName, total) => {
     const reported = branches.filter(row => row[fieldName] != null).length;
@@ -617,7 +668,7 @@ function renderStats() {
     ['Average English students per reporting branch', average('english', english)],
     ['Average Computer students per reporting branch', average('computer', computer)]
   ];
-  if (!monthly) {
+  if (!historical) {
     const englishClasses = sum('englishClasses');
     const computerClasses = sum('computerClasses');
     const inCount = sum('inCount');
@@ -631,7 +682,7 @@ function renderStats() {
     );
   }
   const output = byId('stats-summary');
-  const coverage = monthly
+  const coverage = historical
     ? 'Figures for ' + branches.length + ' of ' + period.listed_branches + ' listed branches.'
     : 'Reports from ' + branches.length + ' of ' + BRANCHES.length + ' listed branches.';
   output.replaceChildren(
@@ -640,14 +691,10 @@ function renderStats() {
     metricList(stats),
     textElement('h2', 'Branch breakdown')
   );
-  if (monthly) {
-    const source = textElement('a', 'LPIA Active Students');
-    source.href = 'https://docs.google.com/spreadsheets/d/1Eo9JzotF1V8pDoOe75kJa4ghgOcunoBXVt2bvogXf60/edit';
-    source.target = '_blank';
-    source.rel = 'noopener noreferrer';
-    const note = textElement('p', 'Monthly source: ', 'hint');
-    note.append(source, '. Totals sum the recorded branch figures.');
-    output.firstElementChild.after(note);
+  if (historical || period.monthlyReport) {
+    const message = historical ? 'Historical figures from LPIA Active Students.' :
+      'Active counts use each branch’s latest weekly report. Student movement totals cover the weeks reported.';
+    output.firstElementChild.after(textElement('p', message, 'hint'));
   }
   const branchTotal = row => (row.english ?? 0) + (row.computer ?? 0);
   const valueText = value => value == null ? '—' : formatCount.format(value);
@@ -664,12 +711,47 @@ function renderStats() {
     bar.value = total;
     bar.setAttribute('aria-label', row.branch + ' active students');
     const countLabel = row.english == null || row.computer == null ? ' students recorded' : ' students';
-    const classes = monthly ? '' : ' · ' + formatCount.format(row.englishClasses + row.computerClasses) + ' classes';
+    const classes = historical ? '' : ' · ' + formatCount.format(row.englishClasses + row.computerClasses) + ' classes';
     card.append(textElement('h3', row.branch + ' · ' + formatCount.format(total) + countLabel), bar,
       textElement('p', 'English ' + valueText(row.english) + ' · Computer ' + valueText(row.computer) + classes, 'hint'));
+    if (period.monthlyReport) {
+      card.append(textElement('p', 'Latest: Week ' + row.latestWeek + ' · ' + row.weeksReported + ' weeks reported', 'hint'));
+    }
     list.append(card);
   }
   output.append(list);
+}
+
+function downloadCsv(filename, csv) {
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadStats() {
+  const period = selectedStatsPeriod();
+  if (!period) return;
+  const rows = [[
+    'period', 'branch', 'english_students', 'computer_students', 'active_students',
+    'english_classes', 'computer_classes', 'academic_personnel', 'students_in', 'students_out',
+    'latest_reporting_week', 'weeks_reported'
+  ], ...period.branches.map(row => [
+    statsPeriodText(period), row.branch, row.english, row.computer, (row.english ?? 0) + (row.computer ?? 0),
+    row.englishClasses, row.computerClasses, row.academia, row.inCount, row.outCount,
+    row.latestWeek ?? period.reporting_week, row.weeksReported ?? (period.reporting_week ? 1 : '')
+  ])];
+  const sum = key => period.branches.some(row => row[key] != null)
+    ? period.branches.reduce((total, row) => total + (row[key] ?? 0), 0)
+    : '';
+  rows.push([statsPeriodText(period), 'Total', sum('english'), sum('computer'), totalStudents(period.branches),
+    sum('englishClasses'), sum('computerClasses'), sum('academia'), sum('inCount'), sum('outCount'), '', '']);
+  const csv = rows.map(row => row.map(value => '"' + String(value ?? '').replace(/"/g, '""') + '"').join(',')).join('\r\n');
+  downloadCsv('LPIA-' + period.key + '.csv', csv + '\r\n');
 }
 
 async function openHistory() {
@@ -724,6 +806,7 @@ function renderHistory() {
 }
 
 function showDetail(report, previousScreen) {
+  currentDetailReport = report;
   const output = byId('report-detail');
   const when = new Intl.DateTimeFormat('en-GB', {
     dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta'
@@ -783,6 +866,11 @@ byId('open-entry').addEventListener('click', () => showScreen('entry'));
 byId('status-yes').addEventListener('click', () => showScreen('entry'));
 byId('status-no').addEventListener('click', finish);
 byId('stats-period').addEventListener('change', renderStats);
+byId('download-stats').addEventListener('click', downloadStats);
+byId('download-detail').addEventListener('click', () => {
+  if (currentDetailReport) downloadCsv(currentDetailReport.report_id + '.csv', encodeCSV([currentDetailReport]));
+});
+document.querySelectorAll('[data-print]').forEach(button => button.addEventListener('click', () => window.print()));
 document.querySelectorAll('[data-menu]').forEach(button => button.addEventListener('click', () => showScreen('menu')));
 document.querySelector('[data-saved]').addEventListener('click', () => showScreen('saved'));
 byId('view-new-report').addEventListener('click', () => showDetail(savedReport, 'saved'));

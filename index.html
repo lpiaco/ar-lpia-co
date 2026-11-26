@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LPIA Academic Reporter</title>
-  <link rel="stylesheet" href="styles.css?v=report-form">
-  <script type="module" src="app.js?v=github-prefill"></script>
+  <link rel="stylesheet" href="styles.css?v=report-views">
+  <script type="module" src="app.js?v=report-views"></script>
 </head>
 <body>
   <section id="start-screen" class="start-screen screen" aria-labelledby="start-title">
@@ -23,6 +23,7 @@
         <img class="logo-slot" src="assets/lpia-logo.png" alt="" width="168" height="168">
       </div>
       <h1 id="menu-title" tabindex="-1">LPIA Academic Report</h1>
+      <div id="menu-report-totals" aria-label="Latest report totals" hidden></div>
       <div class="menu-options">
         <button id="open-status" type="button">Current Status of LPIA Students</button>
         <button id="open-entry" type="button" class="secondary">Enter Data of LPIA Students</button>
@@ -42,6 +43,10 @@
       <h1 id="status-title" tabindex="-1">Current Status of LPIA Students</h1>
       <div id="stats-controls" hidden>
         <label>Reporting period <select id="stats-period"></select></label>
+        <div class="buttons print-controls">
+          <button type="button" class="secondary" id="download-stats">Download CSV</button>
+          <button type="button" class="secondary" data-print>Print</button>
+        </div>
       </div>
       <div id="stats-feedback" class="feedback" role="status"></div>
       <div id="stats-summary"></div>
@@ -148,7 +153,7 @@
           <div class="buttons">
             <a class="button secondary" id="fallback-github"
               href="https://github.com/lpiaco/ar-lpia-co/issues/new?title=LPIA%20Academic%20Report"
-              target="_blank" rel="noopener noreferrer">Continue to GitHub</a>
+              target="_blank" rel="noopener noreferrer">Continue submission</a>
           </div>
           <label id="fallback-copy-manually" hidden>Report to copy
             <textarea id="fallback-body" rows="4" readonly></textarea>
@@ -160,6 +165,7 @@
     </section>
 
     <section class="screen" id="saved-screen" hidden aria-labelledby="saved-title">
+      <button type="button" class="secondary back" data-menu>Back to menu</button>
       <h1 id="saved-title" tabindex="-1">Laporan tersimpan</h1>
       <p id="saved-receipt" class="receipt"></p>
       <div class="menu-options">
@@ -183,6 +189,10 @@
     <section class="screen" id="detail-screen" hidden aria-labelledby="detail-title">
       <button id="detail-back" type="button" class="secondary back">Back</button>
       <h1 id="detail-title" tabindex="-1">Detail laporan</h1>
+      <div class="buttons print-controls">
+        <button type="button" class="secondary" id="download-detail">Download CSV</button>
+        <button type="button" class="secondary" data-print>Print</button>
+      </div>
       <div id="report-detail"></div>
     </section>
   </main>

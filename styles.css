@@ -177,3 +177,14 @@ body.app-running .app-content, body.app-running .menu-screen {
 .picker-options { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0.2rem; }
 .picker-options button { display: block; width: 100%; text-align: left; margin-bottom: 0.35rem; }
 .picker-options button[aria-current="true"] { background: #edf5f2; }
+.print-controls { margin-block: 0.65rem; }
+
+@media print {
+  body.app-running { display: block; height: auto; overflow: visible; }
+  body.app-running .app-content { overflow: visible; }
+  .app-content > .screen { width: 100%; }
+  .print-controls, .back, #stats-controls, #stats-feedback, .screen-end, .stat-branch meter {
+    display: none !important;
+  }
+  .stat-branch, .report-panel, .totals div { break-inside: avoid; }
+}
