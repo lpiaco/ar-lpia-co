@@ -10,7 +10,11 @@ const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=
 const MAX_GITHUB_ISSUE_URL_LENGTH = 4000;
 const REPORT_CSV_ROOT = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/';
 const REPORT_DATA_REF = 'https://api.github.com/repos/lpiaco/ar-lpia-co/git/ref/heads/report-data';
-const MONTHLY_STATS_FILE = 'data/active-students.json?v=source-totals';
+const MONTHLY_STATS_FILES = [
+  './data/active-students.json?v=source-totals',
+  './data/active-students.json',
+  REPORT_CSV_ROOT + 'main/data/active-students.json?v=source-totals'
+].map(path => new URL(path, import.meta.url));
 
 const COUNT_LIMIT = 1000000;
 const MONTHS = [
@@ -87,6 +91,7 @@ const pickerTriggers = new Map();
 let pickerTrigger;
 let historyReports = [];
 let statsPeriods = [];
+let monthlyStatsRequest;
 let fallbackReport;
 let checkingFallback;
 
@@ -645,7 +650,14 @@ async function openStats(periodKey) {
       (right.reporting_week ?? 0) - (left.reporting_week ?? 0) ||
       Number(Boolean(right.monthlyReport)) - Number(Boolean(left.monthlyReport))
     );
-    if (!statsPeriods.length) throw new Error('Student statistics could not be loaded.');
+    if (!statsPeriods.length) {
+      showFeedback(output, 'error', 'Student statistics could not be loaded.');
+      const retry = textElement('button', 'Try again', 'secondary section-actions');
+      retry.type = 'button';
+      retry.addEventListener('click', () => openStats(periodKey));
+      output.append(retry);
+      return;
+    }
     const select = byId('stats-period');
     const groups = [
       ['Weekly reports', statsPeriods.filter(period => period.reporting_week)],
@@ -670,14 +682,33 @@ async function openStats(periodKey) {
   }
 }
 
-async function loadMonthlyStats() {
-  const response = await fetch(MONTHLY_STATS_FILE);
-  if (!response.ok) throw new Error('The monthly figures could not be loaded.');
-  const periods = await response.json();
-  if (!Array.isArray(periods)) throw new Error('The monthly figures are invalid.');
-  return periods.map(period => ({
-    ...period, branches: period.branches.map(row => ({ ...row, branch: displayBranchName(row.branch) }))
-  }));
+function loadMonthlyStats() {
+  monthlyStatsRequest ??= fetchMonthlyStats().catch(error => {
+    monthlyStatsRequest = undefined;
+    throw error;
+  });
+  return monthlyStatsRequest;
+}
+
+async function fetchMonthlyStats() {
+  for (const url of MONTHLY_STATS_FILES) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4500);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) continue;
+      const periods = await response.json();
+      if (!Array.isArray(periods) || !periods.length) continue;
+      return periods.map(period => ({
+        ...period, branches: period.branches.map(row => ({ ...row, branch: displayBranchName(row.branch) }))
+      }));
+    } catch {
+      // Try the next copy when a request fails or the response is unreadable.
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+  throw new Error('The monthly figures could not be loaded.');
 }
 
 function statsPeriodText(period) {

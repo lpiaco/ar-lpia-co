@@ -429,8 +429,34 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.match(await page.locator('#saved-receipt').textContent(), /2026-11-W3-08/);
     assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
     assert.equal(browserMock.rows().length, 3);
+
+    showWeeklyReports = false;
+    let mirrorAvailable = false;
+    let mirrorRequests = 0;
+    const historicalSnapshot = await readFile(new URL('../data/active-students.json', import.meta.url), 'utf8');
+    await page.route(url + '/data/active-students.json*', route => route.fulfill({ status: 503 }));
+    await page.route('https://raw.githubusercontent.com/lpiaco/ar-lpia-co/main/data/active-students.json?*', route => {
+      mirrorRequests += 1;
+      return route.fulfill(mirrorAvailable
+        ? { contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: historicalSnapshot }
+        : { status: 503, headers: { 'Access-Control-Allow-Origin': '*' } });
+    });
+    await page.reload();
+    await page.getByRole('button', { name: 'START', exact: true }).click();
+    const openStatus = page.getByRole('button', { name: 'Current Status of LPIA Students' });
+    await openStatus.click();
+    await page.getByText('Student statistics could not be loaded.', { exact: true }).waitFor();
+    mirrorAvailable = true;
+    await page.getByRole('button', { name: 'Try again', exact: true }).click();
+    await page.getByRole('heading', { name: 'November 2026 · Monthly figures' }).waitFor();
+    await page.locator('#stats-summary').getByText('1,599', { exact: true }).waitFor();
+    const requestsAfterRecovery = mirrorRequests;
+    assert.ok(requestsAfterRecovery >= 2);
+    await page.getByRole('button', { name: 'Back to menu', exact: true }).click();
+    await yearProgress.getByText('November · 1,599 students').waitFor();
+    assert.equal(mirrorRequests, requestsAfterRecovery);
     assert.deepEqual(pageErrors, []);
-    console.log('PASS browser mock: START, statistics, entry, verified receipt, WhatsApp link, history and both finish paths');
+    console.log('PASS browser mock: statistics recovery, START, entry, verified receipt, WhatsApp link, history and both finish paths');
   } finally {
     await browser.close();
     await new Promise(resolve => server.close(resolve));
