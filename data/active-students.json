@@ -4,6 +4,10 @@
     "reporting_year": 2026,
     "reporting_month": 11,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1305,
+      "computer": 294
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -127,6 +131,10 @@
     "reporting_year": 2026,
     "reporting_month": 10,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1334,
+      "computer": 290
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -250,6 +258,10 @@
     "reporting_year": 2026,
     "reporting_month": 9,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1348,
+      "computer": 301
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -373,6 +385,10 @@
     "reporting_year": 2026,
     "reporting_month": 8,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1342,
+      "computer": 308
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -496,6 +512,10 @@
     "reporting_year": 2026,
     "reporting_month": 7,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1223,
+      "computer": 308
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -619,6 +639,10 @@
     "reporting_year": 2026,
     "reporting_month": 6,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1215,
+      "computer": 297
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -747,6 +771,10 @@
     "reporting_year": 2026,
     "reporting_month": 5,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1210,
+      "computer": 273
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -875,6 +903,10 @@
     "reporting_year": 2026,
     "reporting_month": 4,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1201,
+      "computer": 255
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -1003,6 +1035,10 @@
     "reporting_year": 2026,
     "reporting_month": 3,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1195,
+      "computer": 225
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -1126,6 +1162,10 @@
     "reporting_year": 2026,
     "reporting_month": 2,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1202,
+      "computer": 229
+    },
     "branches": [
       {
         "branch": "Buaran",
@@ -1249,6 +1289,10 @@
     "reporting_year": 2026,
     "reporting_month": 1,
     "listed_branches": 24,
+    "source_totals": {
+      "english": 1242,
+      "computer": 243
+    },
     "branches": [
       {
         "branch": "Buaran",

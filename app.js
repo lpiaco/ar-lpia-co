@@ -10,7 +10,7 @@ const GITHUB_ISSUE_URL = 'https://github.com/lpiaco/ar-lpia-co/issues/new?title=
 const MAX_GITHUB_ISSUE_URL_LENGTH = 4000;
 const REPORT_CSV_ROOT = 'https://raw.githubusercontent.com/lpiaco/ar-lpia-co/';
 const REPORT_DATA_REF = 'https://api.github.com/repos/lpiaco/ar-lpia-co/git/ref/heads/report-data';
-const MONTHLY_STATS_FILE = 'data/active-students.json';
+const MONTHLY_STATS_FILE = 'data/active-students.json?v=source-totals';
 
 const COUNT_LIMIT = 1000000;
 const MONTHS = [
@@ -569,7 +569,8 @@ function metricList(entries) {
   return list;
 }
 
-function totalStudents(branches) {
+function totalStudents({ source_totals, branches }) {
+  if (source_totals) return source_totals.english + source_totals.computer;
   return branches.reduce((total, row) => total + (row.english ?? 0) + (row.computer ?? 0), 0);
 }
 
@@ -583,11 +584,10 @@ async function showMenuYearProgress() {
     const latest = months.at(-1);
     const latestMonth = MONTHS[latest.reporting_month - 1];
     byId('menu-year-title').textContent = 'Active students since January · ' + year;
-    byId('menu-year-latest').textContent = latestMonth + ' · ' + formatCount.format(totalStudents(latest.branches)) +
-      ' students · ' + latest.branches.length + ' recorded branches';
+    byId('menu-year-latest').textContent = latestMonth + ' · ' + formatCount.format(totalStudents(latest)) + ' students';
     byId('menu-year-months').replaceChildren(...months.map(period => {
       const month = MONTHS[period.reporting_month - 1];
-      const total = formatCount.format(totalStudents(period.branches));
+      const total = formatCount.format(totalStudents(period));
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'secondary';
@@ -617,8 +617,8 @@ async function showMenuTotals() {
     container.replaceChildren(
       textElement('p', 'New reports received', 'hint'),
       metricList([
-        ['Weekly students · ' + periodText(weekly), totalStudents(weekly.branches)],
-        ['Monthly students · ' + MONTHS[monthly.reporting_month - 1] + ' ' + monthly.reporting_year, totalStudents(monthly.branches)]
+        ['Weekly students · ' + periodText(weekly), totalStudents(weekly)],
+        ['Monthly students · ' + MONTHS[monthly.reporting_month - 1] + ' ' + monthly.reporting_year, totalStudents(monthly)]
       ])
     );
     container.hidden = false;
@@ -700,13 +700,15 @@ function renderStats() {
     const reported = branches.filter(row => row[fieldName] != null).length;
     return reported ? total / reported : null;
   };
-  const english = sum('english');
-  const computer = sum('computer');
+  const branchEnglish = sum('english');
+  const branchComputer = sum('computer');
+  const english = period.source_totals?.english ?? branchEnglish;
+  const computer = period.source_totals?.computer ?? branchComputer;
   const stats = [
     ['Total active students', english + computer], ['English students', english],
     ['Computer students', computer],
-    ['Average English students per reporting branch', average('english', english)],
-    ['Average Computer students per reporting branch', average('computer', computer)]
+    ['Average English students per reporting branch', average('english', branchEnglish)],
+    ['Average Computer students per reporting branch', average('computer', branchComputer)]
   ];
   if (!historical) {
     const englishClasses = sum('englishClasses');
@@ -731,10 +733,15 @@ function renderStats() {
     metricList(stats),
     textElement('h2', 'Branch breakdown')
   );
-  if (historical || period.monthlyReport) {
-    const message = historical ? 'Historical figures from LPIA Active Students.' :
-      'Active counts use each branch’s latest weekly report. Student movement totals cover the weeks reported.';
+  if (historical) {
+    const message = period.source_totals
+      ? 'Totals match the LPIA Active Students summary. The averages and breakdown use all recorded branch figures.'
+      : 'Historical figures from LPIA Active Students.';
     output.firstElementChild.after(textElement('p', message, 'hint'));
+  }
+  if (period.monthlyReport) {
+    output.firstElementChild.after(textElement('p',
+      'Active counts use each branch’s latest weekly report. Student movement totals cover the weeks reported.', 'hint'));
   }
   const branchTotal = row => (row.english ?? 0) + (row.computer ?? 0);
   const valueText = value => value == null ? '—' : formatCount.format(value);
@@ -788,8 +795,15 @@ function downloadStats() {
   const sum = key => period.branches.some(row => row[key] != null)
     ? period.branches.reduce((total, row) => total + (row[key] ?? 0), 0)
     : '';
-  rows.push([statsPeriodText(period), 'Total', sum('english'), sum('computer'), totalStudents(period.branches),
+  const branchEnglish = sum('english');
+  const branchComputer = sum('computer');
+  rows.push([statsPeriodText(period), period.source_totals ? 'Total of recorded branches' : 'Total',
+    branchEnglish, branchComputer, Number(branchEnglish) + Number(branchComputer),
     sum('englishClasses'), sum('computerClasses'), sum('academia'), sum('inCount'), sum('outCount'), '', '']);
+  if (period.source_totals) {
+    rows.push([statsPeriodText(period), 'Total in LPIA Active Students',
+      period.source_totals.english, period.source_totals.computer, totalStudents(period), '', '', '', '', '', '', '']);
+  }
   const csv = rows.map(row => row.map(value => '"' + String(value ?? '').replace(/"/g, '""') + '"').join(',')).join('\r\n');
   downloadCsv('LPIA-' + period.key + '.csv', csv + '\r\n');
 }
