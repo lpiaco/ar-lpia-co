@@ -109,6 +109,17 @@ button:disabled { opacity: 0.58; cursor: default; }
 .menu-logo .logo-slot { transform: translateY(-10.9375%); }
 .menu-content .menu-options { margin: 1.25rem 0 0; }
 .menu-content .menu-options button { text-align: center; }
+.year-progress { margin-top: 0.95rem; }
+.year-progress h2 { margin: 0 0 0.2rem; font-size: 1.05rem; }
+.year-months { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.35rem; }
+.year-months button { padding: 0.22rem 0.1rem; line-height: 1.25; }
+.year-months button span, .year-months button strong { display: block; }
+.year-months button span { color: var(--muted); font-size: 0.72rem; }
+.year-months button strong { font-size: 0.9rem; }
+#menu-report-totals > p { margin: 0.75rem 0 0; }
+@media (min-width: 37rem) {
+  .year-months { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
 .button {
   display: inline-flex; align-items: center; min-height: 2.85rem; padding: 0.5rem 1rem;
   color: var(--accent); border: 1px solid var(--accent); border-radius: 0.35rem;

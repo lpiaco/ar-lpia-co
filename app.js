@@ -316,7 +316,10 @@ function showScreen(name) {
   byId('app-content').scrollTop = 0;
   window.scrollTo(0, 0);
   byId(headings[name])?.focus({ preventScroll: true });
-  if (name === 'menu') showMenuTotals();
+  if (name === 'menu') {
+    showMenuYearProgress();
+    showMenuTotals();
+  }
   if (name === 'entry') {
     academicSource = undefined;
     autoFillAcademicNumbers();
@@ -570,24 +573,61 @@ function totalStudents(branches) {
   return branches.reduce((total, row) => total + (row.english ?? 0) + (row.computer ?? 0), 0);
 }
 
+async function showMenuYearProgress() {
+  try {
+    const figures = await loadMonthlyStats();
+    if (activeScreen !== 'menu' || !figures.length) return;
+    const year = Math.max(...figures.map(period => period.reporting_year));
+    const months = figures.filter(period => period.reporting_year === year)
+      .sort((left, right) => left.reporting_month - right.reporting_month);
+    const latest = months.at(-1);
+    const latestMonth = MONTHS[latest.reporting_month - 1];
+    byId('menu-year-title').textContent = 'Active students since January · ' + year;
+    byId('menu-year-latest').textContent = latestMonth + ' · ' + formatCount.format(totalStudents(latest.branches)) +
+      ' students · ' + latest.branches.length + ' recorded branches';
+    byId('menu-year-months').replaceChildren(...months.map(period => {
+      const month = MONTHS[period.reporting_month - 1];
+      const total = formatCount.format(totalStudents(period.branches));
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'secondary';
+      button.setAttribute('aria-label', month + ' ' + year + ' · ' + total + ' students');
+      button.append(textElement('span', month.slice(0, 3)), textElement('strong', total));
+      button.addEventListener('click', () => openStats(period.key));
+      return button;
+    }));
+    byId('menu-year-progress').hidden = false;
+  } catch {
+    // The reporting menu remains usable if the historical snapshot is unavailable.
+  }
+}
+
 async function showMenuTotals() {
   const container = byId('menu-report-totals');
   try {
     const reports = await loadPublicReports();
-    if (activeScreen !== 'menu' || !reports.length) return;
+    if (activeScreen !== 'menu') return;
+    if (!reports.length) {
+      container.hidden = true;
+      container.replaceChildren();
+      return;
+    }
     const [weekly] = publicStats(reports);
     const [monthly] = monthlyReportStats(reports);
-    container.replaceChildren(metricList([
-      ['Weekly students · ' + periodText(weekly), totalStudents(weekly.branches)],
-      ['Monthly students · ' + MONTHS[monthly.reporting_month - 1] + ' ' + monthly.reporting_year, totalStudents(monthly.branches)]
-    ]));
+    container.replaceChildren(
+      textElement('p', 'New reports received', 'hint'),
+      metricList([
+        ['Weekly students · ' + periodText(weekly), totalStudents(weekly.branches)],
+        ['Monthly students · ' + MONTHS[monthly.reporting_month - 1] + ' ' + monthly.reporting_year, totalStudents(monthly.branches)]
+      ])
+    );
     container.hidden = false;
   } catch {
     // The main menu remains usable when the reports cannot be loaded.
   }
 }
 
-async function openStats() {
+async function openStats(periodKey) {
   showScreen('status');
   const output = byId('stats-feedback');
   byId('stats-summary').replaceChildren();
@@ -618,7 +658,7 @@ async function openStats() {
       group.append(...periods.map(period => new Option(statsPeriodText(period), period.key)));
       return group;
     }));
-    select.value = statsPeriods[0].key;
+    select.value = statsPeriods.some(period => period.key === periodKey) ? periodKey : statsPeriods[0].key;
     byId('stats-controls').hidden = false;
     output.replaceChildren();
     if (live.status === 'rejected') showFeedback(output, 'info', 'Saved reports could not be loaded.');
@@ -861,7 +901,7 @@ function finish() {
 }
 
 byId('start').addEventListener('click', beginFullscreen);
-byId('open-status').addEventListener('click', openStats);
+byId('open-status').addEventListener('click', () => openStats());
 byId('open-entry').addEventListener('click', () => showScreen('entry'));
 byId('status-yes').addEventListener('click', () => showScreen('entry'));
 byId('status-no').addEventListener('click', finish);

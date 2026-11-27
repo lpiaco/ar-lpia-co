@@ -211,6 +211,10 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.equal(splashLogo.width, 168);
     await page.getByRole('button', { name: 'START', exact: true }).click();
     assert.equal(await page.evaluate(() => window.fullscreenRequested), true);
+    const yearProgress = page.locator('#menu-year-progress');
+    await yearProgress.getByRole('heading', { name: 'Active students since January · 2026' }).waitFor();
+    assert.equal(await yearProgress.getByRole('button').count(), 11);
+    await yearProgress.getByText('November · 1,694 students · 23 recorded branches').waitFor();
     for (const viewport of [{ width: 360, height: 780 }, { width: 1366, height: 768 }]) {
       await page.setViewportSize(viewport);
       const menu = await page.locator('.menu-content').boundingBox();
@@ -242,13 +246,17 @@ if (process.env.PLAYWRIGHT_MODULE) {
       assert.ok(Math.abs(visibleLogo.top - bottomGap) < 1, 'Visible upper and lower gaps: ' + visibleLogo.top + ', ' + bottomGap);
     }
     await page.setViewportSize({ width: 360, height: 780 });
+    await yearProgress.getByRole('button', { name: 'January 2026 · 1,544 students' }).click();
+    await page.getByRole('heading', { name: 'January 2026 · Monthly figures' }).waitFor();
+    await page.locator('#stats-summary').getByText('1,544', { exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Back to menu', exact: true }).click();
     await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
     await page.getByRole('heading', { name: 'November 2026 · Monthly figures' }).waitFor();
     assert.equal(await page.locator('#stats-period').inputValue(), 'monthly-2026-11');
     await page.getByText('Figures for 23 of 24 listed branches.').waitFor();
-    await page.getByText('1,694', { exact: true }).waitFor();
-    await page.getByText('1,398', { exact: true }).waitFor();
-    await page.getByText('296', { exact: true }).waitFor();
+    await page.locator('#stats-summary').getByText('1,694', { exact: true }).waitFor();
+    await page.locator('#stats-summary').getByText('1,398', { exact: true }).waitFor();
+    await page.locator('#stats-summary').getByText('296', { exact: true }).waitFor();
     await page.getByRole('heading', { name: 'Solo · 0 students' }).waitFor();
     assert.equal(await page.getByText('Total active classes', { exact: true }).count(), 0);
     assert.equal(await page.getByRole('heading', { name: /Jatisampurna/ }).count(), 0);
@@ -381,6 +389,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.reload();
     await page.getByRole('button', { name: 'START', exact: true }).click();
     await page.getByText('Monthly students · November 2026').waitFor();
+    await page.getByText('New reports received', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
     await page.getByText('Reports from 2 of 24 listed branches.').waitFor();
     await page.getByRole('button', { name: 'No', exact: true }).click();
