@@ -205,11 +205,19 @@ if (process.env.PLAYWRIGHT_MODULE) {
     const url = 'http://127.0.0.1:' + server.address().port;
     await page.goto(url);
     await page.getByRole('heading', { name: 'LPIA Academic Report' }).waitFor();
+    const splashTiming = await page.locator('#start-screen').evaluate(screen => Object.fromEntries(
+      screen.getAnimations({ subtree: true }).map(animation => [animation.animationName, animation.effect.getTiming()])
+    ));
+    assert.equal(splashTiming['splash-spin'].delay, splashTiming['splash-drop'].duration);
+    const spinEnd = splashTiming['splash-spin'].delay + splashTiming['splash-spin'].duration;
+    assert.ok(Math.abs(splashTiming['splash-reveal'].delay - spinEnd) < 1);
+    const start = page.getByRole('button', { name: 'START', exact: true });
+    await start.waitFor();
     await page.waitForFunction(() => document.getElementById('brand-logo').naturalWidth > 0);
     assert.ok(await page.locator('#brand-logo').isVisible());
     const splashLogo = await page.locator('#brand-logo').boundingBox();
     assert.equal(splashLogo.width, 168);
-    await page.getByRole('button', { name: 'START', exact: true }).click();
+    await start.click();
     assert.equal(await page.evaluate(() => window.fullscreenRequested), true);
     const yearProgress = page.locator('#menu-year-progress');
     await yearProgress.getByRole('heading', { name: 'Active students since January · 2026' }).waitFor();
