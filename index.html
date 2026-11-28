@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LPIA Academic Reporter</title>
   <link rel="preload" href="assets/lpia-logo.png" as="image">
-  <link rel="stylesheet" href="styles.css?v=splash-language-control">
-  <script type="module" src="app.js?v=reporter-ui-20261128"></script>
+  <link rel="stylesheet" href="styles.css?v=language-emoji">
+  <script type="module" src="app.js?v=language-emoji"></script>
 </head>
 <body data-screen="start">
   <div class="language-control">
     <button id="language-toggle" class="secondary" type="button" aria-label="Language: English" aria-expanded="false" aria-controls="language-options">
-      <span class="flag flag-en" aria-hidden="true"></span><span id="language-current">EN</span><span class="chevron" aria-hidden="true"></span>
+      <span id="language-flag" aria-hidden="true">🇺🇸</span><span id="language-current">EN</span><span class="chevron" aria-hidden="true"></span>
     </button>
     <div id="language-options" hidden>
-      <button type="button" class="secondary" data-language="en"><span class="flag flag-en" aria-hidden="true"></span>English</button>
-      <button type="button" class="secondary" data-language="id"><span class="flag flag-id" aria-hidden="true"></span>Bahasa Indonesia</button>
+      <button type="button" class="secondary" data-language="en"><span aria-hidden="true">🇺🇸</span>English</button>
+      <button type="button" class="secondary" data-language="id"><span aria-hidden="true">🇮🇩</span>Bahasa Indonesia</button>
     </div>
   </div>
   <section id="start-screen" class="start-screen screen" aria-labelledby="start-title">

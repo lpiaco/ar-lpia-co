@@ -1178,7 +1178,7 @@ function setLanguage(next, remember = true) {
   for (const [node,source] of localNodes) node.nodeValue = node.nodeValue.replace(node.nodeValue.trim(),tr(source));
   byId('language-current').textContent = language.toUpperCase();
   byId('language-toggle').setAttribute('aria-label', language === 'id' ? 'Bahasa: Bahasa Indonesia' : 'Language: English');
-  byId('language-toggle').querySelector('.flag').className = 'flag flag-' + language;
+  byId('language-flag').textContent = language === 'id' ? '🇮🇩' : '🇺🇸';
   for (const [index,option] of [...field('reporting_month').options].entries()) option.textContent = monthLabel(index + 1);
   for (const option of field('reporting_week').options) {
     option.textContent = option.value ? tr('Week') + ' ' + option.value : tr('Select a week');

@@ -322,16 +322,6 @@ body { background: #f2f5fa; }
 .language-control { position:fixed; top:1.05rem; right:max(1rem, calc((100% - 76rem) / 2)); z-index:5; }
 #language-toggle { display:flex; align-items:center; gap:.5rem; min-height:2.35rem; border-color:#496179; background:#203957; color:white; font-size:.79rem; padding:.42rem .58rem; }
 #language-toggle:hover { background:#345374; border-color:#6485a5; }
-.flag { width:1.34rem; height:.87rem; border-radius:2px; background-color:#fff; flex:none; box-shadow:0 0 0 1px #7d91aa55; }
-.flag-id { background:linear-gradient(#d71228 50%,white 50%); }
-.flag-en {
-  background:
-    linear-gradient(transparent 42%,#c10d2e 42% 58%,transparent 58%),
-    linear-gradient(90deg,transparent 44%,#c10d2e 44% 56%,transparent 56%),
-    linear-gradient(transparent 34%,white 34% 66%,transparent 66%),
-    linear-gradient(90deg,transparent 37%,white 37% 63%,transparent 63%),
-    linear-gradient(32deg,#17376f 43%,white 43% 48%,#c10d2e 48% 52%,white 52% 57%,#17376f 57%);
-}
 .chevron { width:.39rem; height:.39rem; transform:rotate(45deg) translateY(-2px); border-right:1px solid; border-bottom:1px solid; }
 #language-options { position:absolute; top:2.7rem; right:0; width:11rem; padding:.32rem; background:white; border:1px solid var(--border); border-radius:.7rem; box-shadow:0 8px 28px #132c5229; }
 #language-options button { display:flex; text-align:left; gap:.55rem; align-items:center; width:100%; border-color:transparent; padding:.45rem; font-size:.85rem; }

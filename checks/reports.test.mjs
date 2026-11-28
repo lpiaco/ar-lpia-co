@@ -333,8 +333,11 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.ok(Math.abs((await submit.boundingBox()).y - (await check.boundingBox()).y) < 1);
     // Switching language preserves all inputs, and editing within review does not write a report.
     await page.locator('#language-toggle').click();
+    assert.equal(await page.getByRole('button', { name: 'English', exact: true }).textContent(), '🇺🇸English');
+    assert.equal(await page.getByRole('button', { name: 'Bahasa Indonesia', exact: true }).textContent(), '🇮🇩Bahasa Indonesia');
     await page.locator('[data-language=id]').click();
     assert.equal(await page.locator('html').getAttribute('lang'),'id');
+    assert.equal(await page.locator('#language-toggle').textContent().then(text => text.trim()), '🇮🇩ID');
     assert.equal(await field('remarks').inputValue(),setu.remarks);
     await submit.click();
     await review.getByRole('button',{name:'Edit · Siswa dan kelas',exact:true}).first().click();
@@ -344,6 +347,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.locator('#language-toggle').click();
     await page.locator('[data-language=en]').click();
     assert.equal(await page.locator('html').getAttribute('lang'),'en');
+    assert.equal(await page.locator('#language-toggle').textContent().then(text => text.trim()), '🇺🇸EN');
     assert.equal(browserMock.rows().length,2);
     await reviewAndSubmit();
     const fallbackMessage = 'Your report is ready to send.';
