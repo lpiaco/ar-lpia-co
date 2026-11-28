@@ -127,11 +127,6 @@ button:disabled { opacity: 0.58; cursor: default; }
 .splash-mark {
   width: fit-content;
   margin-inline: auto;
-  padding: 0.1rem 0.55rem;
-  border: 1px solid #dbe4ee;
-  border-radius: 0.85rem;
-  background: var(--surface);
-  box-shadow: 0 16px 36px rgb(0 0 0 / 25%);
 }
 .splash-content #start {
   min-width: 9.5rem;
@@ -318,9 +313,8 @@ body { background: #f2f5fa; }
 .masthead { background: #10233c; border: 0; color: white; }
 .masthead .page-width { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.92rem 7.1rem 0.92rem 0; }
 .masthead .brand-heading { color:white; font-size:1.02rem; letter-spacing:-.02em; line-height:1.2; }
-.brand-heading img { width:2.65rem; height:2.65rem; padding:.27rem; border-radius:.55rem; background:white; }
+.brand-heading img { width:2.65rem; height:2.65rem; padding:.27rem; }
 .brand-heading span { white-space:nowrap; }
-.brand-heading small { display:block; color:#becde2; font-size:.74rem; font-weight:500; letter-spacing:0; margin-top:.25rem; }
 .workspace-nav { display:flex; gap:.3rem; }
 .workspace-nav .secondary { min-height:2.45rem; color:#d3e1f4; background:transparent; border-color:transparent; font-size:.88rem; padding:.42rem .75rem; }
 .workspace-nav .secondary[aria-current] { background:#23436b; color:white; border-color:#345783; }
@@ -453,6 +447,5 @@ body[data-screen="start"] .language-control, body[data-screen="finished"] .langu
 }
 @media (max-width: 24rem) {
   .masthead .brand-heading { font-size:.86rem; gap:.42rem; }
-  .brand-heading small { font-size:.68rem; }
   .brand-heading img { width:2rem; height:2rem; }
 }
