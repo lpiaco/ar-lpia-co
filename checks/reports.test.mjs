@@ -217,6 +217,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.ok(await page.locator('#brand-logo').isVisible());
     const splashLogo = await page.locator('#brand-logo').boundingBox();
     assert.equal(splashLogo.width, 168);
+    assert.equal(await page.locator('#language-toggle').isVisible(), false);
     await start.click();
     assert.equal(await page.evaluate(() => window.fullscreenRequested), true);
     const yearProgress = page.locator('#menu-year-progress');

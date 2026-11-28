@@ -434,7 +434,8 @@ input,select,textarea,.picker-trigger.secondary { border-color:#becde0; }
 }
 @media print { .language-control,.workspace-nav,#entry-guide { display:none!important; } }
 .guide-nav { margin:0 0 .7rem; }
-body[data-screen="start"] .language-control, body[data-screen="finished"] .language-control { top:1rem; }
+body[data-screen="start"] .language-control { display:none; }
+body[data-screen="finished"] .language-control { top:1rem; }
 #review-dialog .review-header { z-index:1; }
 .review-group-heading { display:flex; align-items:center; justify-content:space-between; gap:.55rem; }
 .review-group-heading .secondary { min-height:2.15rem; padding:.22rem .55rem; font-size:.8rem; color:#244d8a; border-color:#d9e5f4; }
