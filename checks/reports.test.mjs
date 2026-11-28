@@ -220,45 +220,24 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await start.click();
     assert.equal(await page.evaluate(() => window.fullscreenRequested), true);
     const yearProgress = page.locator('#menu-year-progress');
-    await yearProgress.getByRole('heading', { name: 'Active students since January · 2026' }).waitFor();
+    await yearProgress.getByRole('heading', { name: 'Enrollment trend · 2026' }).waitFor();
     assert.equal(await yearProgress.getByRole('button').count(), 11);
     await yearProgress.getByText('November · 1,599 students').waitFor();
     for (const viewport of [{ width: 360, height: 780 }, { width: 1366, height: 768 }]) {
       await page.setViewportSize(viewport);
+      assert.ok(await page.locator('#masthead .brand-heading img').isVisible());
       const menu = await page.locator('.menu-content').boundingBox();
-      const logo = await page.locator('#menu-screen .logo-slot').boundingBox();
-      const title = await page.locator('#menu-title').boundingBox();
-      const lastButton = await page.locator('#open-entry').boundingBox();
-      const visibleLogo = await page.locator('#menu-screen .logo-slot').evaluate(img => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        const context = canvas.getContext('2d');
-        context.drawImage(img, 0, 0);
-        const rgba = context.getImageData(0, 0, canvas.width, canvas.height).data;
-        const visible = (value, index) => index % 4 === 3 && value > 0;
-        const rowOf = index => Math.floor(index / (canvas.width * 4));
-        const firstRow = rowOf(rgba.findIndex(visible));
-        const lastRow = rowOf(rgba.findLastIndex(visible));
-        const rect = img.getBoundingClientRect();
-        const scale = rect.height / canvas.height;
-        return { top: rect.top + firstRow * scale, bottom: rect.top + (lastRow + 1) * scale };
-      });
-      assert.ok(Math.abs(menu.x + menu.width / 2 - viewport.width / 2) < 1);
-      assert.ok(Math.abs(menu.y + menu.height / 2 - viewport.height / 2) < 1);
-      assert.equal(logo.width, splashLogo.width);
-      assert.equal(logo.height, splashLogo.height);
-      assert.ok(Math.abs(logo.x + logo.width / 2 - viewport.width / 2) < 1);
-      assert.ok(visibleLogo.bottom < title.y);
-      const bottomGap = viewport.height - lastButton.y - lastButton.height;
-      assert.ok(Math.abs(visibleLogo.top - bottomGap) < 1, 'Visible upper and lower gaps: ' + visibleLogo.top + ', ' + bottomGap);
+      assert.ok(menu.x >= 0 && menu.x+menu.width <= viewport.width);
+      const flag = await page.locator('#language-toggle').boundingBox();
+      assert.ok(flag.x >= viewport.width/2 && flag.x+flag.width <= viewport.width);
+      assert.ok(await page.locator('.month-bar i').first().evaluate(bar => bar.getBoundingClientRect().height > 0));
     }
     await page.setViewportSize({ width: 360, height: 780 });
     await yearProgress.getByRole('button', { name: 'January 2026 · 1,485 students' }).click();
     await page.getByRole('heading', { name: 'January 2026 · Monthly figures' }).waitFor();
     await page.locator('#stats-summary').getByText('1,485', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Back to menu', exact: true }).click();
-    await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
+    await page.getByRole('button', { name: 'Enrollment details' }).click();
     await page.getByRole('heading', { name: 'November 2026 · Monthly figures' }).waitFor();
     assert.equal(await page.locator('#stats-period').inputValue(), 'monthly-2026-11');
     await page.getByText('Figures for 23 of 24 listed branches.').waitFor();
@@ -279,7 +258,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByRole('heading', { name: 'January 2023 · Monthly figures' }).waitFor();
     await page.getByRole('button', { name: 'Back to menu' }).click();
     showWeeklyReports = true;
-    await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
+    await page.getByRole('button', { name: 'Enrollment details' }).click();
     await page.getByText('Reports from 1 of 24 listed branches.').waitFor();
     await page.getByRole('heading', { name: 'Pondok Gede · 87 students' }).waitFor();
     await page.locator('#stats-period').selectOption('2026-11-W2');
@@ -298,13 +277,13 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.equal(await page.locator('#stats-controls').isVisible(), false);
     assert.equal(await page.locator('#app-content').evaluate(el => getComputedStyle(el).overflow), 'visible');
     await page.emulateMedia({ media: 'screen' });
-    await page.getByRole('button', { name: 'Yes', exact: true }).click();
+    await page.getByRole('button', { name: 'New weekly report', exact: true }).click();
     const field = name => page.locator('[name="' + name + '"]');
     assert.ok(await page.locator('#masthead .brand-heading img').isVisible());
     assert.equal(await page.locator('#masthead .brand-heading').evaluate(el => getComputedStyle(el).fontWeight), '800');
     assert.equal(await page.locator('legend').first().evaluate(el => getComputedStyle(el).fontWeight), '800');
     assert.equal(await page.evaluate(() => document.scrollingElement.scrollHeight), 780);
-    const picker = page.getByRole('dialog');
+    const picker = page.locator('#field-picker');
     const openPicker = async (name, expectedHeight) => {
       await page.getByRole('button', { name }).click();
       await picker.waitFor();
@@ -326,20 +305,46 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.ok(await picker.getByRole('button', { name: 'Close' }).isVisible());
     await picker.getByRole('button', { name: 'Week 3', exact: true }).click();
     await field('reporter_name').fill(setu.reporter_name);
-    await page.getByText('Filled from Week 2, November 2026.').waitFor();
+    await page.getByText('Filled from Week 2, November 2026.').waitFor({ state: 'attached' });
     assert.equal(await field('academic_staff').inputValue(), '2');
     assert.equal(await field('computer_students_out').getAttribute('type'), 'number');
     assert.equal(await field('computer_students_out').getAttribute('autocomplete'), 'off');
     assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
-    for (const key of COUNT_FIELDS) await field(key).fill(String(setu[key]));
-    await field('remarks').fill(setu.remarks);
+    const fillReportSections = async () => {
+      for (const key of COUNT_FIELDS) {
+        if (!await field(key).isVisible()) await page.locator('#step-next').click();
+        await field(key).fill(String(setu[key]));
+      }
+      await page.locator('#step-next').click();
+      await field('remarks').fill(setu.remarks);
+    };
+    await fillReportSections();
     assert.equal(await page.locator('#english_students_per_class').textContent(), '3');
     assert.equal(await page.locator('#computer_students_per_class').textContent(), '1.4');
-    const submit = page.getByRole('button', { name: 'SUBMIT', exact: true });
-    const check = page.getByRole('button', { name: 'Check Report', exact: true });
+    const review = page.locator('#review-dialog');
+    const submit = page.locator('#submit');
+    const reviewAndSubmit = async () => {
+      await submit.click();
+      await review.locator('#review-submit').click();
+    };
+    const check = page.locator('#check');
     await submit.scrollIntoViewIfNeeded();
     assert.ok(Math.abs((await submit.boundingBox()).y - (await check.boundingBox()).y) < 1);
+    // Switching language preserves all inputs, and editing within review does not write a report.
+    await page.locator('#language-toggle').click();
+    await page.locator('[data-language=id]').click();
+    assert.equal(await page.locator('html').getAttribute('lang'),'id');
+    assert.equal(await field('remarks').inputValue(),setu.remarks);
     await submit.click();
+    await review.getByRole('button',{name:'Edit · Siswa dan kelas',exact:true}).first().click();
+    await field('active_english_students').fill('67');
+    assert.equal(await page.locator('#total_active_students').textContent(),'74');
+    await field('active_english_students').fill(String(setu.active_english_students));
+    await page.locator('#language-toggle').click();
+    await page.locator('[data-language=en]').click();
+    assert.equal(await page.locator('html').getAttribute('lang'),'en');
+    assert.equal(browserMock.rows().length,2);
+    await reviewAndSubmit();
     const fallbackMessage = 'Your report is ready to send.';
     await page.getByText(fallbackMessage).waitFor();
     assert.equal(await field('reporter_name').inputValue(), setu.reporter_name);
@@ -354,7 +359,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.evaluate(() => { window.rejectClipboard = true; });
     const longRemarks = '😀'.repeat(500);
     await field('remarks').fill(longRemarks);
-    await submit.click();
+    await reviewAndSubmit();
     await fallback.waitFor();
     assert.equal(new URL(await fallback.getAttribute('href')).searchParams.has('body'), false);
     await fallback.evaluate(link => link.addEventListener('click', event => event.preventDefault(), { once: true }));
@@ -362,7 +367,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByText('Copy the selected report text.').waitFor();
     assert.equal(JSON.parse(await page.getByLabel('Report to copy').inputValue()).remarks, longRemarks);
     await field('remarks').fill(setu.remarks);
-    await submit.click();
+    await reviewAndSubmit();
     await page.getByText(fallbackMessage).waitFor();
     assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
     await fallback.evaluate(link => {
@@ -381,22 +386,22 @@ if (process.env.PLAYWRIGHT_MODULE) {
     assert.equal(await page.evaluate(() => window.copiedReport), undefined);
     assert.equal(await page.getByLabel('Report to copy').isVisible(), false);
     assert.equal((await browserMock.api('submit', prefilledReport)).status, 200);
-    await page.getByRole('heading', { name: 'Laporan tersimpan' }).waitFor();
+    await page.getByRole('heading', { name: 'Report saved' }).waitFor();
     assert.ok((await page.getByRole('link', { name: /WhatsApp/ }).getAttribute('href')).startsWith('https://wa.me/?text='));
-    await page.getByRole('button', { name: 'Lihat laporan yang baru saja di-update' }).click();
+    await page.getByRole('button', { name: 'View saved report' }).click();
     await page.getByText("Coordinator's/Staff's Name: " + setu.reporter_name).waitFor();
     const detailDownload = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Download CSV' }).click();
     assert.equal((await detailDownload).suggestedFilename(), '2026-11-W3-08.csv');
     await page.getByRole('button', { name: 'Back', exact: true }).click();
-    await page.getByRole('button', { name: 'Lihat semua laporan yang sudah terkirim' }).click();
-    await page.getByText('Laporan yang baru dibuka').waitFor();
+    await page.getByRole('button', { name: 'View report history' }).click();
+    await page.getByText('Report just opened').waitFor();
     assert.equal(await page.locator('#history-list article').count(), 3);
     assert.equal(await page.locator('#history-list button').count(), 3);
     await page.locator('#history-search').fill('Week 2');
     assert.equal(await page.locator('#history-list article').count(), 1);
     await page.getByRole('button', { name: 'Back to saved report' }).click();
-    await page.getByRole('button', { name: 'Selesai' }).click();
+    await page.getByRole('button', { name: 'Finish' }).click();
     await page.getByText('Thank you for using Academic Report App.').waitFor();
     assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
     assert.equal(await page.locator('#masthead').isVisible(), false);
@@ -405,16 +410,16 @@ if (process.env.PLAYWRIGHT_MODULE) {
     await page.getByRole('button', { name: 'START', exact: true }).click();
     await page.getByText('Monthly students · November 2026').waitFor();
     await page.getByText('New reports received', { exact: true }).waitFor();
-    await page.getByRole('button', { name: 'Current Status of LPIA Students' }).click();
+    await page.getByRole('button', { name: 'Enrollment details' }).click();
     await page.getByText('Reports from 2 of 24 listed branches.').waitFor();
-    await page.getByRole('button', { name: 'No', exact: true }).click();
+    await page.getByRole('button', { name: 'Finish', exact: true }).click();
     await page.getByText('Thank you for using Academic Report App.').waitFor();
 
     endpointAvailable = true;
     delete browserMock.env.REPORT_ACCESS_CODES;
     await page.reload();
     await page.getByRole('button', { name: 'START', exact: true }).click();
-    await page.getByRole('button', { name: 'Enter Data of LPIA Students' }).click();
+    await page.getByRole('button', { name: 'New weekly report' }).click();
     for (const name of ['branch_id', 'reporting_year', 'reporting_month', 'reporting_week']) {
       await field(name).evaluate((control, value) => {
         control.value = value;
@@ -422,10 +427,9 @@ if (process.env.PLAYWRIGHT_MODULE) {
       }, String(setu[name]));
     }
     await field('reporter_name').fill(setu.reporter_name);
-    await field('remarks').fill(setu.remarks);
-    for (const key of COUNT_FIELDS) await field(key).fill(String(setu[key]));
-    await page.getByRole('button', { name: 'SUBMIT', exact: true }).click();
-    await page.getByRole('heading', { name: 'Laporan tersimpan' }).waitFor();
+    await fillReportSections();
+    await reviewAndSubmit();
+    await page.getByRole('heading', { name: 'Report saved' }).waitFor();
     assert.match(await page.locator('#saved-receipt').textContent(), /2026-11-W3-08/);
     assert.equal(await page.locator('#report-form input[type="password"]').count(), 0);
     assert.equal(browserMock.rows().length, 3);
@@ -443,7 +447,7 @@ if (process.env.PLAYWRIGHT_MODULE) {
     });
     await page.reload();
     await page.getByRole('button', { name: 'START', exact: true }).click();
-    const openStatus = page.getByRole('button', { name: 'Current Status of LPIA Students' });
+    const openStatus = page.getByRole('button', { name: 'Enrollment details' });
     await openStatus.click();
     await page.getByText('Student statistics could not be loaded.', { exact: true }).waitFor();
     mirrorAvailable = true;

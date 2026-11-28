@@ -1,6 +1,6 @@
 import {
   BRANCHES, FIRST_REPORT_YEAR, LAST_REPORT_YEAR, decodeCSV, displayBranchName,
-  encodeCSV, monthlyReportStats, publicStats, reportId
+  encodeCSV, makeReport, monthlyReportStats, publicStats, reportId
 } from './lib/reports.mjs?v=report-views';
 
 // Public options. Leave blank to use the WhatsApp contact picker.
@@ -80,7 +80,7 @@ const feedback = document.querySelector('#feedback');
 const academicFeedback = document.querySelector('#academic-feedback');
 const submitButton = document.querySelector('#submit');
 const checkButton = document.querySelector('#check');
-const formatCount = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
+let formatCount = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
 let busy = false;
 let activeScreen = 'start';
 let savedReport;
@@ -180,7 +180,9 @@ function updateTotals() {
   if (values.active_computer_students > 0 && values.active_computer_classes === 0) unusual.push('Computer');
   const warning = document.querySelector('#active-warning');
   warning.hidden = !unusual.length;
-  const warningText = unusual.length ? `Review ${unusual.join(' and ')}. Active students were entered with 0 active classes.` : '';
+  const programs = unusual.map(tr).join(' ' + tr('and') + ' ');
+  const warningText = unusual.length
+    ? `${tr('Review')} ${programs}. ${tr('Active students were entered with 0 active classes.')}` : '';
   if (warning.textContent !== warningText) warning.textContent = warningText;
 }
 
@@ -194,14 +196,14 @@ function selectedPeriod() {
 }
 
 function periodText(period) {
-  return `Week ${period.reporting_week}, ${MONTHS[period.reporting_month - 1]} ${period.reporting_year}`;
+  return `${tr('Week')} ${period.reporting_week}, ${monthLabel(period.reporting_month)} ${period.reporting_year}`;
 }
 
 function updateSelection() {
   const period = selectedPeriod();
   document.querySelector('#selection').textContent = Object.values(period).every(Boolean)
     ? `${BRANCHES[Number(period.branch_id) - 1]} · ${periodText(period)}`
-    : 'Choose a branch and reporting period.';
+    : tr('Choose a branch and reporting period.');
 }
 
 function collectReport(operation, output) {
@@ -209,7 +211,7 @@ function collectReport(operation, output) {
   const errors = [];
   const mark = (name, message) => {
     const control = field(name);
-    control.setCustomValidity(message);
+    control.setCustomValidity(tr(message));
     if (message) {
       control.setAttribute('aria-invalid', 'true');
       const visibleControl = pickerTriggers.get(name) ?? control;
@@ -241,6 +243,8 @@ function collectReport(operation, output) {
   }
   if (errors.length) {
     showFeedback(output, 'error', 'Check the highlighted fields.');
+    const section = errors[0].closest('fieldset');
+    if (section?.hidden) setEntryStep(entrySections.indexOf(section));
     errors[0].focus();
     if (!errors[0].classList.contains('picker-trigger')) errors[0].reportValidity();
     return null;
@@ -252,7 +256,7 @@ function showFeedback(output, kind, ...lines) {
   output.dataset.kind = kind;
   output.replaceChildren(...lines.map(text => {
     const paragraph = document.createElement('p');
-    paragraph.textContent = text;
+    paragraph.textContent = tr(text);
     return paragraph;
   }));
 }
@@ -261,6 +265,9 @@ function setBusy(value) {
   busy = value;
   submitButton.disabled = value;
   checkButton.disabled = value;
+  byId('step-next').disabled = value || entryStep === entrySections.length - 1;
+  byId('step-back').disabled = value || entryStep === 0;
+  document.querySelectorAll('.workspace-nav button').forEach(link => { link.disabled = value; });
   document.querySelector('#entry-back').disabled = value;
   form.querySelectorAll('fieldset').forEach(section => { section.disabled = value; });
 }
@@ -296,7 +303,7 @@ async function autoFillAcademicNumbers() {
       carriedAcademicFields.add(name);
     }
     if (carriedAcademicFields.size) {
-      showFeedback(academicFeedback, 'info', 'Filled from ' + periodText(latest) + '.');
+      showFeedback(academicFeedback, 'info', tr('Filled from') + ' ' + periodText(latest) + '.');
     }
   } catch {
     if (request === academicRequest) {
@@ -313,11 +320,16 @@ const headings = {
 
 function showScreen(name) {
   activeScreen = name;
+  document.body.dataset.screen = name;
+  for (const link of document.querySelectorAll('[data-nav]')) {
+    if (link.dataset.nav === name) link.setAttribute('aria-current','page');
+    else link.removeAttribute('aria-current');
+  }
   document.querySelectorAll('.screen').forEach(section => { section.hidden = section.id !== name + '-screen'; });
   const standalone = name === 'start' || name === 'menu' || name === 'finished';
   document.body.classList.toggle('app-running', name !== 'start' && name !== 'finished');
   byId('app-content').hidden = standalone;
-  byId('masthead').hidden = standalone;
+  byId('masthead').hidden = name === 'start' || name === 'finished';
   byId('app-content').scrollTop = 0;
   window.scrollTo(0, 0);
   byId(headings[name])?.focus({ preventScroll: true });
@@ -371,7 +383,7 @@ function showReceipt(report) {
   clearSubmissionAccess();
   byId('saved-receipt').textContent = report.branch_name + ' · ' + periodText(report) + ' · ' + report.report_id;
   const text = [
-    'LPIA Academic Report', report.branch_name + ' · ' + periodText(report),
+    tr('LPIA Academic Report'), report.branch_name + ' · ' + periodText(report),
     'Report ID ' + report.report_id,
     'Active students: ' + report.total_active_students + ' (English ' + report.active_english_students +
       ', Computer ' + report.active_computer_students + ')',
@@ -402,9 +414,9 @@ function showSubmissionFallback(report) {
   const issueUrl = issueUrlWithReport(body);
   byId('fallback-body').value = body;
   byId('fallback-github').href = issueUrl;
-  byId('fallback-instructions').textContent = issueUrl === GITHUB_ISSUE_URL
+  byId('fallback-instructions').textContent = tr(issueUrl === GITHUB_ISSUE_URL
     ? 'Continue submission, paste the report into Body, and click Create.'
-    : 'Continue submission. The report is already in Body. Click Create to send it.';
+    : 'Continue submission. The report is already in Body. Click Create to send it.');
   byId('submission-fallback').hidden = false;
 }
 
@@ -419,19 +431,19 @@ async function continueToGitHub(event) {
   link.href = issueUrlWithReport(body.value);
   const prefilled = link.href !== GITHUB_ISSUE_URL;
   checkFallbackReceipt();
-  if (prefilled) byId('fallback-status').textContent = 'The report is filled in. Click Create to send it.';
+  if (prefilled) byId('fallback-status').textContent = tr('The report is filled in. Click Create to send it.');
   try {
     if (!navigator.clipboard) throw new Error('Clipboard unavailable.');
     await navigator.clipboard.writeText(body.value);
     if (!prefilled && fallbackReport === report) {
-      byId('fallback-status').textContent = 'Report copied. Paste it into Body to finish sending.';
+      byId('fallback-status').textContent = tr('Report copied. Paste it into Body to finish sending.');
     }
   } catch {
     if (prefilled || fallbackReport !== report) return;
     byId('fallback-copy-manually').hidden = false;
     body.focus();
     body.select();
-    byId('fallback-status').textContent = 'Copy the selected report text.';
+    byId('fallback-status').textContent = tr('Copy the selected report text.');
   }
 }
 
@@ -445,7 +457,7 @@ async function checkFallbackReceipt() {
   if (!expected || checkingFallback === expected) return;
   checkingFallback = expected;
   const status = byId('fallback-status');
-  status.textContent = 'Waiting for confirmation that the report was saved…';
+  status.textContent = tr('Waiting for confirmation that the report was saved…');
   try {
     for (let attempt = 0; attempt < 18; attempt += 1) {
       if (fallbackReport !== expected || activeScreen !== 'entry') return;
@@ -462,13 +474,13 @@ async function checkFallbackReceipt() {
         return;
       }
       if (saved) {
-        status.textContent = 'A different report already exists for this branch and period. Open Check Report to review it.';
+        status.textContent = tr('A different report already exists for this branch and period. Open Check Report to review it.');
         return;
       }
       await new Promise(resolve => setTimeout(resolve, 4000));
     }
     if (fallbackReport === expected && activeScreen === 'entry') {
-      status.textContent = 'This report is still waiting for confirmation. Use Check Report to check again.';
+      status.textContent = tr('This report is still waiting for confirmation. Use Check Report to check again.');
     }
   } finally {
     if (checkingFallback === expected) checkingFallback = undefined;
@@ -507,7 +519,7 @@ async function submitDirectly(report) {
     const result = await response.json();
     if (response.status === 403 && result.message === 'The access code is invalid for this branch.') {
       showSubmissionAccess();
-      throw new Error('Enter the reporting access code for your branch, then press SUBMIT.');
+      throw new Error('Enter your branch’s access code, then review and submit the report.');
     }
     if (!response.ok) throw new Error(result.message || 'The report could not be saved.');
     if (!['saved', 'already_saved'].includes(result.status) || !matchesSubmission(report, result.report)) {
@@ -557,7 +569,7 @@ async function sendReport(operation) {
 
 function textElement(tag, text, className) {
   const element = document.createElement(tag);
-  element.textContent = text;
+  element.textContent = tr(text);
   if (className) element.className = className;
   return element;
 }
@@ -587,17 +599,24 @@ async function showMenuYearProgress() {
     const months = figures.filter(period => period.reporting_year === year)
       .sort((left, right) => left.reporting_month - right.reporting_month);
     const latest = months.at(-1);
-    const latestMonth = MONTHS[latest.reporting_month - 1];
-    byId('menu-year-title').textContent = 'Active students since January · ' + year;
-    byId('menu-year-latest').textContent = latestMonth + ' · ' + formatCount.format(totalStudents(latest)) + ' students';
+    renderOverviewPanel(latest);
+    const maximum = Math.max(1,...months.map(totalStudents));
+    byId('menu-year-title').textContent = tr('Enrollment trend') + ' · ' + year;
+    byId('menu-year-latest').textContent = monthLabel(latest.reporting_month) + ' · ' + formatCount.format(totalStudents(latest)) + ' ' + tr('students');
     byId('menu-year-months').replaceChildren(...months.map(period => {
-      const month = MONTHS[period.reporting_month - 1];
-      const total = formatCount.format(totalStudents(period));
+      const month = monthLabel(period.reporting_month);
+      const students = totalStudents(period);
+      const total = formatCount.format(students);
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'secondary';
-      button.setAttribute('aria-label', month + ' ' + year + ' · ' + total + ' students');
-      button.append(textElement('span', month.slice(0, 3)), textElement('strong', total));
+      button.setAttribute('aria-label', month + ' ' + year + ' · ' + total + ' ' + tr('students'));
+      const bar = textElement('span', '', 'month-bar');
+      bar.setAttribute('aria-hidden','true');
+      const fill = document.createElement('i');
+      fill.style.height = (students / maximum * 100) + '%';
+      bar.append(fill);
+      button.append(bar, textElement('span', month.slice(0, 3)), textElement('strong', total));
       button.addEventListener('click', () => openStats(period.key));
       return button;
     }));
@@ -622,8 +641,8 @@ async function showMenuTotals() {
     container.replaceChildren(
       textElement('p', 'New reports received', 'hint'),
       metricList([
-        ['Weekly students · ' + periodText(weekly), totalStudents(weekly)],
-        ['Monthly students · ' + MONTHS[monthly.reporting_month - 1] + ' ' + monthly.reporting_year, totalStudents(monthly)]
+        [tr('Weekly students') + ' · ' + periodText(weekly), totalStudents(weekly)],
+        [tr('Monthly students') + ' · ' + monthLabel(monthly.reporting_month) + ' ' + monthly.reporting_year, totalStudents(monthly)]
       ])
     );
     container.hidden = false;
@@ -666,7 +685,8 @@ async function openStats(periodKey) {
     ];
     select.replaceChildren(...groups.filter(([, periods]) => periods.length).map(([label, periods]) => {
       const group = document.createElement('optgroup');
-      group.label = label;
+      group.dataset.label = label;
+      group.label = tr(label);
       group.append(...periods.map(period => new Option(statsPeriodText(period), period.key)));
       return group;
     }));
@@ -714,8 +734,8 @@ async function fetchMonthlyStats() {
 function statsPeriodText(period) {
   return period.reporting_week
     ? periodText(period)
-    : MONTHS[period.reporting_month - 1] + ' ' + period.reporting_year +
-      (period.monthlyReport ? ' · Monthly reports' : ' · Monthly figures');
+    : monthLabel(period.reporting_month) + ' ' + period.reporting_year +
+      ' · ' + tr(period.monthlyReport ? 'Monthly reports' : 'Monthly figures');
 }
 
 function selectedStatsPeriod() {
@@ -756,8 +776,8 @@ function renderStats() {
   }
   const output = byId('stats-summary');
   const coverage = historical
-    ? 'Figures for ' + branches.length + ' of ' + period.listed_branches + ' listed branches.'
-    : 'Reports from ' + branches.length + ' of ' + BRANCHES.length + ' listed branches.';
+    ? tr('Figures for') + ' ' + branches.length + ' ' + tr('of') + ' ' + period.listed_branches + ' ' + tr('listed branches.')
+    : tr('Reports from') + ' ' + branches.length + ' ' + tr('of') + ' ' + BRANCHES.length + ' ' + tr('listed branches.');
   output.replaceChildren(
     textElement('h2', statsPeriodText(period)),
     textElement('p', coverage, 'hint'),
@@ -787,13 +807,13 @@ function renderStats() {
     const bar = document.createElement('meter');
     bar.max = max;
     bar.value = total;
-    bar.setAttribute('aria-label', row.branch + ' active students');
-    const countLabel = row.english == null || row.computer == null ? ' students recorded' : ' students';
-    const classes = historical ? '' : ' · ' + formatCount.format(row.englishClasses + row.computerClasses) + ' classes';
+    bar.setAttribute('aria-label', row.branch + ' ' + tr('active students'));
+    const countLabel = ' ' + tr(row.english == null || row.computer == null ? 'students recorded' : 'students');
+    const classes = historical ? '' : ' · ' + formatCount.format(row.englishClasses + row.computerClasses) + ' ' + tr('classes');
     card.append(textElement('h3', row.branch + ' · ' + formatCount.format(total) + countLabel), bar,
-      textElement('p', 'English ' + valueText(row.english) + ' · Computer ' + valueText(row.computer) + classes, 'hint'));
+      textElement('p', tr('English') + ' ' + valueText(row.english) + ' · ' + tr('Computer') + ' ' + valueText(row.computer) + classes, 'hint'));
     if (period.monthlyReport) {
-      card.append(textElement('p', 'Latest: Week ' + row.latestWeek + ' · ' + row.weeksReported + ' weeks reported', 'hint'));
+      card.append(textElement('p', tr('Latest: Week') + ' ' + row.latestWeek + ' · ' + row.weeksReported + ' ' + tr('weeks reported'), 'hint'));
     }
     list.append(card);
   }
@@ -877,8 +897,8 @@ function renderHistory() {
     card.className = 'history-card' + (current ? ' current' : '');
     const summary = document.createElement('div');
     summary.append(textElement('h3', report.branch_name + ' · ' + periodText(report)),
-      textElement('p', report.report_id + ' · ' + formatCount.format(report.total_active_students) + ' active students', 'hint'));
-    if (current) summary.append(textElement('p', 'Laporan yang baru dibuka', 'hint'));
+      textElement('p', report.report_id + ' · ' + formatCount.format(report.total_active_students) + ' ' + tr('active students'), 'hint'));
+    if (current) summary.append(textElement('p', 'Report just opened', 'hint'));
     card.append(summary);
     if (report.can_view_full !== false) {
       const open = textElement('button', 'View report', 'secondary');
@@ -892,14 +912,15 @@ function renderHistory() {
 
 function showDetail(report, previousScreen) {
   currentDetailReport = report;
+  detailPreviousScreen = previousScreen;
   const output = byId('report-detail');
-  const when = new Intl.DateTimeFormat('en-GB', {
+  const when = new Intl.DateTimeFormat(language === 'id' ? 'id-ID' : 'en-GB', {
     dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Jakarta'
   }).format(new Date(report.submitted_at));
   output.replaceChildren(
     textElement('h2', report.branch_name + ' · ' + periodText(report)),
-    textElement('p', report.report_id + ' · Saved ' + when + ' WIB', 'hint'),
-    textElement('p', "Coordinator's/Staff's Name: " + report.reporter_name),
+    textElement('p', report.report_id + ' · ' + tr('Saved') + ' ' + when + ' WIB', 'hint'),
+    textElement('p', tr("Coordinator's/Staff's Name") + ": " + report.reporter_name),
     metricList([
       ['Total Active Students', report.total_active_students], ['Total Active Classes', report.total_active_classes],
       ['English Students per Class', report.active_english_classes ? report.active_english_students / report.active_english_classes : null],
@@ -928,6 +949,8 @@ function showDetail(report, previousScreen) {
 
 function finish() {
   form.reset();
+  reviewingEdits = false;
+  setEntryStep(0);
   clearSubmissionFallback();
   clearSubmissionAccess();
   academicRequest += 1;
@@ -983,13 +1006,13 @@ function initPickers() {
     trigger.setAttribute('aria-controls', dialog.id);
 
     const sync = () => {
-      trigger.textContent = select.value ? select.selectedOptions[0].textContent : placeholder;
-      trigger.setAttribute('aria-label', name + ', ' + trigger.textContent);
+      trigger.textContent = select.value ? select.selectedOptions[0].textContent : tr(placeholder);
+      trigger.setAttribute('aria-label', tr(name) + ', ' + trigger.textContent);
     };
 
     trigger.addEventListener('click', () => {
       pickerTrigger = trigger;
-      byId('picker-title').textContent = name;
+      byId('picker-title').textContent = tr(name);
       dialog.dataset.kind = select.dataset.picker;
       const choices = [...select.options].filter(option => option.value).map(option => {
         const choice = document.createElement('button');
@@ -1018,6 +1041,7 @@ function initPickers() {
     select.hidden = true;
     select.addEventListener('change', sync);
     pickerTriggers.set(select.name, trigger);
+    pickerUpdates.push(sync);
     sync();
   }
   byId('picker-close').addEventListener('click', () => dialog.close());
@@ -1032,10 +1056,292 @@ function initPickers() {
   });
 }
 
+const translations = {
+  'LPIA Academic Report':'Laporan Akademik LPIA',
+  'LPIA Academic Reporter':'Pelaporan Akademik LPIA',
+  'LPIA Academic Affairs':'Akademik LPIA',
+  'START':'Mulai','Overview':'Ringkasan','Enrollment':'Data siswa','Weekly report':'Laporan mingguan',
+  'Academic overview':'Ringkasan akademik',
+  'Monitor enrollment across LPIA branches and manage weekly reports.':'Pantau jumlah siswa cabang LPIA dan kelola laporan mingguan.',
+  'Enrollment details':'Rincian data siswa','New weekly report':'Buat laporan mingguan','Enrollment overview':'Ringkasan data siswa',
+  'Academic population':'Jumlah siswa','Active students':'Siswa aktif','Student enrollment':'Jumlah siswa aktif',
+  'English students':'Siswa Bahasa Inggris','Computer students':'Siswa Komputer','Reporting coverage':'Cakupan laporan',
+  'Branches with available figures':'Cabang dengan data yang tersedia','Branches with figures':'Cabang dengan data',
+  'Branches listed':'Cabang terdaftar','Awaiting figures':'Data belum tersedia','Enrollment trend':'Tren jumlah siswa',
+  'New reports received':'Laporan baru diterima','Weekly students':'Siswa mingguan','Monthly students':'Siswa bulanan',
+  'Back to menu':'Kembali ke ringkasan','Back to saved report':'Kembali ke laporan tersimpan','Back':'Kembali',
+  'Download CSV':'Unduh CSV','Print':'Cetak','Weekly reporting':'Pelaporan mingguan',
+  'Weekly academic report':'Laporan akademik mingguan','Previous section':'Bagian sebelumnya',
+  'Next section':'Bagian berikutnya','Section':'Bagian','of':'dari','Review report':'Tinjau laporan',
+  'Enter 0 when there were none. Remarks are optional.':'Masukkan 0 jika tidak ada. Catatan bersifat opsional.',
+  'Report Identification':'Identitas laporan','Branch':'Cabang',"Coordinator's/Staff's Name":'Nama koordinator atau staf',
+  'Reporting year':'Tahun laporan','Reporting month':'Bulan laporan','Reporting week':'Minggu laporan',
+  'Reporting period':'Periode laporan','Select a branch':'Pilih cabang','Select a year':'Pilih tahun',
+  'Select a month':'Pilih bulan','Select a week':'Pilih minggu','Week':'Minggu',
+  'New Recruits':'Rekrutmen baru','New recruits':'Rekrutmen baru',
+  'Count newly recruited academic personnel.':'Masukkan jumlah tenaga akademik yang baru direkrut.',
+  'Academic Numbers':'Tenaga akademik','The last saved counts fill in automatically. Update them when needed.':'Jumlah terakhir terisi otomatis. Perbarui bila perlu.',
+  'Academic Coordinators':'Koordinator akademik','Academic Staff':'Staf akademik',
+  'Permanent English Instructors':'Pengajar tetap Bahasa Inggris','Permanent Computer Instructors':'Pengajar tetap Komputer',
+  'Freelance English Instructors':'Pengajar lepas Bahasa Inggris','Freelance Computer Instructors':'Pengajar lepas Komputer',
+  'Tests':'Tes','Count students or persons.':'Masukkan jumlah peserta.','English Placement':'Tes penempatan Bahasa Inggris',
+  'English Promotion':'Tes kenaikan tingkat Bahasa Inggris','Computer Counseling':'Konseling Komputer','Computer Promotion':'Tes kenaikan tingkat Komputer',
+  'Students & Classes':'Siswa dan kelas','Active English Students':'Siswa aktif Bahasa Inggris','Active English Classes':'Kelas aktif Bahasa Inggris',
+  'Active Computer Students':'Siswa aktif Komputer','Active Computer Classes':'Kelas aktif Komputer',
+  'Total Active Students':'Total siswa aktif','Total active students':'Total siswa aktif','Total Active Classes':'Total kelas aktif',
+  'Total active classes':'Total kelas aktif','English Students per Class':'Siswa Bahasa Inggris per kelas',
+  'Computer Students per Class':'Siswa Komputer per kelas','English students per class':'Siswa Bahasa Inggris per kelas',
+  'Computer students per class':'Siswa Komputer per kelas',
+  'Students (IN/OUT)':'Perpindahan siswa','English Students IN':'Siswa masuk Bahasa Inggris','English Students OUT':'Siswa keluar Bahasa Inggris',
+  'Computer Students IN':'Siswa masuk Komputer','Computer Students OUT':'Siswa keluar Komputer',
+  'English Net Movement':'Selisih siswa Bahasa Inggris','Computer Net Movement':'Selisih siswa Komputer',
+  'Total Students IN':'Total siswa masuk','Total Students OUT':'Total siswa keluar','Total Net Movement':'Selisih total siswa',
+  'Net Student Movement':'Selisih siswa','Net movement':'Selisih siswa','Students IN':'Siswa masuk','Students OUT':'Siswa keluar',
+  'Remarks':'Catatan','Academic observations or circumstances (optional)':'Catatan atau kondisi akademik (opsional)',
+  'Up to 1,000 characters.':'Maksimal 1.000 karakter.','Choose a branch and reporting period.':'Pilih cabang dan periode laporan.',
+  'I certify that the information in this report is accurate and reflects the actual conditions at my LPIA branch.':'Saya menyatakan data ini akurat dan sesuai dengan kondisi cabang LPIA saya.',
+  'Reporting access code':'Kode akses laporan','Check report':'Periksa laporan','Continue submission':'Lanjutkan pengiriman',
+  'Report to copy':'Laporan untuk disalin','Close':'Tutup','Edit entries':'Edit isian','Submit report':'Kirim laporan',
+  'Check your entries before submitting.':'Periksa isian sebelum mengirim laporan.',
+  'Report saved':'Laporan tersimpan','Your submission has been saved and verified.':'Laporan Anda telah tersimpan dan terverifikasi.',
+  'View saved report':'Lihat laporan tersimpan','View report history':'Lihat riwayat laporan','Report history':'Riwayat laporan',
+  'Share with Academic Affairs via WhatsApp':'Bagikan ke Akademik Pusat via WhatsApp','Finish':'Selesai',
+  'Search by branch, period, or report ID':'Cari cabang, periode, atau ID laporan','Report details':'Rincian laporan',
+  'Thank you for using Academic Report App.':'Terima kasih telah menggunakan aplikasi laporan akademik.',
+  'English':'Bahasa Inggris','Computer':'Komputer','students':'siswa','classes':'kelas','students recorded':'siswa tercatat',
+  'active students':'siswa aktif','Figures for':'Data untuk','Reports from':'Laporan dari','listed branches.':'cabang terdaftar.',
+  'Branch breakdown':'Rincian cabang','Saved':'Tersimpan','Average English students per reporting branch':'Rata-rata siswa Bahasa Inggris per cabang pelapor',
+  'Average Computer students per reporting branch':'Rata-rata siswa Komputer per cabang pelapor',
+  'Total academic personnel':'Total tenaga akademik','Historical monthly figures':'Data historis bulanan',
+  'Weekly reports':'Laporan mingguan','Monthly reports':'Laporan bulanan','Latest: Week':'Terbaru: Minggu',
+  'weeks reported':'minggu dilaporkan','Historical figures from LPIA Active Students.':'Data historis dari LPIA Active Students.',
+  'Totals match the LPIA Active Students summary. The averages and breakdown use all recorded branch figures.':'Total mengikuti ringkasan LPIA Active Students. Rata-rata dan rincian menggunakan seluruh data cabang yang tercatat.',
+  'Active counts use each branch’s latest weekly report. Student movement totals cover the weeks reported.':'Jumlah aktif memakai laporan terakhir tiap cabang. Perpindahan siswa dijumlahkan dari seluruh minggu yang dilaporkan.',
+  'Saving and verifying your report…':'Menyimpan dan memverifikasi laporan…','Checking saved reports…':'Memeriksa laporan tersimpan…',
+  'No saved report was found for this branch and period.':'Belum ada laporan tersimpan untuk cabang dan periode ini.',
+  'Previous counts could not be loaded. You can enter them here.':'Data sebelumnya tidak dapat dimuat. Masukkan data secara manual.',
+  'The report could not be saved.':'Laporan tidak dapat disimpan.','The request timed out. Use Check Report before trying again.':'Waktu permintaan habis. Pilih Periksa laporan sebelum mencoba lagi.',
+  'Your report is ready to send.':'Laporan siap dikirim.','Check the highlighted fields.':'Periksa isian yang ditandai.',
+  'Select a value.':'Pilih salah satu.','Enter a whole number from 0 to 1,000,000.':'Masukkan bilangan bulat dari 0 hingga 1.000.000.',
+  'Loading student statistics…':'Memuat statistik siswa…','Saved reports could not be loaded.':'Laporan tersimpan tidak dapat dimuat.',
+  'Historical figures could not be loaded.':'Data historis tidak dapat dimuat.','Student statistics could not be loaded.':'Statistik siswa tidak dapat dimuat.',
+  'Try again':'Coba lagi','Open':'Buka','View report':'Lihat laporan','Edit':'Edit',
+  'and':'dan','Review':'Periksa','Active students were entered with 0 active classes.':'Ada siswa aktif dengan jumlah kelas aktif 0.',
+  'Filled from':'Diisi dari','Monthly figures':'Data bulanan','Loading saved reports…':'Memuat laporan tersimpan…',
+  'Report just opened':'Laporan yang baru dibuka','No reports match this search.':'Tidak ada laporan yang sesuai dengan pencarian ini.',
+  'Continue submission, paste the report into Body, and click Create.':'Lanjutkan pengiriman, tempel laporan di kolom Body, lalu klik Create.',
+  'Continue submission. The report is already in Body. Click Create to send it.':'Lanjutkan pengiriman. Laporan sudah ada di kolom Body. Klik Create untuk mengirim.',
+  'The report is filled in. Click Create to send it.':'Laporan sudah terisi. Klik Create untuk mengirim.',
+  'Report copied. Paste it into Body to finish sending.':'Laporan disalin. Tempel di kolom Body untuk menyelesaikan pengiriman.',
+  'Copy the selected report text.':'Salin teks laporan yang dipilih.',
+  'Waiting for confirmation that the report was saved…':'Menunggu konfirmasi bahwa laporan tersimpan…',
+  'A different report already exists for this branch and period. Open Check Report to review it.':'Sudah ada laporan berbeda untuk cabang dan periode ini. Pilih Periksa laporan untuk meninjaunya.',
+  'This report is still waiting for confirmation. Use Check Report to check again.':'Laporan masih menunggu konfirmasi. Pilih Periksa laporan untuk memeriksa kembali.',
+  'Enter your branch’s access code, then review and submit the report.':'Masukkan kode akses cabang, lalu tinjau dan kirim laporan.',
+  'The saved report could not be verified. Use Check Report before trying again.':'Laporan tersimpan tidak dapat diverifikasi. Pilih Periksa laporan sebelum mencoba lagi.',
+  'Statistics took too long to load.':'Statistik terlalu lama dimuat.',
+  "Enter the coordinator's or staff member's name.":'Masukkan nama koordinator atau staf.',
+  'Keep remarks to 1,000 characters or fewer.':'Batasi catatan hingga 1.000 karakter.',
+  'This branch already has a different report for the selected period. Open the saved report to review it.':'Cabang ini sudah memiliki laporan berbeda untuk periode tersebut. Buka laporan tersimpan untuk meninjaunya.'
+};
+
+let language = 'en';
+let detailPreviousScreen = 'saved';
+const pickerUpdates = [];
+const entrySections = [...form.querySelectorAll('fieldset')];
+let entryStep = 0;
+let reviewingEdits = false;
+const localNodes = [];
+function tr(text) {
+  if (language !== 'id' || typeof text !== 'string') return text;
+  return translations[text] ?? text;
+}
+function monthLabel(month) {
+  return new Intl.DateTimeFormat(language === 'id' ? 'id-ID' : 'en', {
+    month:'long', timeZone:'UTC'
+  }).format(new Date(Date.UTC(2026,month-1,1)));
+}
+function captureLocalText(root) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    const source = node.nodeValue.trim();
+    if (!node.parentElement?.closest('#language-options') && Object.hasOwn(translations,source)) localNodes.push([node,source]);
+  }
+}
+function setLanguage(next, remember = true) {
+  language = next === 'id' ? 'id' : 'en';
+  document.documentElement.lang = language;
+  document.title = tr('LPIA Academic Reporter');
+  formatCount = new Intl.NumberFormat(language, { maximumFractionDigits:2 });
+  if (remember) try { localStorage.setItem('lpia-language',language); } catch {}
+  for (const [node,source] of localNodes) node.nodeValue = node.nodeValue.replace(node.nodeValue.trim(),tr(source));
+  byId('language-current').textContent = language.toUpperCase();
+  byId('language-toggle').setAttribute('aria-label', language === 'id' ? 'Bahasa: Bahasa Indonesia' : 'Language: English');
+  byId('language-toggle').querySelector('.flag').className = 'flag flag-' + language;
+  for (const [index,option] of [...field('reporting_month').options].entries()) option.textContent = monthLabel(index + 1);
+  for (const option of field('reporting_week').options) {
+    option.textContent = option.value ? tr('Week') + ' ' + option.value : tr('Select a week');
+  }
+  for (const refresh of pickerUpdates) refresh();
+  setEntryStep(entryStep);
+  updateSelection();
+  updateTotals();
+  if (activeScreen === 'menu') { showMenuYearProgress(); showMenuTotals(); }
+  if (activeScreen === 'status' && statsPeriods.length) {
+    for (const item of byId('stats-period').options) {
+      const period = statsPeriods.find(row=>row.key===item.value);
+      if (period) item.textContent = statsPeriodText(period);
+    }
+    for (const group of byId('stats-period').querySelectorAll('optgroup')) {
+      if (!group.dataset.label) group.dataset.label = group.label;
+      group.label = tr(group.dataset.label);
+    }
+    if (selectedStatsPeriod()) renderStats();
+  }
+  if (activeScreen === 'saved' && savedReport) {
+    byId('saved-receipt').textContent = savedReport.branch_name + ' · ' + periodText(savedReport) + ' · ' + savedReport.report_id;
+  }
+  if (activeScreen === 'history') renderHistory();
+  if (activeScreen === 'detail' && currentDetailReport) showDetail(currentDetailReport,detailPreviousScreen);
+}
+function setEntryStep(step, focus = false) {
+  entryStep = step;
+  for (const [index,section] of entrySections.entries()) section.hidden = index !== step;
+  byId('step-counter').textContent = tr('Section') + ' ' + (step + 1) + ' ' + tr('of') + ' ' + entrySections.length;
+  byId('step-progress').replaceChildren(...entrySections.map((_,index)=>textElement('span','',index <= step ? 'filled' : '')));
+  byId('step-back').disabled = busy || step === 0;
+  byId('step-next').hidden = step === entrySections.length - 1;
+  byId('step-next').disabled = busy || step === entrySections.length - 1;
+  byId('submit').hidden = !reviewingEdits && step !== entrySections.length - 1;
+  document.querySelector('.submission-buttons').classList.toggle('with-review', !byId('submit').hidden);
+  document.querySelector('.attestation').hidden = step !== entrySections.length - 1;
+  if (focus) byId('app-content').scrollTop = 0;
+}
+function renderOverviewPanel(period) {
+  const total = totalStudents(period);
+  const english = period.source_totals?.english ?? period.branches.reduce((sum,row)=>sum+(row.english??0),0);
+  const computer = period.source_totals?.computer ?? period.branches.reduce((sum,row)=>sum+(row.computer??0),0);
+  const count = period.branches.filter(row=>row.english!=null || row.computer!=null).length;
+  const listed = period.listed_branches;
+  const output = byId('overview-summary');
+  const node = (tag,text,cls) => textElement(tag,text,cls);
+  const panel = node('article','','population-panel');
+  const header = node('header','');
+  header.append(node('h2','Academic population'),node('span',monthLabel(period.reporting_month)+' '+period.reporting_year,'population-period'));
+  const track = node('div','','population-track');
+  track.setAttribute('aria-hidden','true');
+  for (const value of [english,computer]) {
+    const segment = node('span','');
+    segment.style.width = (total ? 100*value/total : 0)+'%';
+    track.append(segment);
+  }
+  const metrics = node('dl','','population-mix');
+  for (const [label,value] of [['English students',english],['Computer students',computer]]) {
+    const metric = node('div','');
+    metric.append(node('dt',label),node('dd',formatCount.format(value)));
+    metrics.append(metric);
+  }
+  panel.append(header,node('strong',formatCount.format(total),'population-count'),node('p','Active students','population-caption'),track,metrics);
+  const coverage = node('article','','coverage-panel');
+  const coverageAmount = node('strong',String(count));
+  coverageAmount.append(node('span',' / '+listed));
+  const coverageTrack = node('div','','coverage-track');
+  const fill = node('span','');
+  fill.style.width = (listed ? 100*count/listed : 0)+'%';
+  coverageTrack.append(fill);
+  const coverageMetrics = node('dl','');
+  for (const [label,value] of [['Branches with figures',count],['Awaiting figures',listed-count],['Branches listed',listed]]) {
+    const metric = node('div','');
+    metric.append(node('dt',label),node('dd',String(value)));
+    coverageMetrics.append(metric);
+  }
+  coverage.append(node('h2','Reporting coverage'),node('p','Branches with available figures','hint'),coverageAmount,coverageTrack,coverageMetrics);
+  output.replaceChildren(panel,coverage);
+  output.hidden = false;
+}
+function showReview(candidate) {
+  const report = makeReport(candidate);
+  const dialog = byId('review-dialog');
+  const output = byId('review-content');
+  const groups = [
+    ['Report Identification',[['Branch',report.branch_name],['Reporting period',periodText(report)],["Coordinator's/Staff's Name",report.reporter_name]]],
+    ['Students & Classes',[['Total Active Students',report.total_active_students],['Total Active Classes',report.total_active_classes],['Net Student Movement',report.total_net_movement]]]
+  ];
+  for (const [index,fields] of Object.values(FIELD_GROUPS).entries()) {
+    const title = ['New Recruits','Academic Numbers','Tests','Students & Classes','Students (IN/OUT)'][index];
+    groups.push([title,Object.entries(fields).map(([key,label])=>[label,report[key]])]);
+  }
+  groups.push(['Remarks',[['Remarks',report.remarks||'—']]]);
+  output.replaceChildren(...groups.map(([name,items],index)=>{
+    const block = textElement('section','','report-panel');
+    const list = textElement('dl','','review-lines');
+    for (const [label,value] of items) {
+      const line = textElement('div','');
+      const entry = textElement('dd','');
+      entry.textContent = typeof value === 'number' ? formatCount.format(value) : value;
+      line.append(textElement('dt',label),entry);
+      list.append(line);
+    }
+    const heading = textElement('div','','review-group-heading');
+    const edit = textElement('button','Edit','secondary');
+    edit.type = 'button';
+    edit.setAttribute('aria-label',tr('Edit') + ' · ' + tr(name));
+    const section = [0, 4, 1, 2, 3, 4, 5, 6][index];
+    edit.addEventListener('click',()=>editSection(section));
+    heading.append(textElement('h3',name),edit);
+    block.append(heading,list);
+    return block;
+  }));
+  dialog.showModal();
+  dialog.scrollTop = 0;
+}
+function editSection(step) {
+  byId('review-dialog').close();
+  reviewingEdits = true;
+  setEntryStep(step,true);
+  const first = entrySections[step].querySelector('.picker-trigger, input, textarea');
+  first?.focus({preventScroll:true});
+}
+function toggleLanguageMenu(open) {
+  byId('language-options').hidden = !open;
+  byId('language-toggle').setAttribute('aria-expanded', String(open));
+}
+
 populate();
 initPickers();
-updateTotals();
-updateSelection();
+captureLocalText(document.body);
+for (const template of document.querySelectorAll('template')) captureLocalText(template.content);
+let storedLanguage;
+try { storedLanguage = localStorage.getItem('lpia-language'); } catch {}
+setLanguage(storedLanguage,false);
+byId('language-toggle').addEventListener('click',()=>toggleLanguageMenu(byId('language-options').hidden));
+for (const option of document.querySelectorAll('[data-language]')) option.addEventListener('click',()=>{
+  setLanguage(option.dataset.language);
+  toggleLanguageMenu(false);
+  byId('language-toggle').focus();
+});
+document.addEventListener('click',event=>{
+  if (!event.target.closest('.language-control')) toggleLanguageMenu(false);
+});
+document.addEventListener('keydown',event=>{
+  if (event.key === 'Escape' && !byId('language-options').hidden) {
+    toggleLanguageMenu(false);
+    byId('language-toggle').focus();
+  }
+});
+byId('nav-enrollment').addEventListener('click',()=>openStats());
+byId('nav-report').addEventListener('click',()=>showScreen('entry'));
+byId('step-back').addEventListener('click',()=>setEntryStep(entryStep-1,true));
+byId('step-next').addEventListener('click',()=>setEntryStep(entryStep+1,true));
+byId('review-edit').addEventListener('click',()=>editSection(0));
+byId('review-submit').addEventListener('click',()=>{
+  byId('review-dialog').close();
+  reviewingEdits = false;
+  setEntryStep(entrySections.length-1);
+  sendReport('submit');
+});
+
 form.addEventListener('input', event => {
   if (fallbackReport && event.target.name) clearSubmissionFallback();
   carriedAcademicFields.delete(event.target.name);
@@ -1056,6 +1362,14 @@ form.addEventListener('change', event => {
 });
 form.addEventListener('submit', event => {
   event.preventDefault();
-  sendReport('submit');
+  if (busy || activeScreen !== 'entry') return;
+  if (submitButton.hidden) {
+    setEntryStep(entryStep + 1, true);
+    return;
+  }
+  const candidate = collectReport('submit', feedback);
+  if (!candidate) return;
+  try { showReview(candidate); }
+  catch (error) { showFeedback(feedback,'error',error.message); }
 });
 checkButton.addEventListener('click', () => sendReport('status'));
